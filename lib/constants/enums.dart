@@ -1,0 +1,1 @@
+enum DeleteConfirm { yes, no }
