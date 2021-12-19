@@ -29,5 +29,7 @@ Future<void> cleanDatabase() async {
   final dbName = getDatabaseFileName();
   final dir = await getApplicationDocumentsDirectory();
   final file = File(path.join(dir.path, dbName));
-  await file.delete();
+  if (file.existsSync()) {
+    await file.delete();
+  }
 }
