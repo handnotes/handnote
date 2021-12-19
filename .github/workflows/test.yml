@@ -24,19 +24,23 @@ jobs:
 
       - run: flutter --version
 
-      - name: install dependencies
+      - run: flutter config --enable-macos-desktop
+
+      - run: flutter doctor -v
+
+      - name: Install dependencies
         run: flutter pub get
 
-      - name: test
+      - name: Test
         run: flutter test --coverage -d macos integration_test
 
-      - name: generate coverage report
+      - name: Generate coverage report
         uses: vebr/jest-lcov-reporter@v0.2.0
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           lcov-file: ./coverage/lcov.info
 
-      - name: deploy coverage report
+      - name: Deploy coverage report
         uses: s0/git-publish-subdir-action@master
         env:
           REPO: self
