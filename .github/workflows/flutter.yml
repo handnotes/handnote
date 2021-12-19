@@ -27,6 +27,9 @@ jobs:
       - name: install dependencies
         run: flutter pub get
 
+      - name: genrate model
+        run: flutter packages pub run build_runner build
+
       - name: test
         run: flutter test --coverage -d macos integration_test
 
