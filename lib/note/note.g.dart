@@ -15,7 +15,6 @@ class Note extends DataClass implements Insertable<Note> {
   final DateTime updatedAt;
   final DateTime? archivedAt;
   final DateTime? deletedAt;
-
   Note(
       {required this.id,
       required this.title,
@@ -24,7 +23,6 @@ class Note extends DataClass implements Insertable<Note> {
       required this.updatedAt,
       this.archivedAt,
       this.deletedAt});
-
   factory Note.fromData(Map<String, dynamic> data, {String? prefix}) {
     final effectivePrefix = prefix ?? '';
     return Note(
@@ -37,7 +35,6 @@ class Note extends DataClass implements Insertable<Note> {
       deletedAt: const DateTimeType().mapFromDatabaseResponse(data['${effectivePrefix}deleted_at']),
     );
   }
-
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -79,7 +76,6 @@ class Note extends DataClass implements Insertable<Note> {
       deletedAt: serializer.fromJson<DateTime?>(json['deletedAt']),
     );
   }
-
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
@@ -111,7 +107,6 @@ class Note extends DataClass implements Insertable<Note> {
         archivedAt: archivedAt ?? this.archivedAt,
         deletedAt: deletedAt ?? this.deletedAt,
       );
-
   @override
   String toString() {
     return (StringBuffer('Note(')
@@ -128,7 +123,6 @@ class Note extends DataClass implements Insertable<Note> {
 
   @override
   int get hashCode => Object.hash(id, title, content, createdAt, updatedAt, archivedAt, deletedAt);
-
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -150,7 +144,6 @@ class NotesCompanion extends UpdateCompanion<Note> {
   final Value<DateTime> updatedAt;
   final Value<DateTime?> archivedAt;
   final Value<DateTime?> deletedAt;
-
   const NotesCompanion({
     this.id = const Value.absent(),
     this.title = const Value.absent(),
@@ -160,7 +153,6 @@ class NotesCompanion extends UpdateCompanion<Note> {
     this.archivedAt = const Value.absent(),
     this.deletedAt = const Value.absent(),
   });
-
   NotesCompanion.insert({
     this.id = const Value.absent(),
     required String title,
@@ -171,7 +163,6 @@ class NotesCompanion extends UpdateCompanion<Note> {
     this.deletedAt = const Value.absent(),
   })  : title = Value(title),
         content = Value(content);
-
   static Insertable<Note> custom({
     Expression<int>? id,
     Expression<String>? title,
@@ -266,7 +257,7 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
   final VerificationMeta _titleMeta = const VerificationMeta('title');
   @override
   late final GeneratedColumn<String?> title = GeneratedColumn<String?>('title', aliasedName, false,
-      additionalChecks: GeneratedColumn.checkTextLength(minTextLength: 1, maxTextLength: 50),
+      additionalChecks: GeneratedColumn.checkTextLength(maxTextLength: 50),
       type: const StringType(),
       requiredDuringInsert: true);
   final VerificationMeta _contentMeta = const VerificationMeta('content');
@@ -335,7 +326,6 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
 
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
-
   @override
   Note map(Map<String, dynamic> data, {String? tablePrefix}) {
     return Note.fromData(data, prefix: tablePrefix != null ? '$tablePrefix.' : null);
@@ -350,10 +340,8 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
 abstract class _$NoteDatabase extends GeneratedDatabase {
   _$NoteDatabase(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
   late final $NotesTable notes = $NotesTable(this);
-
   @override
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
-
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [notes];
 }

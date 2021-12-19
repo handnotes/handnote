@@ -28,6 +28,7 @@ class _NoteEditRouteState extends State<NoteEditRoute> {
           child: Column(
             children: <Widget>[
               TextFormField(
+                key: const Key('title'),
                 controller: _titleController,
                 decoration: const InputDecoration(
                   border: InputBorder.none,
@@ -35,6 +36,7 @@ class _NoteEditRouteState extends State<NoteEditRoute> {
                 ),
               ),
               TextFormField(
+                key: const Key('content'),
                 maxLines: 10,
                 autofocus: true,
                 controller: _contentController,

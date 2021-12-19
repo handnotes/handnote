@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -21,7 +20,7 @@ class _NoteListRouteState extends State<NoteListRoute> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('日记'),
+        title: const Text('笔记'),
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.archive),
@@ -38,14 +37,13 @@ class _NoteListRouteState extends State<NoteListRoute> {
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const NoteEditRoute()),
-          );
+          Navigator.of(context).push(MaterialPageRoute(
+            builder: (_) => const NoteEditRoute(),
+          ));
         },
       ),
       body: StreamBuilder<List<Note>>(
-        stream: db.watchAll(),
+        stream: db.watchAllActivated(),
         builder: (context, snapshot) {
           final notes = snapshot.data ?? [];
           return _buildList(notes);
@@ -57,10 +55,7 @@ class _NoteListRouteState extends State<NoteListRoute> {
   Widget _buildList(List<Note> notes) {
     if (notes.isEmpty) {
       return const Center(
-        child: Text(
-          '什么也没有',
-          style: TextStyle(color: Colors.grey),
-        ),
+        child: Text('什么也没有', style: TextStyle(color: Colors.grey)),
       );
     }
 
@@ -77,6 +72,13 @@ class _NoteListRouteState extends State<NoteListRoute> {
     return Dismissible(
       key: Key('note-${note.id}'),
       direction: DismissDirection.startToEnd,
+      background: Container(
+        child: const Align(
+          alignment: FractionalOffset(0.1, 0.5),
+          child: Text('归档', style: TextStyle(color: Colors.white)),
+        ),
+        color: Colors.orangeAccent,
+      ),
       child: Container(
         child: ListTile(
           title: note.title.isEmpty ? const Text('(未标题)', style: TextStyle(color: Colors.grey)) : Text(note.title),
@@ -98,16 +100,9 @@ class _NoteListRouteState extends State<NoteListRoute> {
         ),
       ),
       confirmDismiss: (direction) async => direction == DismissDirection.startToEnd,
-      background: Container(
-        child: const Align(
-          alignment: FractionalOffset(0.1, 0.5),
-          child: Text('归档', style: TextStyle(color: Colors.white)),
-        ),
-        color: Colors.orangeAccent,
-      ),
       onDismissed: (direction) async {
-        final db = Provider.of<NoteDatabase>(context);
-        await db.toggleArchive(note.toCompanion(true));
+        final db = Provider.of<NoteDatabase>(context, listen: false);
+        await db.toggleArchive(note);
       },
     );
   }

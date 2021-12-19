@@ -17,9 +17,9 @@ class _NoteListArchivedListState extends State<NoteListArchivedList> {
     final db = Provider.of<NoteDatabase>(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('日记（已归档）')),
+      appBar: AppBar(title: const Text('笔记（已归档）')),
       body: StreamBuilder<List<Note>>(
-        stream: db.watchAll(),
+        stream: db.watchAllArchived(),
         builder: (context, snapshot) {
           final notes = snapshot.data ?? [];
           return _buildList(notes);
@@ -31,10 +31,7 @@ class _NoteListArchivedListState extends State<NoteListArchivedList> {
   Widget _buildList(List<Note> notes) {
     if (notes.isEmpty) {
       return const Center(
-        child: Text(
-          '什么也没有',
-          style: TextStyle(color: Colors.grey),
-        ),
+        child: Text('什么也没有', style: TextStyle(color: Colors.grey)),
       );
     }
 
@@ -51,6 +48,20 @@ class _NoteListArchivedListState extends State<NoteListArchivedList> {
     return Dismissible(
       key: Key('item-${note.id}'),
       direction: DismissDirection.horizontal,
+      background: Container(
+        child: const Align(
+          alignment: FractionalOffset(0.1, 0.5),
+          child: Text('删除', style: TextStyle(color: Colors.white)),
+        ),
+        color: Colors.redAccent,
+      ),
+      secondaryBackground: Container(
+        child: const Align(
+          alignment: FractionalOffset(0.9, 0.5),
+          child: Text('还原', style: TextStyle(color: Colors.white)),
+        ),
+        color: Colors.green,
+      ),
       child: Container(
         child: ListTile(
           title: Text(note.title),
@@ -71,30 +82,12 @@ class _NoteListArchivedListState extends State<NoteListArchivedList> {
           ),
         ),
       ),
-      background: Container(
-        child: const Align(
-          alignment: FractionalOffset(0.1, 0.5),
-          child: Text('删除', style: TextStyle(color: Colors.white)),
-        ),
-        color: Colors.redAccent,
-      ),
-      secondaryBackground: Container(
-        child: const Align(
-          alignment: FractionalOffset(0.9, 0.5),
-          child: Text('还原', style: TextStyle(color: Colors.white)),
-        ),
-        color: Colors.green,
-      ),
       onDismissed: (direction) async {
-        final db = Provider.of<NoteDatabase>(context);
+        final db = Provider.of<NoteDatabase>(context, listen: false);
         if (direction == DismissDirection.startToEnd) {
-          await db.deleteNote(note.toCompanion(true));
+          await db.deleteNote(note);
         } else {
-          await db.toggleArchive(note.toCompanion(true));
-          final archivedNotes = await db.findAllArchivedNotes();
-          if (archivedNotes.isEmpty) {
-            Navigator.pop(context);
-          }
+          await db.toggleArchive(note);
         }
       },
     );

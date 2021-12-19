@@ -1,4 +1,4 @@
-import 'package:client/widgets/NavigationBar.dart';
+import 'package:client/widgets/navigation_bar.dart';
 import 'package:flutter/material.dart';
 
 class AppData extends ChangeNotifier {

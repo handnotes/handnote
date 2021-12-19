@@ -29,9 +29,7 @@ class NoteDetailRouge extends StatelessWidget {
         padding: const EdgeInsets.all(20.0),
         child: Text(
           note.content.toString(),
-          style: const TextStyle(
-            height: 1.6,
-          ),
+          style: const TextStyle(height: 1.6),
         ),
       ),
     );
@@ -49,26 +47,18 @@ class NoteDetailRouge extends StatelessWidget {
             child: Column(
               children: <Widget>[
                 const Center(
-                  child: Text(
-                    '确认要删除这条内容吗',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 14.0,
-                    ),
-                  ),
+                  child: Text('确认要删除这条内容吗', style: TextStyle(color: Colors.grey, fontSize: 14.0)),
                 ),
                 GestureDetector(
                   child: TextButton(
-                    child: const Text(
-                      '删除',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.red),
-                    ),
-                    onPressed: () {},
+                    child: const Text('删除', textAlign: TextAlign.center, style: TextStyle(color: Colors.red)),
+                    onPressed: () {
+                      Navigator.pop(context, DeleteConfirm.yes);
+                    },
                   ),
-                  onTap: () {
-                    Navigator.pop(context, DeleteConfirm.yes);
-                  },
+                  // onTap: () {
+                  //   Navigator.pop(context, DeleteConfirm.yes);
+                  // },
                 ),
                 const TextButton(
                   child: Text('取消', textAlign: TextAlign.center),
@@ -83,8 +73,8 @@ class NoteDetailRouge extends StatelessWidget {
 
     switch (result) {
       case DeleteConfirm.yes:
-        final db = Provider.of<NoteDatabase>(context);
-        await db.deleteNote(note.toCompanion(true));
+        final db = Provider.of<NoteDatabase>(context, listen: false);
+        await db.deleteNote(note);
         Navigator.pop(context);
         break;
       case DeleteConfirm.no:

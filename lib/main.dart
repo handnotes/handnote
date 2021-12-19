@@ -19,11 +19,15 @@ class HandnoteApp extends StatelessWidget {
       ],
       child: Provider(
         create: (_) => NoteDatabase(),
-        child: MaterialApp(
-          title: 'Handnote',
-          theme: appTheme,
-          debugShowCheckedModeBanner: false,
-          home: const NoteListRoute(),
+        child: Container(
+          padding: const EdgeInsets.only(top: 24),
+          color: appTheme.primaryColor,
+          child: MaterialApp(
+            title: 'Handnote',
+            theme: appTheme,
+            debugShowCheckedModeBanner: false,
+            home: const NoteListRoute(),
+          ),
         ),
       ),
     );

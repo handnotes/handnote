@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
+import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 
@@ -10,7 +11,7 @@ part 'note.g.dart';
 class Notes extends Table {
   IntColumn get id => integer().autoIncrement()();
 
-  TextColumn get title => text().withLength(min: 1, max: 50)();
+  TextColumn get title => text().withLength(max: 50)();
 
   TextColumn get content => text().withLength(max: 1000)();
 
@@ -26,6 +27,9 @@ class Notes extends Table {
 LazyDatabase _openConnection() {
   return LazyDatabase(() async {
     final dbFolder = await getApplicationDocumentsDirectory();
+    if (kDebugMode) {
+      print("database path: ${dbFolder.path}");
+    }
     final file = File(path.join(dbFolder.path, 'note.sqlite'));
     return NativeDatabase(file);
   });
@@ -40,6 +44,12 @@ class NoteDatabase extends _$NoteDatabase {
 
   Stream<List<Note>> watchAll() => (select(notes)..where((n) => n.deletedAt.isNull())).watch();
 
+  Stream<List<Note>> watchAllActivated() =>
+      (select(notes)..where((n) => n.deletedAt.isNull() & n.archivedAt.isNull())).watch();
+
+  Stream<List<Note>> watchAllArchived() =>
+      (select(notes)..where((n) => n.deletedAt.isNull() & n.archivedAt.isNotNull())).watch();
+
   Future<List<Note>> getAll() => (select(notes)..where((n) => n.deletedAt.isNull())).get();
 
   Future<List<Note>> findAllArchivedNotes() =>
@@ -51,13 +61,13 @@ class NoteDatabase extends _$NoteDatabase {
         updatedAt: Value(DateTime.now()),
       ));
 
-  Future<int> deleteNote(NotesCompanion note) => update(notes).write(note.copyWith(
-        deletedAt: Value(DateTime.now()),
-        updatedAt: Value(DateTime.now()),
+  Future<bool> deleteNote(Note note) => update(notes).replace(note.copyWith(
+        deletedAt: DateTime.now(),
+        updatedAt: DateTime.now(),
       ));
 
-  Future<int> toggleArchive(NotesCompanion note) => update(notes).write(note.copyWith(
-        archivedAt: Value(note.archivedAt.value == null ? DateTime.now() : null),
+  Future<bool> toggleArchive(Note note) => update(notes).replace(note.toCompanion(true).copyWith(
+        archivedAt: Value(note.archivedAt == null ? DateTime.now() : null),
         updatedAt: Value(DateTime.now()),
       ));
 }
