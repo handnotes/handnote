@@ -1,7 +1,7 @@
-import 'package:client/note/note.dart';
-import 'package:client/store.dart';
-import 'package:client/theme.dart';
 import 'package:flutter/material.dart';
+import 'package:handnote/note/note.dart';
+import 'package:handnote/store.dart';
+import 'package:handnote/theme.dart';
 import 'package:provider/provider.dart';
 
 import 'note/routes/note_list.dart';

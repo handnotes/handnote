@@ -1,6 +1,5 @@
-
-import 'package:client/database.dart';
 import 'package:drift/drift.dart';
+import 'package:handnote/database.dart';
 
 part 'note.g.dart';
 

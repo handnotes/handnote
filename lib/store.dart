@@ -1,5 +1,5 @@
-import 'package:client/widgets/navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:handnote/widgets/navigation_bar.dart';
 
 class AppData extends ChangeNotifier {
   Navigation currentNavigation = Navigation.memo;

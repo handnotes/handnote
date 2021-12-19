@@ -1,7 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mutoe.handnotes.client.client">
-   <application
-        android:label="client"
+    package="com.mutoe.handnotes.handnote">
+
+    <application
+        android:label="handnote"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

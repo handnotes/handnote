@@ -1,5 +1,5 @@
-import 'package:client/constants/enums.dart';
 import 'package:flutter/material.dart';
+import 'package:handnote/constants/enums.dart';
 import 'package:provider/provider.dart';
 
 import '../note.dart';

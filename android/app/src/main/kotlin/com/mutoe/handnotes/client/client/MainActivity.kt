@@ -1,4 +1,4 @@
-package com.mutoe.handnotes.client.client
+package com.mutoe.handnotes.handnote
 
 import io.flutter.embedding.android.FlutterActivity
 

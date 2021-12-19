@@ -1,6 +1,6 @@
-# client
+# Handnote
 
-A new Flutter project.
+Flutter client for handnote.
 
 ## Getting Started
 
