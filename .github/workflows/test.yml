@@ -36,6 +36,11 @@ jobs:
       - name: Test
         run: flutter test --coverage -d macos integration_test
 
+      - name: Remove generated files from coverage report
+        run: |
+          dart pub global activate remove_from_coverage
+          dart pub global run remove_from_coverage:remove_from_coverage -f coverage/lcov.info -r '\.g\.dart$'
+
       - name: Upload coverage
         uses: codecov/codecov-action@v2
         with:
