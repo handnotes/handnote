@@ -34,16 +34,8 @@ jobs:
       - name: Test
         run: flutter test --coverage -d macos integration_test
 
-      - name: Generate coverage report
-        uses: vebr/jest-lcov-reporter@v0.2.0
+      - name: Upload coverage
+        uses: codecov/codecov-action@v2
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          lcov-file: ./coverage/lcov.info
-
-      - name: Deploy coverage report
-        uses: s0/git-publish-subdir-action@master
-        env:
-          REPO: self
-          BRANCH: gh-pages
-          FOLDER: dist
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: coverage/lcov.info
