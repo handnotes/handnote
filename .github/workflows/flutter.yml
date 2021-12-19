@@ -8,7 +8,7 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
       - uses: actions/checkout@v2
@@ -28,7 +28,7 @@ jobs:
         run: flutter pub get
 
       - name: test
-        run: flutter test --coverage
+        run: flutter test --coverage -d macos integration_test
 
       - name: generate coverage report
         uses: vebr/jest-lcov-reporter@v0.2.0

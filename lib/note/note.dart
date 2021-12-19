@@ -1,10 +1,6 @@
-import 'dart:io';
 
+import 'package:client/database.dart';
 import 'package:drift/drift.dart';
-import 'package:drift/native.dart';
-import 'package:flutter/foundation.dart';
-import 'package:path/path.dart' as path;
-import 'package:path_provider/path_provider.dart';
 
 part 'note.g.dart';
 
@@ -24,20 +20,9 @@ class Notes extends Table {
   DateTimeColumn get deletedAt => dateTime().nullable()();
 }
 
-LazyDatabase _openConnection() {
-  return LazyDatabase(() async {
-    final dbFolder = await getApplicationDocumentsDirectory();
-    if (kDebugMode) {
-      print("database path: ${dbFolder.path}");
-    }
-    final file = File(path.join(dbFolder.path, 'note.sqlite'));
-    return NativeDatabase(file);
-  });
-}
-
 @DriftDatabase(tables: [Notes])
 class NoteDatabase extends _$NoteDatabase {
-  NoteDatabase() : super(_openConnection());
+  NoteDatabase() : super(connectDatabase());
 
   @override
   int get schemaVersion => 1;
