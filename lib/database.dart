@@ -7,10 +7,7 @@ import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 
 String getDatabaseFileName() {
-  if (Platform.environment.containsKey('FLUTTER_TEST')) {
-    return 'test.sqlite';
-  }
-  return 'note.sqlite';
+  return const String.fromEnvironment("DB_NAME", defaultValue: "db.sqlite");
 }
 
 LazyDatabase connectDatabase() {

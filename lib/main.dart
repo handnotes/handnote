@@ -17,8 +17,9 @@ class HandnoteApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<AppData>.value(value: AppData()),
       ],
-      child: Provider(
+      child: Provider<NoteDatabase>(
         create: (_) => NoteDatabase(),
+        dispose: (_, db) => db.close(),
         child: Container(
           padding: const EdgeInsets.only(top: 24),
           color: appTheme.primaryColor,
