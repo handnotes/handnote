@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provider/provider.dart';
 
 import '../store.dart';
 
 enum Navigation { memo }
 
-class NavigationBar extends StatefulWidget {
+class NavigationBar extends HookWidget {
   final Navigation active;
 
   const NavigationBar(this.active, {Key? key}) : super(key: key);
 
-  @override
-  _NavigationBarState createState() => _NavigationBarState();
-}
-
-class _NavigationBarState extends State<NavigationBar> {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
@@ -26,7 +22,7 @@ class _NavigationBarState extends State<NavigationBar> {
       ],
       onTap: (index) {
         final tap = Navigation.values[index];
-        if (tap == widget.active) return;
+        if (tap == active) return;
         Provider.of<AppData>(context, listen: false).navigateTo(tap);
       },
     );

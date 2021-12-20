@@ -1,34 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provider/provider.dart';
 
 import '../note.dart';
 import 'note_detail.dart';
 
-class NoteListArchivedList extends StatefulWidget {
+class NoteListArchivedList extends HookWidget {
   const NoteListArchivedList({Key? key}) : super(key: key);
 
   @override
-  _NoteListArchivedListState createState() => _NoteListArchivedListState();
-}
-
-class _NoteListArchivedListState extends State<NoteListArchivedList> {
-  @override
   Widget build(BuildContext context) {
     final db = Provider.of<NoteDatabase>(context);
+    final snapshot = useStream(db.watchAllArchived());
+    final notes = snapshot.data ?? [];
 
     return Scaffold(
       appBar: AppBar(title: const Text('笔记（已归档）')),
-      body: StreamBuilder<List<Note>>(
-        stream: db.watchAllArchived(),
-        builder: (context, snapshot) {
-          final notes = snapshot.data ?? [];
-          return _buildList(notes);
-        },
-      ),
+      body: _buildList(context, notes),
     );
   }
 
-  Widget _buildList(List<Note> notes) {
+  Widget _buildList(BuildContext context, List<Note> notes) {
     if (notes.isEmpty) {
       return const Center(
         child: Text('什么也没有', style: TextStyle(color: Colors.grey)),
@@ -39,12 +31,12 @@ class _NoteListArchivedListState extends State<NoteListArchivedList> {
       itemCount: notes.length,
       itemBuilder: (_, index) {
         final note = notes[index];
-        return _buildListItem(note);
+        return _buildListItem(context, note);
       },
     );
   }
 
-  Widget _buildListItem(Note note) {
+  Widget _buildListItem(BuildContext context, Note note) {
     return Dismissible(
       key: Key('item-${note.id}'),
       direction: DismissDirection.horizontal,

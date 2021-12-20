@@ -29,10 +29,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.2
+  cupertino_icons: ^1.0.4
+  flutter_hooks: ^0.18.1
   drift: ^1.1.0
-  sqlite3_flutter_libs: ^0.5.0
-  path_provider: ^2.0.0
+  sqlite3_flutter_libs: ^0.5.2
+  path_provider: ^2.0.8
   path: ^1.8.0
   provider:
 

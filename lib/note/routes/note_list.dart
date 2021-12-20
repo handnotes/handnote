@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:provider/provider.dart';
 
 import '../note.dart';
@@ -6,17 +7,14 @@ import 'note_detail.dart';
 import 'note_edit.dart';
 import 'note_list_archived.dart';
 
-class NoteListRoute extends StatefulWidget {
+class NoteListRoute extends HookWidget {
   const NoteListRoute({Key? key}) : super(key: key);
 
   @override
-  _NoteListRouteState createState() => _NoteListRouteState();
-}
-
-class _NoteListRouteState extends State<NoteListRoute> {
-  @override
   Widget build(BuildContext context) {
     final db = Provider.of<NoteDatabase>(context);
+    final snapshot = useStream(db.watchAllActivated());
+    final notes = snapshot.data ?? [];
 
     return Scaffold(
       appBar: AppBar(
@@ -42,17 +40,11 @@ class _NoteListRouteState extends State<NoteListRoute> {
           ));
         },
       ),
-      body: StreamBuilder<List<Note>>(
-        stream: db.watchAllActivated(),
-        builder: (context, snapshot) {
-          final notes = snapshot.data ?? [];
-          return _buildList(notes);
-        },
-      ),
+      body: _buildList(context, notes),
     );
   }
 
-  Widget _buildList(List<Note> notes) {
+  Widget _buildList(BuildContext context, List<Note> notes) {
     if (notes.isEmpty) {
       return const Center(
         child: Text('什么也没有', style: TextStyle(color: Colors.grey)),
@@ -63,12 +55,12 @@ class _NoteListRouteState extends State<NoteListRoute> {
       itemCount: notes.length,
       itemBuilder: (_, index) {
         final note = notes[index];
-        return _buildListItem(note);
+        return _buildListItem(context, note);
       },
     );
   }
 
-  Widget _buildListItem(Note note) {
+  Widget _buildListItem(BuildContext context, Note note) {
     return Dismissible(
       key: Key('note-${note.id}'),
       direction: DismissDirection.startToEnd,
@@ -89,7 +81,7 @@ class _NoteListRouteState extends State<NoteListRoute> {
           ),
           onTap: () {
             Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => NoteDetailRouge(note: note),
+              builder: (_) => NoteDetailRouge(note: note),
             ));
           },
         ),
