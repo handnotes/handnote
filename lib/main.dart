@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:handnote/note/note.dart';
-import 'package:handnote/store.dart';
+import 'package:handnote/database.dart';
 import 'package:handnote/theme.dart';
-import 'package:provider/provider.dart';
-
-import 'note/routes/note_list.dart';
 
 void main() => runApp(const HandnoteApp());
 
@@ -13,22 +9,16 @@ class HandnoteApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<AppData>.value(value: AppData()),
-      ],
-      child: Provider<NoteDatabase>(
-        create: (_) => NoteDatabase(),
-        dispose: (_, db) => db.close(),
-        child: Container(
-          padding: const EdgeInsets.only(top: 24),
-          color: appTheme.primaryColor,
-          child: MaterialApp(
-            title: 'Handnote',
-            theme: appTheme,
-            debugShowCheckedModeBanner: false,
-            home: const NoteListRoute(),
-          ),
+    connectDatabase();
+    return Container(
+      padding: const EdgeInsets.only(top: 24),
+      color: appTheme.primaryColor,
+      child: MaterialApp(
+        title: 'Handnote',
+        theme: appTheme,
+        debugShowCheckedModeBanner: false,
+        home: const Scaffold(
+          body: Text("Hello"),
         ),
       ),
     );

@@ -1,32 +1,35 @@
-import 'dart:io';
-
-import 'package:drift/drift.dart';
-import 'package:drift/native.dart';
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as path;
-import 'package:path_provider/path_provider.dart';
+import 'package:sqflite/sqflite.dart';
 
-String getDatabaseFileName() {
-  return const String.fromEnvironment("DB_NAME", defaultValue: "db.sqlite");
-}
-
-LazyDatabase connectDatabase() {
-  return LazyDatabase(() async {
-    final dbName = getDatabaseFileName();
-    final dbFolder = await getApplicationDocumentsDirectory();
-    if (kDebugMode) {
-      print("database path: ${dbFolder.path}");
-    }
-    final file = File(path.join(dbFolder.path, dbName));
-    return NativeDatabase(file);
-  });
-}
-
-Future<void> cleanDatabase() async {
-  final dbName = getDatabaseFileName();
-  final dir = await getApplicationDocumentsDirectory();
-  final file = File(path.join(dir.path, dbName));
-  if (file.existsSync()) {
-    await file.delete();
+Future<String> getDatabaseFileName() async {
+  final dbPath = await getDatabasesPath();
+  const dbName = String.fromEnvironment("DB_NAME", defaultValue: "db.sqlite");
+  final file = path.join(dbPath, dbName);
+  if (kDebugMode) {
+    print("database path: $dbPath, filename: $dbName");
   }
+  return file;
+}
+
+Future<Database> connectDatabase() async {
+  return openDatabase(
+    await getDatabaseFileName(),
+    version: 1,
+    onCreate: (Database db, int version) async {
+      await db.execute('''CREATE TABLE IF NOT EXISTS bill (
+  id          TEXT    NOT NULL PRIMARY KEY,
+  category    INT     NOT NULL,
+  subCategory INT,
+  outAssets   INT,
+  outAmount   REAL,
+  inAssets    INT,
+  inAmount    REAL,
+  date        INTEGER NOT NULL,
+  description TEXT,
+  created_at  INTEGER NOT NULL,
+  updated_at  INTEGER NOT NULL
+)''');
+    },
+  );
 }
