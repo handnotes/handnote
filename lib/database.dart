@@ -1,16 +1,14 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:logging/logging.dart';
 import 'package:path/path.dart' as path;
 import 'package:sqflite/sqflite.dart';
+
+final logger = Logger("Database");
 
 Future<String> getDatabaseFileName() async {
   final dbPath = await getDatabasesPath();
   const dbName = String.fromEnvironment("DB_NAME", defaultValue: "db.sqlite");
-  final file = path.join(dbPath, dbName);
-  if (kDebugMode) {
-    print("database path: $dbPath, filename: $dbName");
-  }
-  return file;
+  return path.join(dbPath, dbName);
 }
 
 Future<String> loadSqlFile(int version) async {
@@ -22,10 +20,15 @@ Future<void> cleanDatabase() async {
 }
 
 Future<Database> connectDatabase() async {
+  var dbPath = await getDatabaseFileName();
+  logger.fine("Location of sqlite file: $dbPath");
+
   return openDatabase(
-    await getDatabaseFileName(),
+    dbPath,
     version: 1,
     onCreate: (Database db, int version) async {
+      logger.info("Running the migration script v$version...");
+
       var scripts = (await loadSqlFile(1)).split(";");
       for (var script in scripts) {
         final sql = script
@@ -33,6 +36,8 @@ Future<Database> connectDatabase() async {
             .replaceAll(RegExp(r"--.*$", multiLine: true), "") // remove comments
             .replaceAll(RegExp(r"\s+"), " "); // squash whitespace
         if (sql.isEmpty) continue;
+
+        logger.fine("Preparing: $sql");
         await db.execute(sql);
       }
     },
