@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:path/path.dart' as path;
 import 'package:sqflite/sqflite.dart';
 
@@ -12,24 +13,28 @@ Future<String> getDatabaseFileName() async {
   return file;
 }
 
+Future<String> loadSqlFile(int version) async {
+  return await rootBundle.loadString("assets/migration/sqlite/v$version.sql");
+}
+
+Future<void> cleanDatabase() async {
+  await deleteDatabase(await getDatabaseFileName());
+}
+
 Future<Database> connectDatabase() async {
   return openDatabase(
     await getDatabaseFileName(),
     version: 1,
     onCreate: (Database db, int version) async {
-      await db.execute('''CREATE TABLE IF NOT EXISTS bill (
-  id          TEXT    NOT NULL PRIMARY KEY,
-  category    INT     NOT NULL,
-  subCategory INT,
-  outAssets   INT,
-  outAmount   REAL,
-  inAssets    INT,
-  inAmount    REAL,
-  date        INTEGER NOT NULL,
-  description TEXT,
-  created_at  INTEGER NOT NULL,
-  updated_at  INTEGER NOT NULL
-)''');
+      var scripts = (await loadSqlFile(1)).split(";");
+      for (var script in scripts) {
+        final sql = script
+            .trim()
+            .replaceAll(RegExp(r"--.*$", multiLine: true), "") // remove comments
+            .replaceAll(RegExp(r"\s+"), " "); // squash whitespace
+        if (sql.isEmpty) continue;
+        await db.execute(sql);
+      }
     },
   );
 }

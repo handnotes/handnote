@@ -17,8 +17,11 @@ class HandnoteApp extends StatelessWidget {
         title: 'Handnote',
         theme: appTheme,
         debugShowCheckedModeBanner: false,
-        home: const Scaffold(
-          body: Text("Hello"),
+        home: Scaffold(
+          appBar: AppBar(
+            title: const Text('Handnote'),
+          ),
+          body: const Text("Hello"),
         ),
       ),
     );

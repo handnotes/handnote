@@ -1,4 +1,11 @@
-DROP TABLE IF EXISTS wallet_bill;
+CREATE TABLE common
+(
+    key   TEXT PRIMARY KEY UNIQUE NOT NULL,
+    value TEXT
+);
+INSERT INTO common (key, value)
+VALUES ('last_update_at', NULL);
+
 CREATE TABLE wallet_bill
 (
     id          TEXT    NOT NULL PRIMARY KEY,
@@ -12,10 +19,10 @@ CREATE TABLE wallet_bill
     description TEXT,
     imported_id TEXT,             -- 导入数据的唯一标识符 (非导入数据留空)
     created_at  INTEGER NOT NULL,
-    updated_at  INTEGER NOT NULL
+    updated_at  INTEGER NOT NULL,
+    deleted_at  INTEGER
 );
 
-DROP TABLE IF EXISTS wallet_category;
 CREATE TABLE wallet_category
 (
     id         INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -25,11 +32,11 @@ CREATE TABLE wallet_category
     sort       INTEGER,                    -- 排序
     status     INTEGER NOT NULL DEFAULT 1, -- 状态 (0: 禁用 1: 启用)
     created_at INTEGER NOT NULL,
-    updated_at INTEGER NOT NULL
+    updated_at INTEGER NOT NULL,
+    deleted_at INTEGER
 );
 CREATE UNIQUE INDEX wallet_category_id_uindex ON wallet_category (id);
 
-DROP TABLE IF EXISTS wallet_asset;
 CREATE TABLE wallet_asset
 (
     id             INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
@@ -44,5 +51,6 @@ CREATE TABLE wallet_asset
     repayment_date INTEGER,                    -- 到期日/还款日
     billing_date   INTEGER,                    -- (信用卡/花呗)账单日
     created_at     INTEGER NOT NULL,
-    updated_at     INTEGER NOT NULL
+    updated_at     INTEGER NOT NULL,
+    deleted_at     INTEGER
 );
