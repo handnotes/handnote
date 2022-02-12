@@ -3,6 +3,8 @@ import 'package:handnote/database.dart';
 import 'package:handnote/theme.dart';
 import 'package:handnote/utils/logger.dart';
 
+import 'wallet/screen/wallet_home_screen.dart';
+
 void main() {
   setupLogger();
   runApp(const HandnoteApp());
@@ -21,13 +23,7 @@ class HandnoteApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Handnote',
         theme: appTheme,
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(
-          appBar: AppBar(
-            title: const Text('Handnote'),
-          ),
-          body: const Text("Hello"),
-        ),
+        home: const WalletHomeScreen(),
       ),
     );
   }
