@@ -10,38 +10,18 @@ void main() {
     // clean db
   });
 
-  testWidgets('Add wallet', (WidgetTester tester) async {
+  testWidgets('Wallet can mask income and outcome value', (WidgetTester tester) async {
     await tester.pumpWidget(const HandnoteApp());
 
-    final addButton = find.byIcon(Icons.add);
-    expect(addButton, findsOneWidget);
+    expect(find.textContaining("本月支出"), findsOneWidget);
+    expect(find.textContaining("1,591.00"), findsOneWidget);
 
-    // await tester.tap(addButton);
-    // await tester.pumpAndSettle();
-    //
-    // await tester.enterText(find.bySemanticsLabel("要记下什么事..."), "abc");
-    //
-    // await tester.tap(find.text("保存"));
-    // await tester.pumpAndSettle();
-    //
-    // expect(find.text("笔记"), findsOneWidget);
-    // expect(find.byType(ListTile), findsOneWidget);
-    //
-    // await tester.drag(find.byType(Dismissible), const Offset(500, 0));
-    //
-    // await tester.tap(find.byIcon(Icons.archive));
-    // await tester.pumpAndSettle();
-    //
-    // expect(find.textContaining("已归档"), findsOneWidget);
-    //
-    // await tester.tap(find.text("abc"));
-    // await tester.pumpAndSettle();
-    //
-    // expect(find.textContaining("abc"), findsOneWidget);
-    //
-    // await tester.tap(find.bySemanticsLabel("Back"));
-    // await tester.pumpAndSettle();
-    //
-    // await tester.drag(find.byType(Dismissible), const Offset(500, 0));
+    final maskButton = find.byIcon(Icons.visibility);
+    expect(maskButton, findsOneWidget);
+
+    await tester.tap(maskButton);
+    await tester.pumpAndSettle();
+
+    expect(find.textContaining('****'), findsWidgets);
   });
 }
