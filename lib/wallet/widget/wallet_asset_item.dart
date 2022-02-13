@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:handnote/wallet/enum/wallet_asset_type.dart';
 import 'package:handnote/wallet/model/wallet_asset.dart';
 import 'package:handnote/widgets/currency_text.dart';
 
@@ -13,6 +14,7 @@ class WalletAssetItem extends HookWidget {
   Widget build(BuildContext context) {
     final subTitle = asset.remark;
 
+    var icon = walletAssetTypeIcon(asset.type);
     return Card(
       elevation: 8,
       shadowColor: Colors.black.withOpacity(0.1),
@@ -20,7 +22,7 @@ class WalletAssetItem extends HookWidget {
         height: 72,
         alignment: Alignment.center,
         child: ListTile(
-          leading: const Icon(Icons.account_balance_wallet, size: 28),
+          leading: Icon(icon.first, color: icon.second),
           title: Text(asset.name, style: const TextStyle(fontSize: 16)),
           subtitle: subTitle.isNotEmpty ? Text(subTitle, style: const TextStyle(fontSize: 14)) : null,
           trailing: maskBalance ? null : CurrencyText(asset.balance, color: Colors.black, monoFont: false),
