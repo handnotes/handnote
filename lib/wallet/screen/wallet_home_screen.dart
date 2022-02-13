@@ -199,6 +199,8 @@ class WalletHomeScreen extends HookWidget {
           color: Colors.red[400],
           height: 48,
           child: Row(
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               Expanded(
                 child: TextButton.icon(
@@ -212,18 +214,18 @@ class WalletHomeScreen extends HookWidget {
                   },
                 ),
               ),
-              const SizedBox(height: 28, child: VerticalDivider(color: Colors.white54)),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: TextButton(
-                  child: const Text(
-                    "添加资产",
-                    style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w400),
-                  ),
-                  onPressed: () {
-                    // TODO: add asset page
-                  },
+              const SizedBox(height: 28, child: VerticalDivider(color: Colors.white54, width: 0)),
+              TextButton(
+                child: const Text(
+                  "添加资产",
+                  style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w400),
                 ),
+                style: TextButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(horizontal: 24),
+                ),
+                onPressed: () {
+                  // TODO: add asset page
+                },
               ),
             ],
           ),
