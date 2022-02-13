@@ -5,6 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:handnote/wallet/enum/wallet_asset_category.dart';
 import 'package:handnote/wallet/enum/wallet_asset_type.dart';
 import 'package:handnote/wallet/model/wallet_asset.dart';
+import 'package:handnote/wallet/screen/asset/wallet_asset_add_screen.dart';
 import 'package:handnote/wallet/widget/wallet_asset_list.dart';
 import 'package:handnote/widgets/currency_text.dart';
 
@@ -64,7 +65,7 @@ class WalletHomeScreen extends HookWidget {
           _appBar(titleOpacity, maskAmount),
           SliverList(
             delegate: SliverChildListDelegate([
-              _addABillWidget(),
+              _addABillWidget(context),
               WalletAssetList(walletAssets, maskAmount: maskAmount.value),
             ]),
           )
@@ -187,7 +188,7 @@ class WalletHomeScreen extends HookWidget {
           );
   }
 
-  Widget _addABillWidget() {
+  Widget _addABillWidget(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Material(
@@ -224,7 +225,7 @@ class WalletHomeScreen extends HookWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 24),
                 ),
                 onPressed: () {
-                  // TODO: add asset page
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => const WalletAssetAddScreen()));
                 },
               ),
             ],
