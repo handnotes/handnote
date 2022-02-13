@@ -5,7 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:handnote/wallet/enum/wallet_asset_category.dart';
 import 'package:handnote/wallet/enum/wallet_asset_type.dart';
 import 'package:handnote/wallet/model/wallet_asset.dart';
-import 'package:handnote/wallet/widget/wallet_asset_item.dart';
+import 'package:handnote/wallet/widget/wallet_asset_list.dart';
 import 'package:handnote/widgets/currency_text.dart';
 
 const double bannerHeight = 180;
@@ -65,7 +65,7 @@ class WalletHomeScreen extends HookWidget {
           SliverList(
             delegate: SliverChildListDelegate([
               _addABillWidget(),
-              _accountListWidget(maskAmount),
+              WalletAssetList(walletAssets, maskAmount: maskAmount.value),
             ]),
           )
         ],
@@ -228,27 +228,6 @@ class WalletHomeScreen extends HookWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _accountListWidget(ValueNotifier<bool> maskAmount) {
-    final assets = walletAssets.where((asset) => asset.showInHomePage);
-
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 4),
-            alignment: Alignment.topLeft,
-            child: const Text("账户", style: TextStyle(fontSize: 16)),
-          ),
-          const SizedBox(height: 8),
-          Column(children: [
-            for (var asset in assets) WalletAssetItem(asset, maskBalance: maskAmount.value),
-          ]),
-        ],
       ),
     );
   }
