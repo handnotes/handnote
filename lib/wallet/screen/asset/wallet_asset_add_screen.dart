@@ -38,6 +38,7 @@ class WalletAssetAddScreen extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final category = useState(0);
+    final pageController = usePageController();
 
     return Scaffold(
       appBar: AppBar(
@@ -48,11 +49,19 @@ class WalletAssetAddScreen extends HookWidget {
           RadioButtons(
             textList: walletAssetCategory,
             selected: category.value,
-            onSelected: (index) => category.value = index,
+            onSelected: (index) {
+              category.value = index;
+              pageController.animateToPage(index, duration: const Duration(milliseconds: 300), curve: Curves.ease);
+            },
           ),
           Flexible(
-            child: ListView(
-              children: buildAssetList(context, WalletAssetCategory.values[category.value]),
+            child: PageView(
+              controller: pageController,
+              children: [
+                for (var i = 0; i < walletAssetCategory.length; i++)
+                  ListView(children: buildAssetList(context, WalletAssetCategory.values[i])),
+              ],
+              onPageChanged: (index) => category.value = index,
             ),
           ),
         ],
