@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:handnote/constants/formatter.dart';
+import 'package:handnote/utils/formatter.dart';
 
 class CurrencyText extends HookWidget {
   const CurrencyText(
@@ -9,12 +9,14 @@ class CurrencyText extends HookWidget {
     this.mask = false,
     this.fontSize = 16,
     this.color = Colors.white,
+    this.monoFont = true,
   }) : super(key: key);
 
   final double amount;
   final bool mask;
   final double fontSize;
   final Color color;
+  final bool monoFont;
 
   @override
   Widget build(BuildContext context) {
@@ -24,8 +26,8 @@ class CurrencyText extends HookWidget {
         style: TextStyle(
           fontSize: fontSize,
           color: color,
-          fontFamily: 'monospace',
-          fontFamilyFallback: const ['Courier'],
+          fontFamily: monoFont ? 'monospace' : null,
+          fontFamilyFallback: monoFont ? ['Courier'] : null,
         ));
   }
 }

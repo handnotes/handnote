@@ -2,9 +2,48 @@ import 'dart:core';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:handnote/wallet/enum/wallet_asset_category.dart';
+import 'package:handnote/wallet/enum/wallet_asset_type.dart';
+import 'package:handnote/wallet/model/wallet_asset.dart';
+import 'package:handnote/wallet/widget/wallet_asset_item.dart';
 import 'package:handnote/widgets/currency_text.dart';
 
 const double bannerHeight = 180;
+final List<WalletAsset> walletAssets = [
+  WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.cash, name: '现金钱包', remark: '', balance: 100.0),
+  WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.creditCard, name: '建设银行', cardNumber: '3759'),
+  WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.debitCard, name: '农业银行', remark: '房贷卡'),
+  WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.debitCard, name: '招商银行', remark: '工资卡'),
+  WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.alipay, name: '支付宝'),
+  WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.wechat, name: '微信钱包'),
+  WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.livingCard, name: '饭卡', remark: '关东即时捞'),
+  WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.livingCard, name: '购物卡', remark: '盒马鲜生'),
+  WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.livingCard, name: '购物卡', remark: '蛋糕先生'),
+  WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.livingCard, name: '公交卡', remark: '天府通'),
+  WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.haircutCard, name: '剪发卡', remark: 'TAT'),
+  WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.digitalAssets, name: '数字人民币'),
+  WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.digitalAssets, name: 'Steam'),
+  WalletAsset(category: WalletAssetCategory.receivable, type: WalletAssetType.reimburse, name: 'Thoughtworks'),
+  WalletAsset(
+      category: WalletAssetCategory.payable,
+      type: WalletAssetType.borrowIn,
+      name: '蚂蚁花呗',
+      remark: '花呗',
+      initAmount: 2000),
+  WalletAsset(
+      category: WalletAssetCategory.payable,
+      type: WalletAssetType.loan,
+      name: '成都市公积金',
+      remark: '住房公积金贷款',
+      notCounted: true,
+      showInHomePage: false),
+  WalletAsset(
+      category: WalletAssetCategory.payable,
+      type: WalletAssetType.loan,
+      name: '农业银行',
+      remark: '住房贷款',
+      notCounted: true),
+];
 
 class WalletHomeScreen extends HookWidget {
   const WalletHomeScreen({Key? key}) : super(key: key);
@@ -26,9 +65,7 @@ class WalletHomeScreen extends HookWidget {
           SliverList(
             delegate: SliverChildListDelegate([
               _addABillWidget(),
-              _accountListWidget(),
-              _accountListWidget(),
-              _accountListWidget(),
+              _accountListWidget(maskAmount),
             ]),
           )
         ],
@@ -195,7 +232,9 @@ class WalletHomeScreen extends HookWidget {
     );
   }
 
-  Widget _accountListWidget() {
+  Widget _accountListWidget(ValueNotifier<bool> maskAmount) {
+    final assets = walletAssets.where((asset) => asset.showInHomePage);
+
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -206,25 +245,10 @@ class WalletHomeScreen extends HookWidget {
             child: const Text("账户", style: TextStyle(fontSize: 16)),
           ),
           const SizedBox(height: 8),
-          Column(
-            children: [
-              _accountItemWidget(0),
-              _accountItemWidget(1),
-              _accountItemWidget(2),
-            ],
-          ),
+          Column(children: [
+            for (var asset in assets) WalletAssetItem(asset, maskBalance: maskAmount.value),
+          ]),
         ],
-      ),
-    );
-  }
-
-  Widget _accountItemWidget(int index) {
-    return Card(
-      child: ListTile(
-        leading: const Icon(Icons.account_balance_wallet, size: 28),
-        title: Text("账户$index", style: const TextStyle(fontSize: 16)),
-        subtitle: Text("账户$index", style: const TextStyle(fontSize: 14)),
-        trailing: Text("账户$index", style: const TextStyle(fontSize: 14)),
       ),
     );
   }

@@ -1,1 +1,3 @@
-enum DeleteConfirm { yes, no }
+enum Confirm { no, yes }
+
+enum Status { inactive, active }
