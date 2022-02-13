@@ -12,6 +12,7 @@ class WalletHomeScreen extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final titleOpacity = useState<double>(0);
+    final maskAmount = useState(false);
     final scrollController = useScrollController();
     scrollController.addListener(() {
       titleOpacity.value = scrollController.offset > bannerHeight * 0.7 ? 1 : 0;
@@ -21,7 +22,7 @@ class WalletHomeScreen extends HookWidget {
       body: CustomScrollView(
         controller: scrollController,
         slivers: [
-          _appBar(titleOpacity),
+          _appBar(titleOpacity, maskAmount),
           SliverList(
             delegate: SliverChildListDelegate([
               const SizedBox(height: 20),
@@ -96,7 +97,7 @@ class WalletHomeScreen extends HookWidget {
     );
   }
 
-  Widget _appBar(ValueNotifier<double> titleOpacity) {
+  Widget _appBar(ValueNotifier<double> titleOpacity, ValueNotifier<bool> maskAmount) {
     double outcome = 1591.0;
     double income = 1;
     double budget = 10000;
@@ -134,7 +135,19 @@ class WalletHomeScreen extends HookWidget {
             children: [
               const Text("本月支出（元）", style: TextStyle(fontSize: 14, color: Colors.white70)),
               const SizedBox(height: 12),
-              CurrencyText(outcome, fontSize: 32),
+              Row(
+                children: [
+                  Expanded(child: CurrencyText(outcome, mask: maskAmount.value, fontSize: 32)),
+                  IconButton(
+                    onPressed: () {
+                      maskAmount.value = !maskAmount.value;
+                    },
+                    icon: maskAmount.value
+                        ? const Icon(Icons.visibility_off, color: Colors.white)
+                        : const Icon(Icons.visibility, color: Colors.white),
+                  ),
+                ],
+              ),
               const SizedBox(height: 16),
               Row(
                 children: [
@@ -143,7 +156,7 @@ class WalletHomeScreen extends HookWidget {
                       onTap: () {
                         // TODO: income page
                       },
-                      child: _incomeWidget(income),
+                      child: _incomeWidget(income, maskAmount),
                     ),
                   ),
                   Expanded(
@@ -151,7 +164,7 @@ class WalletHomeScreen extends HookWidget {
                       onTap: () {
                         // TODO: setup budget page
                       },
-                      child: _budgetWidget(budget, outcome),
+                      child: _budgetWidget(budget, outcome, maskAmount),
                     ),
                   ),
                 ],
@@ -163,20 +176,22 @@ class WalletHomeScreen extends HookWidget {
     );
   }
 
-  Widget _incomeWidget(double income) {
+  Widget _incomeWidget(double income, ValueNotifier<bool> maskAmount) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         const Text("本月收入", style: TextStyle(fontSize: 14, color: Colors.white70)),
         const SizedBox(width: 8),
-        income > 0
-            ? CurrencyText(income, fontSize: 14)
-            : const Text("暂无收入", style: TextStyle(fontSize: 14, color: Colors.white70)),
+        maskAmount.value
+            ? CurrencyText(income, mask: true, fontSize: 14)
+            : income > 0
+                ? CurrencyText(income, fontSize: 14)
+                : const Text("暂无收入", style: TextStyle(fontSize: 14, color: Colors.white70)),
       ],
     );
   }
 
-  Widget _budgetWidget(double budget, double outcome) {
+  Widget _budgetWidget(double budget, double outcome, ValueNotifier<bool> maskAmount) {
     return budget == 0
         ? Row(
             crossAxisAlignment: CrossAxisAlignment.end,
@@ -191,7 +206,7 @@ class WalletHomeScreen extends HookWidget {
             children: [
               Text(budget - outcome > 0 ? "预算剩余" : "预算超支", style: const TextStyle(fontSize: 14, color: Colors.white70)),
               const SizedBox(width: 8),
-              CurrencyText((budget - outcome).abs(), fontSize: 14),
+              CurrencyText((budget - outcome).abs(), mask: maskAmount.value, fontSize: 14),
             ],
           );
   }
