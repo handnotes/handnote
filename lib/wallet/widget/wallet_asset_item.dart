@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:handnote/wallet/constants/wallet_asset_type.dart';
+import 'package:handnote/wallet/constants/wallet_icon_map.dart';
 import 'package:handnote/wallet/model/wallet_asset.dart';
 import 'package:handnote/widgets/currency_text.dart';
 
@@ -14,7 +14,7 @@ class WalletAssetItem extends HookWidget {
   Widget build(BuildContext context) {
     final subTitle = asset.remark;
 
-    var icon = walletAssetTypeIcon(asset.type);
+    var icon = walletAssetTypeIconMap[asset.type]!;
     return Card(
       elevation: 8,
       shadowColor: Colors.black.withOpacity(0.1),

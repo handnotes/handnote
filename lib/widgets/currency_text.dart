@@ -26,8 +26,7 @@ class CurrencyText extends HookWidget {
         style: TextStyle(
           fontSize: fontSize,
           color: color,
-          fontFamily: monoFont ? 'monospace' : null,
-          fontFamilyFallback: monoFont ? ['Courier'] : null,
+          fontFamily: monoFont ? 'IBMPlexMono' : null,
         ));
   }
 }

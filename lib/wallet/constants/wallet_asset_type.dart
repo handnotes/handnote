@@ -1,6 +1,5 @@
-import 'package:flutter_font_icons/flutter_font_icons.dart';
-import 'package:flutter/material.dart';
-import 'package:handnote/utils/pair.dart';
+import 'package:handnote/wallet/constants/wallet_asset_category.dart';
+import 'package:handnote/wallet/model/wallet_asset.dart';
 
 enum WalletAssetType {
   creditCard,
@@ -28,26 +27,26 @@ enum WalletAssetType {
   otherPayable,
 }
 
-final Map<WalletAssetType, Pair<IconData, Color?>> _iconMap = {
-  WalletAssetType.creditCard: const Pair(FontAwesome5Brands.cc_visa, null),
-  WalletAssetType.debitCard: const Pair(FontAwesome5.credit_card, null),
-  WalletAssetType.alipay: const Pair(FontAwesome5Brands.alipay, Colors.blue),
-  WalletAssetType.wechat: const Pair(FontAwesome5Brands.weixin, Colors.green),
-  WalletAssetType.cash: const Pair(FontAwesome5.money_bill_alt, null),
-  WalletAssetType.schoolCard: const Pair(FontAwesome.graduation_cap, null),
-  WalletAssetType.busCard: const Pair(FontAwesome5Solid.bus, null),
-  WalletAssetType.foodCard: const Pair(FontAwesome5Solid.utensils, null),
-  WalletAssetType.shoppingCard: const Pair(FontAwesome5Solid.shopping_cart, null),
-  WalletAssetType.haircutCard: const Pair(FontAwesome5Solid.cut, null),
-  WalletAssetType.digitalAssets: const Pair(FontAwesome5Brands.bitcoin, null),
-  WalletAssetType.otherAsset: const Pair(FontAwesome5Solid.money_check_alt, null),
-  WalletAssetType.borrowOut: const Pair(FontAwesome.sign_out, null),
-  WalletAssetType.reimburse: const Pair(Ionicons.receipt_outline, null),
-  WalletAssetType.owed: const Pair(FontAwesome5Solid.file_invoice_dollar, null),
-  WalletAssetType.otherReceivable: const Pair(FontAwesome.sign_out, null),
-  WalletAssetType.borrowIn: const Pair(FontAwesome.sign_in, null),
-  WalletAssetType.loan: const Pair(MaterialCommunityIcons.bank_transfer_out, null),
-  WalletAssetType.otherPayable: const Pair(FontAwesome.sign_in, null),
-};
-
-Pair<IconData, Color?> walletAssetTypeIcon(WalletAssetType type) => _iconMap[type]!;
+final walletAssetTypeList = <WalletAsset>[
+  WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.creditCard, name: '信用卡'),
+  WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.debitCard, name: '储蓄卡'),
+  WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.alipay, name: '支付宝'),
+  WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.wechat, name: '微信支付'),
+  WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.cash, name: '现金'),
+  WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.schoolCard, name: '校园卡'),
+  WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.foodCard, name: '餐卡'),
+  WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.busCard, name: '公交卡'),
+  WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.shoppingCard, name: '购物卡'),
+  WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.haircutCard, name: '理发卡'),
+  WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.digitalAssets, name: '数字资产'),
+  WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.otherAsset, name: '其他资产'),
+  // receivable
+  WalletAsset(category: WalletAssetCategory.receivable, type: WalletAssetType.borrowOut, name: '借出'),
+  WalletAsset(category: WalletAssetCategory.receivable, type: WalletAssetType.reimburse, name: '报销'),
+  WalletAsset(category: WalletAssetCategory.receivable, type: WalletAssetType.owed, name: '欠款'),
+  WalletAsset(category: WalletAssetCategory.receivable, type: WalletAssetType.otherReceivable, name: '其他应收'),
+  // payable
+  WalletAsset(category: WalletAssetCategory.payable, type: WalletAssetType.borrowIn, name: '借入'),
+  WalletAsset(category: WalletAssetCategory.payable, type: WalletAssetType.loan, name: '贷款'),
+  WalletAsset(category: WalletAssetCategory.payable, type: WalletAssetType.otherPayable, name: '其他应付'),
+];

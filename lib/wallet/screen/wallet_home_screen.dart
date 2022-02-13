@@ -1,6 +1,7 @@
 import 'dart:core';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_font_icons/flutter_font_icons.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:handnote/wallet/constants/wallet_asset_category.dart';
 import 'package:handnote/wallet/constants/wallet_asset_type.dart';
@@ -111,18 +112,16 @@ class WalletHomeScreen extends HookWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text("本月支出（元）", style: TextStyle(fontSize: 14, color: Colors.white70)),
+              const Text("本月支出（元）", style: TextStyle(color: Colors.white70)),
               const SizedBox(height: 12),
               Row(
                 children: [
-                  Expanded(child: CurrencyText(outcome, mask: maskAmount.value, fontSize: 32)),
+                  Expanded(child: CurrencyText(outcome, mask: maskAmount.value, fontSize: 36)),
                   IconButton(
-                    onPressed: () {
-                      maskAmount.value = !maskAmount.value;
-                    },
+                    onPressed: () => maskAmount.value = !maskAmount.value,
                     icon: maskAmount.value
-                        ? const Icon(Icons.visibility_off, color: Colors.white)
-                        : const Icon(Icons.visibility, color: Colors.white),
+                        ? const Icon(Ionicons.eye_off, color: Colors.white)
+                        : const Icon(Ionicons.eye, color: Colors.white),
                   ),
                 ],
               ),
@@ -156,15 +155,14 @@ class WalletHomeScreen extends HookWidget {
 
   Widget _incomeWidget(double income, ValueNotifier<bool> maskAmount) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        const Text("本月收入", style: TextStyle(fontSize: 14, color: Colors.white70)),
+        const Text("本月收入", style: TextStyle(color: Colors.white70)),
         const SizedBox(width: 8),
         maskAmount.value
-            ? CurrencyText(income, mask: true, fontSize: 14)
+            ? CurrencyText(income, mask: true)
             : income > 0
-                ? CurrencyText(income, fontSize: 14)
-                : const Text("暂无收入", style: TextStyle(fontSize: 14, color: Colors.white70)),
+                ? CurrencyText(income)
+                : const Text("暂无收入", style: TextStyle(color: Colors.white70)),
       ],
     );
   }
@@ -172,19 +170,17 @@ class WalletHomeScreen extends HookWidget {
   Widget _budgetWidget(double budget, double outcome, ValueNotifier<bool> maskAmount) {
     return budget == 0
         ? Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
             children: const [
-              Text("设置预算", style: TextStyle(fontSize: 14, color: Colors.white70)),
+              Text("设置预算", style: TextStyle(color: Colors.white70)),
               SizedBox(width: 8),
               Icon(Icons.admin_panel_settings_outlined, color: Colors.white70, size: 18),
             ],
           )
         : Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text(budget - outcome > 0 ? "预算剩余" : "预算超支", style: const TextStyle(fontSize: 14, color: Colors.white70)),
+              Text(budget - outcome > 0 ? "预算剩余" : "预算超支", style: const TextStyle(color: Colors.white70)),
               const SizedBox(width: 8),
-              CurrencyText((budget - outcome).abs(), mask: maskAmount.value, fontSize: 14),
+              CurrencyText((budget - outcome).abs(), mask: maskAmount.value),
             ],
           );
   }
@@ -220,7 +216,7 @@ class WalletHomeScreen extends HookWidget {
               TextButton(
                 child: const Text(
                   "添加资产",
-                  style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w400),
+                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.w400),
                 ),
                 style: TextButton.styleFrom(
                   padding: const EdgeInsets.symmetric(horizontal: 24),

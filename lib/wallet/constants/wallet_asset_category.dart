@@ -8,3 +8,5 @@ enum WalletAssetCategory {
   /// 应付
   payable,
 }
+
+const walletAssetCategory = ['资金', '应收', '应付'];
