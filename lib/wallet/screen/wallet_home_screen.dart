@@ -25,71 +25,10 @@ class WalletHomeScreen extends HookWidget {
           _appBar(titleOpacity, maskAmount),
           SliverList(
             delegate: SliverChildListDelegate([
-              const SizedBox(height: 20),
-              const Text(
-                'Welcome to Handnote!',
-                style: TextStyle(fontSize: 20),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'Handnote is a simple, secure, and easy-to-use wallet for your digital assets.',
-                style: TextStyle(fontSize: 16),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'You can use Handnote to store and manage your digital assets, and send them to other people.',
-                style: TextStyle(fontSize: 16),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'Handnote is a decentralized, open-source, and open-source wallet for your digital assets.',
-                style: TextStyle(fontSize: 16),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'You can use Handnote to store and manage your digital assets, and send them to other people.',
-                style: TextStyle(fontSize: 16),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'Handnote is a decentralized, open-source, and open-source wallet for your digital assets.',
-                style: TextStyle(fontSize: 16),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'You can use Handnote to store and manage your digital assets, and send them to other people.',
-                style: TextStyle(fontSize: 16),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'Handnote is a decentralized, open-source, and open-source wallet for your digital assets.',
-                style: TextStyle(fontSize: 16),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'You can use Handnote to store and manage your digital assets, and send them to other people.',
-                style: TextStyle(fontSize: 16),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'Handnote is a decentralized, open-source, and open-source wallet for your digital assets.',
-                style: TextStyle(fontSize: 16),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'You can use Handnote to store and manage your digital assets, and send them to other people.',
-                style: TextStyle(fontSize: 16),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'Handnote is a decentralized, open-source, and open-source wallet for your digital assets.',
-                style: TextStyle(fontSize: 16),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'You can use Handnote to store and manage your digital assets, and send them to other people.',
-                style: TextStyle(fontSize: 16),
-              ),
+              _addABillWidget(),
+              _accountListWidget(),
+              _accountListWidget(),
+              _accountListWidget(),
             ]),
           )
         ],
@@ -209,5 +148,84 @@ class WalletHomeScreen extends HookWidget {
               CurrencyText((budget - outcome).abs(), mask: maskAmount.value, fontSize: 14),
             ],
           );
+  }
+
+  Widget _addABillWidget() {
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Material(
+        elevation: 4.0,
+        borderRadius: BorderRadius.circular(4),
+        clipBehavior: Clip.antiAlias,
+        shadowColor: Colors.red.withOpacity(0.5),
+        child: Container(
+          color: Colors.red[400],
+          height: 48,
+          child: Row(
+            children: <Widget>[
+              Expanded(
+                child: TextButton.icon(
+                  label: const Text(
+                    "记一笔",
+                    style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w400),
+                  ),
+                  icon: const Icon(Icons.add, color: Colors.white, size: 28),
+                  onPressed: () {
+                    // TODO: add a bill page
+                  },
+                ),
+              ),
+              const SizedBox(height: 28, child: VerticalDivider(color: Colors.white54)),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: TextButton(
+                  child: const Text(
+                    "添加资产",
+                    style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w400),
+                  ),
+                  onPressed: () {
+                    // TODO: add asset page
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _accountListWidget() {
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            alignment: Alignment.topLeft,
+            child: const Text("账户", style: TextStyle(fontSize: 16)),
+          ),
+          const SizedBox(height: 8),
+          Column(
+            children: [
+              _accountItemWidget(0),
+              _accountItemWidget(1),
+              _accountItemWidget(2),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _accountItemWidget(int index) {
+    return Card(
+      child: ListTile(
+        leading: const Icon(Icons.account_balance_wallet, size: 28),
+        title: Text("账户$index", style: const TextStyle(fontSize: 16)),
+        subtitle: Text("账户$index", style: const TextStyle(fontSize: 14)),
+        trailing: Text("账户$index", style: const TextStyle(fontSize: 14)),
+      ),
+    );
   }
 }
