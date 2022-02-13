@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:handnote/constants/bank.dart';
-import 'package:handnote/wallet/enum/wallet_asset_category.dart';
-import 'package:handnote/wallet/enum/wallet_asset_type.dart';
+import 'package:handnote/wallet/constants/wallet_asset_category.dart';
+import 'package:handnote/wallet/constants/wallet_asset_type.dart';
 
 class WalletAssetEditScreen extends HookWidget {
   const WalletAssetEditScreen({

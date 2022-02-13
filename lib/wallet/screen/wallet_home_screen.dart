@@ -2,8 +2,8 @@ import 'dart:core';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:handnote/wallet/enum/wallet_asset_category.dart';
-import 'package:handnote/wallet/enum/wallet_asset_type.dart';
+import 'package:handnote/wallet/constants/wallet_asset_category.dart';
+import 'package:handnote/wallet/constants/wallet_asset_type.dart';
 import 'package:handnote/wallet/model/wallet_asset.dart';
 import 'package:handnote/wallet/screen/asset/wallet_asset_add_screen.dart';
 import 'package:handnote/wallet/widget/wallet_asset_list.dart';

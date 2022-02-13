@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:handnote/wallet/enum/wallet_asset_type.dart';
+import 'package:handnote/wallet/constants/wallet_asset_type.dart';
 import 'package:handnote/wallet/model/wallet_asset.dart';
 import 'package:handnote/widgets/currency_text.dart';
 
