@@ -130,9 +130,15 @@ class WalletHomeScreen extends HookWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text("本月支出（元）", style: TextStyle(fontSize: 14, color: Colors.white70)),
-              const SizedBox(height: 8),
-              Text(currencyYuanFormatter.format(amount), style: const TextStyle(fontSize: 32, color: Colors.white)),
               const SizedBox(height: 12),
+              Text(currencyYuanFormatter.format(amount),
+                  style: const TextStyle(
+                    fontSize: 32,
+                    color: Colors.white,
+                    fontFamily: 'monospace',
+                    fontFamilyFallback: ['Courier'],
+                  )),
+              const SizedBox(height: 16),
               Row(
                 children: [
                   Expanded(
