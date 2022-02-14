@@ -115,5 +115,5 @@ class WalletAsset {
   }
 
   @override
-  String toString() => "WalletAsset { id:$id, category:${category.name}, type:${type.name}, name:$name }";
+  String toString() => 'WalletAsset { id:$id, category:${category.name}, type:${type.name}, name:$name }';
 }

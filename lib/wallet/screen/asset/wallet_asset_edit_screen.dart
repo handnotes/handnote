@@ -6,10 +6,7 @@ import 'package:handnote/wallet/model/wallet_asset.dart';
 import 'package:handnote/widgets/round_icon.dart';
 
 class WalletAssetEditScreen extends HookWidget {
-  const WalletAssetEditScreen({
-    Key? key,
-    required this.asset,
-  }) : super(key: key);
+  const WalletAssetEditScreen({Key? key, required this.asset}) : super(key: key);
 
   final WalletAsset asset;
 
@@ -17,7 +14,6 @@ class WalletAssetEditScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: Text("${isEdit ? '编辑' : '新建'}账户"),
@@ -63,12 +59,12 @@ class WalletAssetEditScreen extends HookWidget {
                   children: [
                     const Padding(
                       padding: EdgeInsets.only(top: 8),
-                      child: Text("账户余额"),
+                      child: Text('账户余额'),
                     ),
                     TextFormField(
                       decoration: const InputDecoration(
                         hintText: '0.00',
-                        prefixText: "¥",
+                        prefixText: '¥',
                         hintStyle: TextStyle(color: Colors.grey, fontSize: 22, fontFamily: fontMonospace),
                         border: InputBorder.none,
                       ),
@@ -82,7 +78,8 @@ class WalletAssetEditScreen extends HookWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 24),
                 child: TextButton(
-                  child: const Text("保存", style: TextStyle(letterSpacing: 2, fontSize: 16, fontWeight: FontWeight.w400)),
+                  child:
+                      const Text('保存', style: TextStyle(letterSpacing: 2, fontSize: 16, fontWeight: FontWeight.w400)),
                   style: TextButton.styleFrom(
                     primary: Colors.white,
                     backgroundColor: Colors.red[400],
