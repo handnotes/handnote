@@ -1,5 +1,6 @@
 import 'package:handnote/constants/bank.dart';
 import 'package:handnote/constants/enums.dart';
+import 'package:handnote/utils/extensions.dart'; // ignore: unused_import
 import 'package:handnote/wallet/constants/wallet_asset_category.dart';
 import 'package:handnote/wallet/constants/wallet_asset_type.dart';
 
@@ -104,13 +105,13 @@ class WalletAsset {
       notCounted: map['not_counted'] == 1,
       initAmount: map['init_amount'],
       balance: map['balance'],
-      bank: map['bank'] == null ? null : Bank.values.byName(map['bank']),
+      bank: map['bank']?.let((it) => Bank.values.byName(it)),
       cardNumber: map['card_number'],
-      repaymentDate: map['repayment_date'] == null ? null : DateTime.fromMillisecondsSinceEpoch(map['repayment_date']),
-      billingDate: map['billing_date'] == null ? null : DateTime.fromMillisecondsSinceEpoch(map['billing_date']),
+      repaymentDate: map['repayment_date']?.let((it) => DateTime.fromMillisecondsSinceEpoch(it)),
+      billingDate: map['billing_date']?.let((it) => DateTime.fromMillisecondsSinceEpoch(it)),
       createdAt: DateTime.fromMillisecondsSinceEpoch(map['created_at']),
       updatedAt: DateTime.fromMillisecondsSinceEpoch(map['updated_at']),
-      deletedAt: map['deleted_at'] == null ? null : DateTime.fromMillisecondsSinceEpoch(map['deleted_at']),
+      deletedAt: map['deleted_at']?.let((it) => DateTime.fromMillisecondsSinceEpoch(it)),
     );
   }
 
