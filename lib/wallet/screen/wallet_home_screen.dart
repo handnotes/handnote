@@ -12,6 +12,7 @@ import 'package:handnote/widgets/currency_text.dart';
 
 const double bannerHeight = 180;
 final List<WalletAsset> walletAssets = [
+  // @formatter:off
   WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.cash, name: '现金钱包', remark: '', balance: 100.0),
   WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.otherAsset, name: '其他账户'),
   WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.creditCard, name: '建设银行', cardNumber: '3759'),
@@ -30,25 +31,10 @@ final List<WalletAsset> walletAssets = [
   WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.digitalAssets, name: '数字人民币'),
   WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.digitalAssets, name: 'Steam'),
   WalletAsset(category: WalletAssetCategory.receivable, type: WalletAssetType.reimburse, name: 'Thoughtworks'),
-  WalletAsset(
-      category: WalletAssetCategory.payable,
-      type: WalletAssetType.borrowIn,
-      name: '蚂蚁花呗',
-      remark: '花呗',
-      initAmount: 2000),
-  WalletAsset(
-      category: WalletAssetCategory.payable,
-      type: WalletAssetType.loan,
-      name: '成都市公积金',
-      remark: '住房公积金贷款',
-      notCounted: true,
-      showInHomePage: false),
-  WalletAsset(
-      category: WalletAssetCategory.payable,
-      type: WalletAssetType.loan,
-      name: '农业银行',
-      remark: '住房贷款',
-      notCounted: true),
+  WalletAsset(category: WalletAssetCategory.payable, type: WalletAssetType.borrowIn, name: '蚂蚁花呗', remark: '花呗', initAmount: 2000),
+  WalletAsset(category: WalletAssetCategory.payable, type: WalletAssetType.loan, name: '成都市公积金', remark: '住房公积金贷款', notCounted: true, showInHomePage: false),
+  WalletAsset(category: WalletAssetCategory.payable, type: WalletAssetType.loan, name: '农业银行', remark: '住房贷款', notCounted: true),
+  // @formatter:on
 ];
 
 class WalletHomeScreen extends HookWidget {
