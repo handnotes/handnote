@@ -1,19 +1,16 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:handnote/database.dart';
-import 'package:handnote/theme.dart';
-import 'package:handnote/utils/logger.dart';
-import 'package:handnote/wallet/constants/wallet_asset_category.dart';
-import 'package:handnote/wallet/model/wallet_asset.dart';
-import 'package:handnote/wallet/screen/asset/wallet_asset_edit_screen.dart';
 import 'dart:io';
 
-import 'wallet/constants/wallet_asset_type.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:handnote/theme.dart';
+import 'package:handnote/utils/logger.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import 'wallet/screen/wallet_home_screen.dart';
 
 void main() {
   setupLogger();
-  runApp(const HandnoteApp());
+  runApp(const ProviderScope(child: HandnoteApp()));
 }
 
 class HandnoteApp extends StatelessWidget {
@@ -21,7 +18,6 @@ class HandnoteApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    connectDatabase();
     final double padding = Platform.isMacOS ? 24 : 0;
 
     // Transparent status bar

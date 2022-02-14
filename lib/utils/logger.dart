@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:logging/logging.dart';
 
 void setupLogger() {
-  Logger.root.level = Level.ALL;
+  Logger.root.level = Level.FINE;
   Logger.root.onRecord.listen((LogRecord rec) {
     final level = '[${rec.level.name}]'.padRight(0);
     final name = '[${rec.loggerName}]';

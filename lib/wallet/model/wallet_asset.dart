@@ -67,4 +67,53 @@ class WalletAsset {
     this.deletedAt,
   })  : createdAt = createdAt ?? DateTime.now(),
         updatedAt = updatedAt ?? DateTime.now();
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'category': category.name,
+      'type': type.name,
+      'name': name,
+      'remark': remark,
+      'status': status.index,
+      'show_in_home_page': showInHomePage,
+      'allow_bill': allowBill,
+      'not_counted': notCounted,
+      'init_amount': initAmount,
+      'balance': balance,
+      'bank': bank?.name,
+      'card_number': cardNumber,
+      'repayment_date': repaymentDate?.millisecondsSinceEpoch,
+      'billing_date': billingDate?.millisecondsSinceEpoch,
+      'created_at': createdAt.millisecondsSinceEpoch,
+      'updated_at': updatedAt.millisecondsSinceEpoch,
+      'deleted_at': deletedAt?.millisecondsSinceEpoch,
+    };
+  }
+
+  factory WalletAsset.fromMap(Map<String, dynamic> map) {
+    return WalletAsset(
+      id: map['id'],
+      category: WalletAssetCategory.values[map['category']],
+      type: WalletAssetType.values.byName(map['type']),
+      name: map['name'],
+      remark: map['remark'],
+      status: Status.values[map['status']],
+      showInHomePage: map['show_in_home_page'] == 1,
+      allowBill: map['allow_bill'] == 1,
+      notCounted: map['not_counted'] == 1,
+      initAmount: map['init_amount'],
+      balance: map['balance'],
+      bank: map['bank'] == null ? null : Bank.values.byName(map['bank']),
+      cardNumber: map['card_number'],
+      repaymentDate: map['repayment_date'] == null ? null : DateTime.fromMillisecondsSinceEpoch(map['repayment_date']),
+      billingDate: map['billing_date'] == null ? null : DateTime.fromMillisecondsSinceEpoch(map['billing_date']),
+      createdAt: DateTime.fromMillisecondsSinceEpoch(map['created_at']),
+      updatedAt: DateTime.fromMillisecondsSinceEpoch(map['updated_at']),
+      deletedAt: map['deleted_at'] == null ? null : DateTime.fromMillisecondsSinceEpoch(map['deleted_at']),
+    );
+  }
+
+  @override
+  String toString() => "WalletAsset { id:$id, category:${category.name}, type:${type.name}, name:$name }";
 }

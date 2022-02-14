@@ -3,45 +3,20 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:flutter_font_icons/flutter_font_icons.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:handnote/wallet/constants/wallet_asset_category.dart';
-import 'package:handnote/wallet/constants/wallet_asset_type.dart';
-import 'package:handnote/wallet/model/wallet_asset.dart';
+import 'package:handnote/wallet/model/wallet_asset_provider.dart';
 import 'package:handnote/wallet/screen/asset/wallet_asset_add_screen.dart';
 import 'package:handnote/wallet/widget/wallet_asset_list.dart';
 import 'package:handnote/widgets/currency_text.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 const double bannerHeight = 180;
-final List<WalletAsset> walletAssets = [
-  // @formatter:off
-  WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.cash, name: '现金钱包', remark: '', balance: 100.0),
-  WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.otherAsset, name: '其他账户'),
-  WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.creditCard, name: '建设银行', cardNumber: '3759'),
-  WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.debitCard, name: '农业银行', remark: '房贷卡'),
-  WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.debitCard, name: '招商银行', remark: '工资卡'),
-  WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.alipay, name: '支付宝'),
-  WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.wechat, name: '微信钱包'),
-  WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.neteasePay, name: '网易支付'),
-  WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.tenpay, name: '财付通'),
-  WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.schoolCard, name: '校园卡', remark: '重庆交通大学'),
-  WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.foodCard, name: '饭卡', remark: '关东即时捞'),
-  WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.shoppingCard, name: '购物卡', remark: '盒马鲜生'),
-  WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.shoppingCard, name: '购物卡', remark: '蛋糕先生'),
-  WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.busCard, name: '公交卡', remark: '天府通'),
-  WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.haircutCard, name: '剪发卡', remark: 'TAT'),
-  WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.digitalAssets, name: '数字人民币'),
-  WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.digitalAssets, name: 'Steam'),
-  WalletAsset(category: WalletAssetCategory.receivable, type: WalletAssetType.reimburse, name: 'Thoughtworks'),
-  WalletAsset(category: WalletAssetCategory.payable, type: WalletAssetType.borrowIn, name: '蚂蚁花呗', remark: '花呗', initAmount: 2000),
-  WalletAsset(category: WalletAssetCategory.payable, type: WalletAssetType.loan, name: '成都市公积金', remark: '住房公积金贷款', notCounted: true, showInHomePage: false),
-  WalletAsset(category: WalletAssetCategory.payable, type: WalletAssetType.loan, name: '农业银行', remark: '住房贷款', notCounted: true),
-  // @formatter:on
-];
 
-class WalletHomeScreen extends HookWidget {
+class WalletHomeScreen extends HookConsumerWidget {
   const WalletHomeScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final walletAssets = ref.watch(walletAssetProvider);
     final titleOpacity = useState<double>(0);
     final maskAmount = useState(false);
     final scrollController = useScrollController();
