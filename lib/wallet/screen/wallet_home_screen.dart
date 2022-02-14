@@ -13,11 +13,14 @@ import 'package:handnote/widgets/currency_text.dart';
 const double bannerHeight = 180;
 final List<WalletAsset> walletAssets = [
   WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.cash, name: '现金钱包', remark: '', balance: 100.0),
+  WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.otherAsset, name: '其他账户'),
   WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.creditCard, name: '建设银行', cardNumber: '3759'),
   WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.debitCard, name: '农业银行', remark: '房贷卡'),
   WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.debitCard, name: '招商银行', remark: '工资卡'),
   WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.alipay, name: '支付宝'),
   WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.wechat, name: '微信钱包'),
+  WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.neteasePay, name: '网易支付'),
+  WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.tenpay, name: '财付通'),
   WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.schoolCard, name: '校园卡', remark: '重庆交通大学'),
   WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.foodCard, name: '饭卡', remark: '关东即时捞'),
   WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.shoppingCard, name: '购物卡', remark: '盒马鲜生'),

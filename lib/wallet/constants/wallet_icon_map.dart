@@ -1,26 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_font_icons/flutter_font_icons.dart';
-import 'package:handnote/utils/pair.dart';
 import 'package:handnote/wallet/constants/wallet_asset_type.dart';
 
-final Map<WalletAssetType, Pair<IconData, Color?>> walletAssetTypeIconMap = {
-  WalletAssetType.creditCard: const Pair(FontAwesome5Brands.cc_visa, null),
-  WalletAssetType.debitCard: const Pair(FontAwesome5.credit_card, null),
-  WalletAssetType.alipay: const Pair(FontAwesome5Brands.alipay, Colors.blue),
-  WalletAssetType.wechat: const Pair(FontAwesome5Brands.weixin, Colors.green),
-  WalletAssetType.cash: const Pair(FontAwesome5.money_bill_alt, null),
-  WalletAssetType.schoolCard: const Pair(FontAwesome.graduation_cap, null),
-  WalletAssetType.busCard: const Pair(FontAwesome5Solid.bus, null),
-  WalletAssetType.foodCard: const Pair(FontAwesome5Solid.utensils, null),
-  WalletAssetType.shoppingCard: const Pair(FontAwesome5Solid.shopping_cart, null),
-  WalletAssetType.haircutCard: const Pair(FontAwesome5Solid.cut, null),
-  WalletAssetType.digitalAssets: const Pair(FontAwesome5Brands.bitcoin, null),
-  WalletAssetType.otherAsset: const Pair(FontAwesome5Solid.money_check_alt, null),
-  WalletAssetType.borrowOut: const Pair(FontAwesome5Solid.sign_out_alt, null),
-  WalletAssetType.reimburse: const Pair(Ionicons.receipt_outline, null),
-  WalletAssetType.owed: const Pair(FontAwesome5Solid.file_invoice_dollar, null),
-  WalletAssetType.otherReceivable: const Pair(FontAwesome.sign_out, null),
-  WalletAssetType.borrowIn: const Pair(FontAwesome.sign_in, null),
-  WalletAssetType.loan: const Pair(MaterialCommunityIcons.bank_transfer_out, null),
-  WalletAssetType.otherPayable: const Pair(FontAwesome.sign_in, null),
+final Map<WalletAssetType, Widget> walletAssetTypeIconMap = {
+  WalletAssetType.creditCard: const Icon(FontAwesome5Brands.cc_visa, color: Colors.orangeAccent, size: 20),
+  WalletAssetType.debitCard: const Icon(FontAwesome5.credit_card, color: Colors.orangeAccent, size: 20),
+  WalletAssetType.cash: const Icon(Icons.money, color: Colors.orangeAccent, size: 24),
+  WalletAssetType.alipay: const Icon(FontAwesome5Brands.alipay, color: Colors.blue, size: 24),
+  WalletAssetType.wechat: const Icon(FontAwesome5Brands.weixin, color: Colors.green, size: 22),
+  WalletAssetType.neteasePay: Image.asset('assets/icons/netease_pay.png', width: 22, height: 22, color: Colors.red),
+  WalletAssetType.tenpay: Image.asset('assets/icons/tenpay.png', width: 20, height: 20, color: Colors.orangeAccent),
+  WalletAssetType.schoolCard: const Icon(Ionicons.school, color: Colors.orangeAccent, size: 24),
+  WalletAssetType.busCard: const Icon(FontAwesome5Solid.bus, color: Colors.orangeAccent, size: 22),
+  WalletAssetType.foodCard: const Icon(FontAwesome.cutlery, color: Colors.orangeAccent, size: 22),
+  WalletAssetType.shoppingCard: const Icon(FontAwesome5Solid.shopping_cart, color: Colors.orangeAccent, size: 20),
+  WalletAssetType.haircutCard: const Icon(Ionicons.cut, color: Colors.orangeAccent, size: 24),
+  WalletAssetType.digitalAssets: const Icon(FontAwesome.bitcoin, color: Colors.orangeAccent, size: 24),
+  WalletAssetType.otherAsset: const Icon(FontAwesome5Solid.money_check_alt, color: Colors.orangeAccent, size: 18),
+  // receivable
+  WalletAssetType.borrowOut: const Icon(FontAwesome5Solid.sign_out_alt, color: Colors.green, size: 20),
+  WalletAssetType.reimburse: const Icon(Ionicons.receipt, color: Colors.green, size: 20),
+  WalletAssetType.owed: const Icon(FontAwesome5Solid.file_invoice_dollar, color: Colors.green, size: 20),
+  WalletAssetType.otherReceivable: const Icon(FontAwesome5Solid.sign_out_alt, color: Colors.green, size: 20),
+  // payable
+  WalletAssetType.borrowIn: const Icon(FontAwesome5Solid.sign_in_alt, color: Colors.blue, size: 20),
+  WalletAssetType.loan: const Icon(MaterialCommunityIcons.bank_transfer_out, color: Colors.blue, size: 24),
+  WalletAssetType.otherPayable: const Icon(FontAwesome5Solid.sign_in_alt, color: Colors.blue, size: 20),
 };

@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:handnote/utils/pair.dart';
 import 'package:handnote/wallet/constants/wallet_asset_category.dart';
 import 'package:handnote/wallet/constants/wallet_asset_type.dart';
 import 'package:handnote/wallet/constants/wallet_icon_map.dart';
 import 'package:handnote/wallet/screen/asset/wallet_asset_edit_screen.dart';
 import 'package:handnote/widgets/radio_buttons.dart';
-
+import 'package:handnote/widgets/round_icon.dart';
 
 class WalletAssetAddScreen extends HookWidget {
   const WalletAssetAddScreen({Key? key}) : super(key: key);
@@ -47,10 +46,9 @@ class WalletAssetAddScreen extends HookWidget {
 
   List<Widget> buildAssetList(BuildContext context, WalletAssetCategory category) {
     return walletAssetTypeList.where((asset) => asset.category == category).map((asset) {
-      Pair<IconData, Color?> icon = walletAssetTypeIconMap[asset.type]!;
       return ListTile(
         title: Text(asset.name),
-        leading: Icon(icon.first, color: icon.second),
+        leading: RoundIcon(walletAssetTypeIconMap[asset.type]),
         onTap: () {
           Navigator.of(context).push(
             MaterialPageRoute(
