@@ -32,7 +32,7 @@ enum WalletAssetType {
 final walletAssetTypeList = <WalletAsset>[
   WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.creditCard, name: '信用卡'),
   WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.debitCard, name: '储蓄卡'),
-  WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.cash, name: '现金'),
+  WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.cash, name: '现金钱包'),
   WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.alipay, name: '支付宝'),
   WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.wechat, name: '微信支付'),
   WalletAsset(category: WalletAssetCategory.fund, type: WalletAssetType.neteasePay, name: '网易支付'),

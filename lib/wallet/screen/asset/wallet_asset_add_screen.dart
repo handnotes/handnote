@@ -34,7 +34,7 @@ class WalletAssetAddScreen extends HookWidget {
               controller: pageController,
               children: [
                 for (var i = 0; i < walletAssetCategory.length; i++)
-                  ListView(children: buildAssetList(context, WalletAssetCategory.values[i])),
+                  ListView(children: _buildAssetList(context, WalletAssetCategory.values[i])),
               ],
               onPageChanged: (index) => category.value = index,
             ),
@@ -44,7 +44,7 @@ class WalletAssetAddScreen extends HookWidget {
     );
   }
 
-  List<Widget> buildAssetList(BuildContext context, WalletAssetCategory category) {
+  List<Widget> _buildAssetList(BuildContext context, WalletAssetCategory category) {
     return walletAssetTypeList.where((asset) => asset.category == category).map((asset) {
       return ListTile(
         title: Text(asset.name),
@@ -52,10 +52,7 @@ class WalletAssetAddScreen extends HookWidget {
         onTap: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => WalletAssetEditScreen(
-                category: category,
-                type: asset.type,
-              ),
+              builder: (_) => WalletAssetEditScreen(asset: asset),
             ),
           );
         },
