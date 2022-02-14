@@ -16,13 +16,19 @@ class WalletHomeScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final walletAssets = ref.watch(walletAssetProvider);
     final titleOpacity = useState<double>(0);
     final maskAmount = useState(false);
     final scrollController = useScrollController();
     scrollController.addListener(() {
       titleOpacity.value = scrollController.offset > bannerHeight * 0.7 ? 1 : 0;
     });
+
+    useEffect(() {
+      ref.read(walletAssetProvider.notifier).getList();
+      return null;
+    }, []);
+
+    final walletAssets = ref.watch(walletAssetProvider);
 
     return Scaffold(
       body: CustomScrollView(
@@ -76,7 +82,7 @@ class WalletHomeScreen extends HookConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text("本月支出（元）", style: TextStyle(color: Colors.white70)),
+              const Text('本月支出（元）', style: TextStyle(color: Colors.white70)),
               const SizedBox(height: 12),
               Row(
                 children: [
