@@ -75,7 +75,26 @@ jobs:
       - name: Build
         run: flutter build macos
 
+      - name: Create dmg
+        run: |
+          echo "Install create-dmg"
+          brew install create-dmg
+          RELEASE_PATH=build/macos/Build/Products/Release
+          create-dmg \
+            --volname Handnote \
+            --window-pos 200 120 \
+            --window-size 800 529 \
+            --icon-size 130 \  
+            --text-size 14 \  
+            --icon "$RELEASE_PATH/handnote.app" 260 250 \
+            --hide-extension "$RELEASE_PATH/handnote.app" \
+            --app-drop-link 540 250 \
+            --hdiutil-quiet \
+            "$RELEASE_PATH/handnote.dmg" \
+            "$RELEASE_PATH/handnote.app"
+
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: build/macos/Build/Products/Release/handnote.app
+          fail_on_unmatched_files: true
+          files: build/macos/Build/Products/Release/handnote.dmg
