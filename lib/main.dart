@@ -10,7 +10,7 @@ import 'wallet/screen/wallet_home_screen.dart';
 
 void main() {
   setupLogger();
-  runApp(const ProviderScope(child: HandnoteApp()));
+  runApp(const HandnoteApp());
 }
 
 class HandnoteApp extends StatelessWidget {
@@ -26,13 +26,15 @@ class HandnoteApp extends StatelessWidget {
       statusBarIconBrightness: Brightness.dark,
     ));
 
-    return Container(
-      padding: EdgeInsets.only(top: padding),
-      color: appTheme.primaryColor,
-      child: MaterialApp(
-        title: 'Handnote',
-        theme: appTheme,
-        home: const WalletHomeScreen(),
+    return ProviderScope(
+      child: Container(
+        padding: EdgeInsets.only(top: padding),
+        color: appTheme.primaryColor,
+        child: MaterialApp(
+          title: 'Handnote',
+          theme: appTheme,
+          home: const WalletHomeScreen(),
+        ),
       ),
     );
   }
