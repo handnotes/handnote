@@ -52,7 +52,7 @@ class DB with ChangeNotifier {
         for (var i = 1; i <= version; i++) {
           await _executeSql(db, i);
         }
-        logger.info('Migration to v$version succeed.');
+        logger.info('Setup database succeed. Version: $version');
       },
       onUpgrade: (Database db, int oldVersion, int newVersion) async {
         logger.info('Database need to update. Running the migration script v$oldVersion -> v$newVersion...');
@@ -64,6 +64,7 @@ class DB with ChangeNotifier {
   }
 
   Future<void> _executeSql(Database db, int version) async {
+    logger.fine('Executing migration script v$version...');
     var scripts = (await _loadSqlFile(version)).split(';');
     for (var script in scripts) {
       final sql = script
