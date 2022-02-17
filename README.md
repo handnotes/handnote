@@ -12,10 +12,8 @@ flutter run
 flutter test -d macos integration_test
 ```
 
-## Generate module
+## TODO
 
-If you change the model, you need to regenerate the model database.
-
-```bash
-flutter packages pub run build_runner build --delete-conflicting-outputs
-```
+- [ ] Release cross-platform
+  build (https://github.com/softprops/action-gh-release/issues/57#issuecomment-653802166)
+- [ ] Manually trigger release
