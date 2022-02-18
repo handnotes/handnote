@@ -76,6 +76,7 @@ jobs:
         run: |
           flutter build macos
           mv build/macos/Build/Products/Release/handnote.app handnote.app
+          ls -al
 
       - name: Prepare create dmg
         run: |
@@ -84,13 +85,13 @@ jobs:
 
       - name: Create dmg
         run: |
-          create-dmg --help
+          pwd
           create-dmg \
             --volname Handnote \
             --window-pos 200 120 \
             --window-size 800 529 \
-            --icon-size 130 \  
-            --text-size 14 \  
+            --icon-size 130 \
+            --text-size 14 \
             --icon "handnote.app" 260 250 \
             --hide-extension "handnote.app" \
             --app-drop-link 540 250 \
