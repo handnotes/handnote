@@ -34,7 +34,7 @@ class RadioButtons extends HookWidget {
           borderColor: theme.colorScheme.primary,
           selectedBorderColor: theme.colorScheme.primary,
           fillColor: theme.colorScheme.primary,
-          selectedColor: theme.colorScheme.onPrimary,
+          selectedColor: theme.colorScheme.onPrimaryContainer,
           color: theme.colorScheme.primary,
           onPressed: (index) {
             if (onSelected != null) {

@@ -191,9 +191,13 @@ class WalletHomeScreen extends HookConsumerWidget {
                 child: TextButton.icon(
                   label: Text(
                     '记一笔',
-                    style: theme.textTheme.titleLarge,
+                    style: theme.textTheme.headline6?.copyWith(color: theme.colorScheme.onPrimaryContainer),
                   ),
-                  icon: Icon(Fontisto.plus_a, color: Colors.white, size: theme.textTheme.titleLarge?.fontSize),
+                  icon: Icon(
+                    Fontisto.plus_a,
+                    color: theme.colorScheme.onPrimaryContainer,
+                    size: theme.textTheme.headline6?.fontSize,
+                  ),
                   onPressed: () {
                     // TODO: add a bill page
                   },
@@ -201,7 +205,10 @@ class WalletHomeScreen extends HookConsumerWidget {
               ),
               const SizedBox(height: 28, child: VerticalDivider(color: Colors.white54, width: 0)),
               TextButton(
-                child: Text('添加资产', style: theme.textTheme.titleSmall),
+                child: Text(
+                  '添加资产',
+                  style: theme.textTheme.titleSmall?.copyWith(color: theme.colorScheme.onPrimaryContainer),
+                ),
                 style: TextButton.styleFrom(
                   padding: const EdgeInsets.symmetric(horizontal: 24),
                 ),

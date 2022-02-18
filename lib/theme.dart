@@ -6,14 +6,6 @@ final lightTheme = ThemeData(
     primary: Colors.blueGrey,
     secondary: Colors.red[300],
   ),
-  textTheme: const TextTheme(
-    headline6: TextStyle(
-      color: Colors.white,
-    ),
-    subtitle2: TextStyle(
-      color: Colors.white,
-    ),
-  ),
   hintColor: Colors.grey,
 );
 
@@ -24,6 +16,6 @@ final darkTheme = ThemeData(
     primary: Colors.blueGrey,
     secondary: Colors.red[300],
     surface: Colors.grey[800],
+    onPrimaryContainer: Colors.white,
   ),
-  textTheme: const TextTheme(),
 );
