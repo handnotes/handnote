@@ -84,6 +84,7 @@ jobs:
 
       - name: Create dmg
         run: |
+          create-dmg --help
           create-dmg \
             --volname Handnote \
             --window-pos 200 120 \
