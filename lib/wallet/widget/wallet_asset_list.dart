@@ -30,7 +30,7 @@ class WalletAssetList extends HookWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 4),
             alignment: Alignment.topLeft,
-            child: const Text('账户', style: TextStyle(fontSize: 16)),
+            child: Text('账户', style: Theme.of(context).textTheme.titleMedium),
           ),
           const SizedBox(height: 8),
           Column(children: [

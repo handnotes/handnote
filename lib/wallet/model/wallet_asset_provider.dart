@@ -8,7 +8,7 @@ class WalletAssetNotifier extends StateNotifier<List<WalletAsset>> {
 
   static const tableName = 'wallet_asset';
 
-  void getList() async {
+  Future<void> getList() async {
     final db = await DB.shared.instance;
     final List<Map<String, Object?>> list = await db.query(
       tableName,
@@ -17,7 +17,7 @@ class WalletAssetNotifier extends StateNotifier<List<WalletAsset>> {
     state = list.map((e) => WalletAsset.fromMap(e)).toList();
   }
 
-  void add(WalletAsset asset) async {
+  Future<void> add(WalletAsset asset) async {
     final db = await DB.shared.instance;
     await db.insert(tableName, asset.toMap());
     state.add(asset);

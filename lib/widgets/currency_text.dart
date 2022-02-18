@@ -7,27 +7,25 @@ class CurrencyText extends HookWidget {
   const CurrencyText(
     this.amount, {
     Key? key,
+    TextStyle? style,
     this.mask = false,
-    this.fontSize = 16,
-    this.color = Colors.white,
     this.monoFont = true,
-  }) : super(key: key);
+  })  : style = style ?? const TextStyle(),
+        super(key: key);
 
   final double amount;
   final bool mask;
-  final double fontSize;
-  final Color color;
+  final TextStyle style;
   final bool monoFont;
 
   @override
   Widget build(BuildContext context) {
     final amountString = mask ? '****' : currencyYuanFormatter.format(amount);
-
-    return Text(amountString,
-        style: TextStyle(
-          fontSize: fontSize,
-          color: color,
-          fontFamily: monoFont ? fontMonospace : null,
-        ));
+    return Text(
+      amountString,
+      style: style.copyWith(
+        fontFamily: monoFont ? fontMonospace : null,
+      ),
+    );
   }
 }

@@ -18,6 +18,7 @@ class RadioButtons extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final isSelected = getMenuStatus(selected);
+    final theme = Theme.of(context);
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -30,11 +31,11 @@ class RadioButtons extends HookWidget {
           ),
           isSelected: isSelected,
           borderRadius: BorderRadius.circular(4),
-          borderColor: Colors.blueGrey,
-          selectedBorderColor: Colors.blueGrey,
-          fillColor: Colors.blueGrey,
-          selectedColor: Colors.white,
-          color: Colors.blueGrey,
+          borderColor: theme.colorScheme.primary,
+          selectedBorderColor: theme.colorScheme.primary,
+          fillColor: theme.colorScheme.primary,
+          selectedColor: theme.colorScheme.onPrimary,
+          color: theme.colorScheme.primary,
           onPressed: (index) {
             if (onSelected != null) {
               onSelected!(index);

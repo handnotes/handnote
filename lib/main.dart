@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:handnote/theme.dart';
@@ -18,8 +16,6 @@ class HandnoteApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double padding = Platform.isMacOS ? 24 : 0;
-
     // Transparent status bar
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
@@ -27,14 +23,12 @@ class HandnoteApp extends StatelessWidget {
     ));
 
     return ProviderScope(
-      child: Container(
-        padding: EdgeInsets.only(top: padding),
-        color: appTheme.primaryColor,
-        child: MaterialApp(
-          title: 'Handnote',
-          theme: appTheme,
-          home: const WalletHomeScreen(),
-        ),
+      child: MaterialApp(
+        title: 'Handnote',
+        theme: lightTheme,
+        darkTheme: darkTheme,
+        themeMode: ThemeMode.system,
+        home: const WalletHomeScreen(),
       ),
     );
   }
