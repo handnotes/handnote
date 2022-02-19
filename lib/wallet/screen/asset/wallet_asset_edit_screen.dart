@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:handnote/constants/bank.dart';
 import 'package:handnote/constants/constants.dart';
 import 'package:handnote/wallet/constants/wallet_icon_map.dart';
 import 'package:handnote/wallet/model/wallet_asset.dart';
@@ -18,8 +19,19 @@ class WalletAssetEditScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final bankInfo = bankInfoMap[asset.bank];
+
+    String remarkLabel = '备注名';
+    String? remarkHint;
+
+    if (asset.bank != null) {
+      remarkLabel = '卡别名';
+      remarkHint = '如工资卡、房贷卡等';
+    }
+
     final remark = useState<String>(asset.remark);
     final balance = useState<double>(asset.balance);
+    final cardNumber = useState<String>('');
 
     return PageContainer(
       child: Scaffold(
@@ -44,8 +56,10 @@ class WalletAssetEditScreen extends HookConsumerWidget {
                       Semantics(
                         explicitChildNodes: true,
                         child: ListTile(
-                          title: Text(asset.name),
-                          leading: RoundIcon(walletAssetTypeIconMap[asset.type]),
+                          title: Text('${bankInfo?.name ?? ''}${asset.name}'),
+                          leading: bankInfo != null
+                              ? RoundIcon(bankInfo.icon, color: bankInfo.color)
+                              : RoundIcon(walletAssetTypeIconMap[asset.type]),
                           contentPadding: const EdgeInsets.symmetric(horizontal: 0),
                         ),
                       ),
@@ -53,14 +67,30 @@ class WalletAssetEditScreen extends HookConsumerWidget {
                       Semantics(
                         explicitChildNodes: true,
                         child: TextFormField(
-                          decoration: const InputDecoration(
-                            labelText: '备注名',
+                          decoration: InputDecoration(
+                            labelText: remarkLabel,
+                            hintText: remarkHint,
                             border: InputBorder.none,
                           ),
                           initialValue: asset.remark,
                           onChanged: (value) => remark.value = value,
                         ),
                       ),
+                      if (asset.bank != null) ...[
+                        const Divider(),
+                        Semantics(
+                          explicitChildNodes: true,
+                          child: TextFormField(
+                            decoration: const InputDecoration(
+                              labelText: '卡号',
+                              hintText: '可填尾号进行辨识，或用于备忘',
+                              border: InputBorder.none,
+                            ),
+                            initialValue: asset.cardNumber,
+                            onChanged: (value) => cardNumber.value = value,
+                          ),
+                        ),
+                      ]
                     ],
                   ),
                 ),
@@ -107,6 +137,7 @@ class WalletAssetEditScreen extends HookConsumerWidget {
                       final updated = asset.copyWith(
                         remark: remark.value,
                         balance: balance.value,
+                        cardNumber: bankInfo != null ? cardNumber.value : null,
                       );
                       if (isEdit) {
                         await ref.read(walletAssetProvider.notifier).update(updated);

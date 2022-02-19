@@ -150,7 +150,7 @@ class WalletAsset {
       notCounted: map['not_counted'] == 1,
       initAmount: map['init_amount'],
       balance: map['balance'],
-      bank: map['bank']?.let((it) => Bank.values.byName(it)),
+      bank: map['bank'] != null ? Bank.values.byName(map['bank']) : null,
       cardNumber: map['card_number'],
       repaymentDate: map['repayment_date']?.let((it) => DateTime.fromMillisecondsSinceEpoch(it)),
       billingDate: map['billing_date']?.let((it) => DateTime.fromMillisecondsSinceEpoch(it)),

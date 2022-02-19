@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:handnote/constants/bank.dart';
 import 'package:handnote/wallet/constants/wallet_icon_map.dart';
 import 'package:handnote/wallet/model/wallet_asset.dart';
 import 'package:handnote/wallet/model/wallet_asset_provider.dart';
@@ -16,14 +19,19 @@ class WalletAssetItem extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final subTitle = asset.remark;
+    final bankInfo = bankInfoMap[asset.bank];
+    final cardNumber = asset.cardNumber?.substring(max(0, asset.cardNumber!.length - 4), asset.cardNumber!.length);
+    final subTitleText = "${subTitle.isNotEmpty ? subTitle : ''} ${cardNumber ?? ''}".trim();
 
     return Card(
       elevation: 8,
       shadowColor: Colors.black.withOpacity(0.1),
       child: ListTile(
-        leading: RoundIcon(walletAssetTypeIconMap[asset.type]),
+        leading: bankInfo != null
+            ? RoundIcon(bankInfo.icon, color: bankInfo.color)
+            : RoundIcon(walletAssetTypeIconMap[asset.type]),
         title: Text(asset.name),
-        subtitle: subTitle.isNotEmpty ? Text(subTitle) : null,
+        subtitle: subTitleText.isEmpty ? null : Text(subTitleText),
         trailing: CurrencyText(asset.balance, mask: maskBalance, monoFont: false),
         visualDensity: VisualDensity.standard,
         onLongPress: () => _showAdvancedDialog(context, ref),
@@ -95,8 +103,7 @@ class WalletAssetItem extends HookConsumerWidget {
             onPressed: () async {
               await ref.read(walletAssetProvider.notifier).delete(asset);
               Navigator.of(context)
-                ..pop()
-                ..pop();
+                ..pop()..pop();
             },
           ),
         ],

@@ -7,6 +7,7 @@ import 'package:handnote/wallet/constants/wallet_asset_type.dart';
 import 'package:handnote/wallet/constants/wallet_icon_map.dart';
 import 'package:handnote/wallet/model/wallet_asset.dart';
 import 'package:handnote/wallet/screen/asset/wallet_asset_edit_screen.dart';
+import 'package:handnote/wallet/screen/asset/wallet_asset_select_bank_screen.dart';
 import 'package:handnote/widgets/page_container.dart';
 import 'package:handnote/widgets/radio_buttons.dart';
 import 'package:handnote/widgets/round_icon.dart';
@@ -100,15 +101,7 @@ class WalletAssetAddScreen extends HookWidget {
               MaterialPageRoute(
                 builder: (_) {
                   if (item.hasSecondaryMenu) {
-                    return Scaffold(
-                      appBar: AppBar(
-                        title: Text(asset.name),
-                        leading: IconButton(
-                          icon: const Icon(Icons.arrow_back),
-                          onPressed: () => Navigator.of(context).pop(),
-                        ),
-                      ),
-                    );
+                    return WalletAssetSelectBankScreen(asset: asset);
                   } else {
                     return WalletAssetEditScreen(asset: asset);
                   }
