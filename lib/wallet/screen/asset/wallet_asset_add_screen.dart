@@ -83,8 +83,6 @@ class WalletAssetAddScreen extends HookWidget {
       final asset = WalletAsset(category: item.category, type: item.type, name: item.name);
 
       return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        height: 64,
         alignment: Alignment.centerLeft,
         decoration: BoxDecoration(
           border: Border(
@@ -96,7 +94,7 @@ class WalletAssetAddScreen extends HookWidget {
           subtitle: item.description.isNotEmpty ? Text(item.description) : null,
           leading: RoundIcon(walletAssetTypeIconMap[asset.type]),
           trailing: item.hasSecondaryMenu ? const Icon(Icons.chevron_right) : null,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 0),
+          visualDensity: VisualDensity.standard,
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(

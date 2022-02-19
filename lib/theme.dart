@@ -7,6 +7,7 @@ final lightTheme = ThemeData(
     secondary: Colors.red[300],
   ),
   hintColor: Colors.grey,
+  dividerColor: Colors.grey[200],
 );
 
 final darkTheme = ThemeData(
@@ -18,4 +19,5 @@ final darkTheme = ThemeData(
     surface: Colors.grey[800],
     onPrimaryContainer: Colors.white,
   ),
+  dividerColor: Colors.grey[800],
 );
