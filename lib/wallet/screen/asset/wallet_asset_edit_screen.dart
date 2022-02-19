@@ -18,8 +18,8 @@ class WalletAssetEditScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final remark = useState('');
-    final balance = useState(0.0);
+    final remark = useState<String>(asset.remark);
+    final balance = useState<double>(asset.balance);
 
     return PageContainer(
       child: Scaffold(
@@ -41,17 +41,20 @@ class WalletAssetEditScreen extends HookConsumerWidget {
                   color: theme.colorScheme.surface,
                   child: Column(
                     children: [
-                      ListTile(
-                        title: Text(asset.name),
-                        leading: RoundIcon(walletAssetTypeIconMap[asset.type]),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 0),
+                      Semantics(
+                        explicitChildNodes: true,
+                        child: ListTile(
+                          title: Text(asset.name),
+                          leading: RoundIcon(walletAssetTypeIconMap[asset.type]),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 0),
+                        ),
                       ),
                       const Divider(),
                       Semantics(
                         explicitChildNodes: true,
                         child: TextFormField(
                           decoration: const InputDecoration(
-                            hintText: '输入备注名',
+                            labelText: '备注名',
                             border: InputBorder.none,
                           ),
                           initialValue: asset.remark,
@@ -67,26 +70,27 @@ class WalletAssetEditScreen extends HookConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Padding(
-                        padding: EdgeInsets.only(top: 8),
-                        child: Text('账户余额'),
-                      ),
-                      TextFormField(
-                        decoration: const InputDecoration(
-                          hintText: '0.00',
-                          prefixText: '¥',
-                          hintStyle: TextStyle(fontSize: 22, fontFamily: fontMonospace),
-                          border: InputBorder.none,
+                      Semantics(
+                        explicitChildNodes: true,
+                        child: TextFormField(
+                          initialValue: asset.balance == 0 ? null : asset.balance.toString(),
+                          decoration: const InputDecoration(
+                            labelText: '账户余额',
+                            hintText: '0.00',
+                            prefixText: '¥',
+                            hintStyle: TextStyle(fontSize: 22, fontFamily: fontMonospace),
+                            border: InputBorder.none,
+                          ),
+                          style: const TextStyle(fontSize: 22, fontFamily: fontMonospace),
+                          keyboardType: const TextInputType.numberWithOptions(decimal: true, signed: true),
+                          onChanged: (value) => balance.value = double.tryParse(value) ?? 0.0,
                         ),
-                        style: const TextStyle(fontSize: 22, fontFamily: fontMonospace),
-                        keyboardType: const TextInputType.numberWithOptions(decimal: true, signed: true),
-                        onChanged: (value) => balance.value = double.tryParse(value) ?? 0.0,
                       ),
                     ],
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 24),
+                  padding: const EdgeInsets.all(16),
                   child: TextButton(
                     style: TextButton.styleFrom(
                       backgroundColor: theme.colorScheme.secondary,
@@ -100,14 +104,15 @@ class WalletAssetEditScreen extends HookConsumerWidget {
                       ),
                     ),
                     onPressed: () async {
-                      final _asset = WalletAsset(
-                        name: asset.name,
-                        category: asset.category,
-                        type: asset.type,
+                      final updated = asset.copyWith(
                         remark: remark.value,
                         balance: balance.value,
                       );
-                      await ref.read(walletAssetProvider.notifier).add(_asset);
+                      if (isEdit) {
+                        await ref.read(walletAssetProvider.notifier).update(updated);
+                      } else {
+                        await ref.read(walletAssetProvider.notifier).add(updated);
+                      }
                       Navigator.of(context).popUntil(ModalRoute.withName('/'));
                     },
                   ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:handnote/wallet/constants/wallet_icon_map.dart';
 import 'package:handnote/wallet/model/wallet_asset.dart';
 import 'package:handnote/wallet/model/wallet_asset_provider.dart';
+import 'package:handnote/wallet/screen/asset/wallet_asset_edit_screen.dart';
 import 'package:handnote/widgets/currency_text.dart';
 import 'package:handnote/widgets/round_icon.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -60,7 +61,7 @@ class WalletAssetItem extends HookConsumerWidget {
   }
 
   Future<void> _editAsset(BuildContext context, WidgetRef ref) async {
-    // TODO: implement edit asset
+    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => WalletAssetEditScreen(asset: asset)));
   }
 
   Future<void> _deleteAsset(BuildContext context, WidgetRef ref) async {
