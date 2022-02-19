@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:handnote/utils/extensions.dart';
 import 'package:handnote/wallet/constants/wallet_icon_map.dart';
 import 'package:handnote/wallet/model/wallet_asset.dart';
 import 'package:handnote/wallet/model/wallet_asset_provider.dart';
@@ -27,7 +26,7 @@ class WalletAssetItem extends HookConsumerWidget {
           leading: SizedBox(child: RoundIcon(walletAssetTypeIconMap[asset.type]), height: double.infinity),
           title: Text(asset.name),
           subtitle: subTitle.isNotEmpty ? Text(subTitle) : null,
-          trailing: maskBalance.let((_) => CurrencyText(asset.balance, monoFont: false)),
+          trailing: CurrencyText(asset.balance, mask: maskBalance, monoFont: false),
           onLongPress: () => _showAdvancedDialog(context, ref),
         ),
       ),
