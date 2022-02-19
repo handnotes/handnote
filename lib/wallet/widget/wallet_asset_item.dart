@@ -19,16 +19,13 @@ class WalletAssetItem extends HookConsumerWidget {
     return Card(
       elevation: 8,
       shadowColor: Colors.black.withOpacity(0.1),
-      child: Container(
-        height: 72,
-        alignment: Alignment.center,
-        child: ListTile(
-          leading: SizedBox(child: RoundIcon(walletAssetTypeIconMap[asset.type]), height: double.infinity),
-          title: Text(asset.name),
-          subtitle: subTitle.isNotEmpty ? Text(subTitle) : null,
-          trailing: CurrencyText(asset.balance, mask: maskBalance, monoFont: false),
-          onLongPress: () => _showAdvancedDialog(context, ref),
-        ),
+      child: ListTile(
+        leading: RoundIcon(walletAssetTypeIconMap[asset.type]),
+        title: Text(asset.name),
+        subtitle: subTitle.isNotEmpty ? Text(subTitle) : null,
+        trailing: CurrencyText(asset.balance, mask: maskBalance, monoFont: false),
+        visualDensity: VisualDensity.standard,
+        onLongPress: () => _showAdvancedDialog(context, ref),
       ),
     );
   }
