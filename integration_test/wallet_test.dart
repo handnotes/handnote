@@ -24,4 +24,33 @@ void main() {
 
     expect(find.textContaining('****'), findsWidgets);
   });
+
+  testWidgets('Wallet add a asset and delete asset', (WidgetTester tester) async {
+    await tester.pumpWidget(const HandnoteApp());
+
+    final addAssetButton = find.bySemanticsLabel('添加资产');
+    expect(addAssetButton, findsOneWidget);
+    await tester.tap(addAssetButton);
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.textContaining('支付宝'));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.bySemanticsLabel('输入备注名'), '我的支付宝');
+
+    await tester.tap(find.text('保存'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('我的支付宝'), findsOneWidget);
+
+    // delete asset
+    await tester.longPress(find.text('我的支付宝'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('删除'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('确认'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('我的支付宝'), findsNothing);
+  });
 }

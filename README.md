@@ -17,3 +17,5 @@ flutter test -d macos integration_test
 - [ ] Release cross-platform
   build (https://github.com/softprops/action-gh-release/issues/57#issuecomment-653802166)
 - [ ] Manually trigger release
+- [ ] Remove redundant semantic widget on TextField
+  widget [![flutter/flutter/26336](https://img.shields.io/github/issues/detail/state/flutter/flutter/26336)](https://github.com/flutter/flutter/issues/26336)

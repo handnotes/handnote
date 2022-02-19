@@ -26,7 +26,7 @@ class WalletAssetEditScreen extends HookConsumerWidget {
         appBar: AppBar(
           title: Text("${isEdit ? '编辑' : '新建'}账户"),
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
+            icon: const Icon(Icons.arrow_back, semanticLabel: '返回'),
             onPressed: () => Navigator.of(context).pop(),
           ),
         ),
@@ -47,13 +47,16 @@ class WalletAssetEditScreen extends HookConsumerWidget {
                         contentPadding: const EdgeInsets.symmetric(horizontal: 0),
                       ),
                       const Divider(),
-                      TextFormField(
-                        decoration: const InputDecoration(
-                          hintText: '输入备注名',
-                          border: InputBorder.none,
+                      Semantics(
+                        explicitChildNodes: true,
+                        child: TextFormField(
+                          decoration: const InputDecoration(
+                            hintText: '输入备注名',
+                            border: InputBorder.none,
+                          ),
+                          initialValue: asset.remark,
+                          onChanged: (value) => remark.value = value,
                         ),
-                        initialValue: asset.remark,
-                        onChanged: (value) => remark.value = value,
                       ),
                     ],
                   ),
