@@ -102,7 +102,7 @@ class WalletAssetEditScreen extends HookConsumerWidget {
                         balance: balance.value,
                       );
                       await ref.read(walletAssetProvider.notifier).add(_asset);
-                      Navigator.of(context).pop();
+                      Navigator.of(context).popUntil(ModalRoute.withName('/'));
                     },
                   ),
                 ),

@@ -20,7 +20,7 @@ class WalletAssetNotifier extends StateNotifier<List<WalletAsset>> {
   Future<void> add(WalletAsset asset) async {
     final db = await DB.shared.instance;
     await db.insert(tableName, asset.toMap());
-    state.add(asset);
+    state = [asset, ...state];
   }
 }
 

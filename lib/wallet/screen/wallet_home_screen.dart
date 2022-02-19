@@ -15,6 +15,8 @@ const double bannerHeight = 180;
 class WalletHomeScreen extends HookConsumerWidget {
   const WalletHomeScreen({Key? key}) : super(key: key);
 
+  static const routeName = '/wallet';
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final titleOpacity = useState<double>(0);
