@@ -112,9 +112,8 @@ class WalletAsset {
   }
 
   Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'category': category.name,
+    final map = <String, dynamic>{
+      'category': category.index,
       'type': type.name,
       'name': name,
       'remark': remark,
@@ -132,6 +131,10 @@ class WalletAsset {
       'updated_at': updatedAt.millisecondsSinceEpoch,
       'deleted_at': deletedAt?.millisecondsSinceEpoch,
     };
+    if (id != null) {
+      map['id'] = id;
+    }
+    return map;
   }
 
   factory WalletAsset.fromMap(Map<String, dynamic> map) {

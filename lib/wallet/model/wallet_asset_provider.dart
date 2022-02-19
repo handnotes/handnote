@@ -1,7 +1,10 @@
 import 'package:handnote/database/db.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:logging/logging.dart';
 
 import 'wallet_asset.dart';
+
+final logger = Logger('WalletAssetProvider');
 
 class WalletAssetNotifier extends StateNotifier<List<WalletAsset>> {
   WalletAssetNotifier() : super([]);
@@ -20,13 +23,15 @@ class WalletAssetNotifier extends StateNotifier<List<WalletAsset>> {
 
   Future<void> add(WalletAsset asset) async {
     final db = await DB.shared.instance;
-    await db.insert(tableName, asset.toMap());
-    state = [asset, ...state];
+    final updated = asset.copyWith(createdAt: DateTime.now(), updatedAt: DateTime.now());
+    await db.insert(tableName, updated.toMap());
+    await getHomeScreenList();
   }
 
   Future<void> update(WalletAsset asset) async {
     final db = await DB.shared.instance;
-    await db.update(tableName, asset.toMap(), where: 'id = ?', whereArgs: [asset.id]);
+    final updated = asset.copyWith(updatedAt: DateTime.now());
+    await db.update(tableName, updated.toMap(), where: 'id = ?', whereArgs: [asset.id]);
     await getHomeScreenList();
   }
 

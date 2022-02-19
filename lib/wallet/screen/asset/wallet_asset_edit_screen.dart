@@ -37,6 +37,7 @@ class WalletAssetEditScreen extends HookConsumerWidget {
               children: <Widget>[
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+                  margin: const EdgeInsets.only(bottom: 16.0),
                   color: theme.colorScheme.surface,
                   child: Column(
                     children: [
@@ -57,7 +58,6 @@ class WalletAssetEditScreen extends HookConsumerWidget {
                     ],
                   ),
                 ),
-                const SizedBox(height: 16),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
                   color: theme.colorScheme.surface,
@@ -91,7 +91,10 @@ class WalletAssetEditScreen extends HookConsumerWidget {
                     ),
                     child: Text(
                       '保存',
-                      style: theme.textTheme.subtitle1?.copyWith(letterSpacing: 1.5),
+                      style: theme.textTheme.subtitle1?.copyWith(
+                        letterSpacing: 1.5,
+                        color: theme.colorScheme.onPrimary,
+                      ),
                     ),
                     onPressed: () async {
                       final _asset = WalletAsset(

@@ -33,12 +33,9 @@ class WalletAssetList extends HookWidget {
             child: Text('账户', style: Theme.of(context).textTheme.titleMedium),
           ),
           const SizedBox(height: 8),
-          ListView(
-            shrinkWrap: true,
-            children: [
-              for (var asset in assets) WalletAssetItem(asset, maskBalance: maskAmount),
-            ],
-          ),
+          Column(children: [
+            for (var asset in assets) WalletAssetItem(asset, maskBalance: maskAmount),
+          ]),
         ],
       ),
     );

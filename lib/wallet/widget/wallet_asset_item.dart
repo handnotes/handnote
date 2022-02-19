@@ -64,8 +64,30 @@ class WalletAssetItem extends HookConsumerWidget {
   }
 
   Future<void> _deleteAsset(BuildContext context, WidgetRef ref) async {
-    // TODO: popup a confirm dialog before delete
-    await ref.read(walletAssetProvider.notifier).delete(asset);
-    Navigator.of(context).pop();
+    // TODO: determine if asset is have billing
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('确认删除'),
+        content: Text('确认删除资产：${asset.name}？'),
+        actions: [
+          TextButton(
+            autofocus: true,
+            child: const Text('取消'),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          TextButton(
+            style: TextButton.styleFrom(primary: Theme.of(context).errorColor),
+            child: const Text('确认'),
+            onPressed: () async {
+              await ref.read(walletAssetProvider.notifier).delete(asset);
+              Navigator.of(context)
+                ..pop()
+                ..pop();
+            },
+          ),
+        ],
+      ),
+    );
   }
 }

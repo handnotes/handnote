@@ -41,6 +41,7 @@ class DB with ChangeNotifier {
     logger.info('Location of sqlite file: $dbPath');
 
     if (kDebugMode) {
+      Sqflite.setDebugModeOn(true);
       await cleanDatabase();
     }
 
