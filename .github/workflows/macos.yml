@@ -76,16 +76,17 @@ jobs:
         run: |
           flutter build macos
           mv build/macos/Build/Products/Release/handnote.app handnote.app
-          ls -al
 
       - name: Prepare create dmg
         run: |
           echo "Install create-dmg"
           brew install create-dmg
 
+      - name: Get current version
+        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
       - name: Create dmg
         run: |
-          pwd
           create-dmg \
             --volname Handnote \
             --window-pos 200 120 \
@@ -96,7 +97,7 @@ jobs:
             --hide-extension "handnote.app" \
             --app-drop-link 540 250 \
             --hdiutil-quiet \
-            "handnote.dmg" \
+            "handnote-$RELEASE_VERSION.dmg" \
             "handnote.app"
 
       - name: Release
@@ -104,4 +105,4 @@ jobs:
         with:
           fail_on_unmatched_files: true
           draft: true
-          files: handnote.dmg
+          files: handnote-$RELEASE_VERSION.dmg
