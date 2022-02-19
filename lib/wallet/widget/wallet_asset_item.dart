@@ -34,24 +34,36 @@ class WalletAssetItem extends HookConsumerWidget {
   Future<int?> _showAdvancedDialog(BuildContext context, WidgetRef ref) {
     return showDialog(
       context: context,
-      builder: (context) => SimpleDialog(
-        title: Text(asset.name),
-        titleTextStyle: Theme.of(context).textTheme.subtitle1,
-        children: [
-          SimpleDialogOption(
-            child: const Text('隐藏'),
-            onPressed: () => _hideAsset(context, ref),
+      builder: (context) {
+        final theme = Theme.of(context);
+        return Theme(
+          data: theme.copyWith(
+            textTheme: theme.textTheme.copyWith(
+              bodyText2: theme.textTheme.bodyText2?.copyWith(fontSize: 16),
+            ),
           ),
-          SimpleDialogOption(
-            child: const Text('编辑'),
-            onPressed: () => _editAsset(context, ref),
+          child: SimpleDialog(
+            title: Text(asset.name),
+            children: [
+              SimpleDialogOption(
+                child: const Text('隐藏'),
+                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+                onPressed: () => _hideAsset(context, ref),
+              ),
+              SimpleDialogOption(
+                child: const Text('编辑'),
+                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+                onPressed: () => _editAsset(context, ref),
+              ),
+              SimpleDialogOption(
+                child: const Text('删除'),
+                padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+                onPressed: () => _deleteAsset(context, ref),
+              ),
+            ],
           ),
-          SimpleDialogOption(
-            child: const Text('删除'),
-            onPressed: () => _deleteAsset(context, ref),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 
