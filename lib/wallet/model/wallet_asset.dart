@@ -69,6 +69,48 @@ class WalletAsset {
   })  : createdAt = createdAt ?? DateTime.now(),
         updatedAt = updatedAt ?? DateTime.now();
 
+  WalletAsset copyWith({
+    int? id,
+    WalletAssetCategory? category,
+    WalletAssetType? type,
+    String? name,
+    String? remark,
+    Status? status,
+    bool? showInHomePage,
+    bool? allowBill,
+    bool? notCounted,
+    double? initAmount,
+    double? balance,
+    Bank? bank,
+    String? cardNumber,
+    DateTime? repaymentDate,
+    DateTime? billingDate,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    DateTime? deletedAt,
+  }) {
+    return WalletAsset(
+      id: id ?? this.id,
+      category: category ?? this.category,
+      type: type ?? this.type,
+      name: name ?? this.name,
+      remark: remark ?? this.remark,
+      status: status ?? this.status,
+      showInHomePage: showInHomePage ?? this.showInHomePage,
+      allowBill: allowBill ?? this.allowBill,
+      notCounted: notCounted ?? this.notCounted,
+      initAmount: initAmount ?? this.initAmount,
+      balance: balance ?? this.balance,
+      bank: bank ?? this.bank,
+      cardNumber: cardNumber ?? this.cardNumber,
+      repaymentDate: repaymentDate ?? this.repaymentDate,
+      billingDate: billingDate ?? this.billingDate,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      deletedAt: deletedAt ?? this.deletedAt,
+    );
+  }
+
   Map<String, dynamic> toMap() {
     return {
       'id': id,

@@ -27,7 +27,8 @@ class WalletHomeScreen extends HookConsumerWidget {
     });
 
     useEffect(() {
-      ref.read(walletAssetProvider.notifier).getList();
+      // TODO: View hidden wallet assets
+      ref.read(walletAssetProvider.notifier).getHomeScreenList();
       return null;
     }, []);
 
