@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:handnote/constants/bank.dart';
 import 'package:handnote/constants/constants.dart';
+import 'package:handnote/wallet/constants/wallet_asset_type.dart';
 import 'package:handnote/wallet/constants/wallet_icon_map.dart';
 import 'package:handnote/wallet/model/wallet_asset.dart';
 import 'package:handnote/wallet/model/wallet_asset_provider.dart';
@@ -20,6 +21,7 @@ class WalletAssetEditScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final bankInfo = bankInfoMap[asset.bank];
+    final String bankCardName = assetTypeNameMap[asset.type] ?? '';
 
     String remarkLabel = '备注名';
     String? remarkHint;
@@ -36,7 +38,7 @@ class WalletAssetEditScreen extends HookConsumerWidget {
     return PageContainer(
       child: Scaffold(
         appBar: AppBar(
-          title: Text("${isEdit ? '编辑' : '新建'}账户"),
+          title: Text("${isEdit ? '编辑' : '新建'}资产账户"),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, semanticLabel: '返回'),
             onPressed: () => Navigator.of(context).pop(),
@@ -56,7 +58,10 @@ class WalletAssetEditScreen extends HookConsumerWidget {
                       Semantics(
                         explicitChildNodes: true,
                         child: ListTile(
-                          title: Text('${bankInfo?.name ?? ''}${asset.name}'),
+                          title: bankInfo != null ? Text(bankInfo.name) : Text(asset.name),
+                          trailing: bankCardName.isNotEmpty
+                              ? Text(bankCardName, style: TextStyle(color: theme.disabledColor))
+                              : null,
                           leading: bankInfo != null
                               ? RoundIcon(bankInfo.icon, color: bankInfo.color)
                               : RoundIcon(walletAssetTypeIconMap[asset.type]),

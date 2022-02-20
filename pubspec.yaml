@@ -39,6 +39,7 @@ dependencies:
   intl: ^0.17.0
 
 dev_dependencies:
+  test:
   flutter_test:
     sdk: flutter
   integration_test:
