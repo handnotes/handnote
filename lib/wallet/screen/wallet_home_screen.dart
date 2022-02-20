@@ -8,6 +8,7 @@ import 'package:handnote/wallet/screen/asset/wallet_asset_add_screen.dart';
 import 'package:handnote/wallet/widget/wallet_asset_list.dart';
 import 'package:handnote/widgets/currency_text.dart';
 import 'package:handnote/widgets/page_container.dart';
+import 'package:handnote/widgets/svg_icon.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 const double bannerHeight = 180;
@@ -115,7 +116,9 @@ class WalletHomeScreen extends HookConsumerWidget {
                       ),
                       IconButton(
                         onPressed: () => maskAmount.value = !maskAmount.value,
-                        icon: maskAmount.value ? const Icon(Ionicons.eye_off) : const Icon(Ionicons.eye),
+                        icon: maskAmount.value
+                            ? const SvgIcon('eye_off', color: Colors.white, size: 20)
+                            : const Icon(Ionicons.eye),
                       ),
                     ],
                   ),

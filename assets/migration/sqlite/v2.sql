@@ -2,7 +2,6 @@ INSERT INTO 'wallet_asset' (category, type, name, remark, status, show_in_home_p
                             init_amount, balance, bank, card_number, created_at,
                             updated_at, deleted_at)
 VALUES (0, 'cash', '现金钱包', '', 1, 1, 1, 0, 100.0, 100.0, NULL, NULL, 1644850542470, 1644850542470, NULL),
-       (0, 'otherAsset', '其他资产', '', 1, 1, 1, 0, 0.0, 0.0, NULL, NULL, 1644850542470, 1644850542470, NULL),
        (0, 'creditCard', '建设银行', '', 1, 1, 1, 0, 0.0, 0.0, 'jianshe', '', 1644850542470, 1644850542470, NULL),
        (0, 'debitCard', '农业银行', '房贷卡', 1, 1, 1, 0, 0.0, 0.0, 'nongye', '', 1644850542470, 1644850542470, NULL),
        (0, 'debitCard', '招商银行', '工资卡', 1, 1, 1, 0, 0.0, 0.0, 'zhaoshang', '3415', 1644850542470, 1644850542470, NULL),
@@ -19,6 +18,7 @@ VALUES (0, 'cash', '现金钱包', '', 1, 1, 1, 0, 100.0, 100.0, NULL, NULL, 164
        (0, 'haircutCard', '剪发卡', 'TAT', 1, 1, 1, 0, 0.0, 0.0, NULL, NULL, 1644850542470, 1644850542470, NULL),
        (0, 'digitalAssets', '数字人民币', '', 1, 1, 1, 0, 0.0, 0.0, NULL, NULL, 1644850542470, 1644850542470, NULL),
        (0, 'digitalAssets', 'Steam', '', 1, 1, 1, 0, 0.0, 0.0, NULL, NULL, 1644850542470, 1644850542470, NULL),
+       (0, 'otherAsset', '其他资产', '', 1, 1, 1, 0, 0.0, 0.0, NULL, NULL, 1644850542470, 1644850542470, NULL),
        (1, 'reimburse', '公司', '', 1, 1, 1, 0, 0.0, 0.0, NULL, NULL, 1644850542470, 1644850542470, NULL),
        (2, 'borrowIn', '蚂蚁花呗', '花呗', 1, 1, 1, 0, 0.0, 0.0, NULL, NULL, 1644850542470, 1644850542470, NULL),
        (2, 'borrowIn', '成都市公积金', '住房公积金贷款', 1, 0, 1, 1, 0.0, 0.0, NULL, NULL, 1644850542470, 1644850542470, NULL),

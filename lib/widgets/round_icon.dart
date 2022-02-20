@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:handnote/widgets/svg_icon.dart';
 
 class RoundIcon extends StatelessWidget {
   const RoundIcon(
@@ -23,6 +24,9 @@ class RoundIcon extends StatelessWidget {
       color = icon.color ?? this.color;
     } else if (icon is Image) {
       whiteIcon = Image(image: icon.image, width: icon.width, height: icon.height);
+      color = icon.color ?? this.color;
+    } else if (icon is SvgIcon) {
+      whiteIcon = SvgIcon(icon.assetName, color: Colors.white, size: icon.size);
       color = icon.color ?? this.color;
     } else {
       whiteIcon = icon;

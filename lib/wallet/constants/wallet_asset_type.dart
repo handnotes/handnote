@@ -3,8 +3,10 @@ enum WalletAssetType {
   debitCard,
   alipay,
   wechat,
+  jd,
   neteasePay,
   tenpay,
+  meituan,
   cash,
   schoolCard,
   busCard,
@@ -17,12 +19,12 @@ enum WalletAssetType {
   // Receivable
   borrowOut,
   reimburse,
-  owed,
   otherReceivable,
 
   // Payable
   borrowIn,
   loan,
+  jiebei,
   otherPayable,
 }
 
@@ -31,8 +33,10 @@ const assetTypeNameMap = <WalletAssetType, String>{
   WalletAssetType.debitCard: '储蓄卡',
   WalletAssetType.alipay: '支付宝',
   WalletAssetType.wechat: '微信钱包',
+  WalletAssetType.jd: '京东钱包',
   WalletAssetType.neteasePay: '网易支付',
   WalletAssetType.tenpay: '财付通',
+  WalletAssetType.meituan: '美团钱包',
   WalletAssetType.cash: '现金钱包',
   WalletAssetType.schoolCard: '校园卡',
   WalletAssetType.busCard: '公交卡',
@@ -43,9 +47,9 @@ const assetTypeNameMap = <WalletAssetType, String>{
   WalletAssetType.otherAsset: '其他资产',
   WalletAssetType.borrowOut: '借出',
   WalletAssetType.reimburse: '报销',
-  WalletAssetType.owed: '项目欠款',
-  WalletAssetType.otherReceivable: '其他收款',
+  WalletAssetType.otherReceivable: '其他待收款项',
   WalletAssetType.borrowIn: '借入',
   WalletAssetType.loan: '贷款',
-  WalletAssetType.otherPayable: '其他付款',
+  WalletAssetType.jiebei: '借呗',
+  WalletAssetType.otherPayable: '其他应付款项',
 };
