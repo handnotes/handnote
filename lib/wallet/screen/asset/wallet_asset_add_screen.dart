@@ -13,7 +13,8 @@ import 'package:handnote/widgets/round_icon.dart';
 const walletAssetTypeList = <WalletAddAssetItem>[
   WalletAddAssetItem(category: WalletAssetCategory.fund, type: WalletAssetType.creditCard, hasSecondaryMenu: true),
   WalletAddAssetItem(category: WalletAssetCategory.fund, type: WalletAssetType.debitCard, hasSecondaryMenu: true),
-  WalletAddAssetItem(category: WalletAssetCategory.fund, type: WalletAssetType.digitalAssets, hasSecondaryMenu: true),
+  // TODO: add digital asset select page
+  // WalletAddAssetItem(category: WalletAssetCategory.fund, type: WalletAssetType.digitalAssets, hasSecondaryMenu: true),
   WalletAddAssetItem(category: WalletAssetCategory.fund, type: WalletAssetType.alipay, description: '支持导入账单'),
   WalletAddAssetItem(category: WalletAssetCategory.fund, type: WalletAssetType.wechat, description: '支持导入账单'),
   WalletAddAssetItem(category: WalletAssetCategory.fund, type: WalletAssetType.jd),
