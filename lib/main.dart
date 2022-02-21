@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:handnote/theme.dart';
 import 'package:handnote/utils/logger.dart';
+import 'package:handnote/wallet/screen/wallet_home_screen.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-import 'wallet/screen/wallet_home_screen.dart';
 
 void main() {
   setupLogger();

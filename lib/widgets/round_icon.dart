@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:handnote/widgets/svg_icon.dart';
 
+const defaultIconSize = 24.0;
+
 class RoundIcon extends StatelessWidget {
   const RoundIcon(
     this.icon, {
@@ -20,13 +22,14 @@ class RoundIcon extends StatelessWidget {
     final Color color;
 
     if (icon is Icon) {
-      whiteIcon = Icon(icon.icon, color: Colors.white, size: icon.size);
+      whiteIcon = Icon(icon.icon, color: Colors.white, size: icon.size ?? defaultIconSize);
       color = icon.color ?? this.color;
     } else if (icon is Image) {
-      whiteIcon = Image(image: icon.image, width: icon.width, height: icon.height);
+      whiteIcon =
+          Image(image: icon.image, width: icon.width ?? defaultIconSize, height: icon.height ?? defaultIconSize);
       color = icon.color ?? this.color;
     } else if (icon is SvgIcon) {
-      whiteIcon = SvgIcon(icon.assetName, color: Colors.white, size: icon.size);
+      whiteIcon = SvgIcon(icon.assetName, color: Colors.white, size: icon.size ?? defaultIconSize);
       color = icon.color ?? this.color;
     } else {
       whiteIcon = icon;

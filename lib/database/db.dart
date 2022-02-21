@@ -47,7 +47,7 @@ class DB with ChangeNotifier {
 
     return openDatabase(
       dbPath,
-      version: 2,
+      version: 3,
       onCreate: (Database db, int version) async {
         logger.info('First time run the app. Start running the migration script to v$version...');
         for (var i = 1; i <= version; i++) {

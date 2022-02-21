@@ -33,6 +33,7 @@ dependencies:
   flutter_font_icons: ^2.2.4
   flutter_svg: ^1.0.3
   flutter_hooks: ^0.18.2+1
+  flutter_iconpicker: ^3.1.2
   hooks_riverpod: ^2.0.0-dev.2
   path: ^1.8.0
   sqflite: ^2.0.2
@@ -94,3 +95,6 @@ flutter:
           weight: 600
         - asset: assets/fonts/IBMPlexMono-Bold.ttf
           weight: 700
+    - family: HandnoteIcon
+      fonts:
+        - asset: assets/fonts/iconfont.ttf

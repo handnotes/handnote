@@ -12,7 +12,7 @@ class SvgIcon extends StatelessWidget {
 
   final String assetName;
   final String? semanticLabel;
-  final double size;
+  final double? size;
   final Color? color;
 
   @override

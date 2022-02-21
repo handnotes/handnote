@@ -22,6 +22,21 @@ flutter test -d macos integration_test
 - [ ] Cannot re-open dialog with long press in integration
   test [![flutter/flutter/98804](https://img.shields.io/github/issues/detail/state/flutter/flutter/98804)](https://github.com/flutter/flutter/issues/98804)
 
+## Development
+
+### Build
+
+```bash
+flutter build apk --split-per-abi --no-tree-shake-icons
+```
+
+### Add icon from Iconfont
+
+1. Copy `iconfont.ttf` to `asset/fonts`
+2. Replace `.icon-(.*):before[\s\S]+?"\\(.*?)";\n}\n`
+   with `'$1': IconData(0x$2, fontFamily: 'HandnoteIcon'),` in `iconfont.css` and copy the result
+   to `lib/constants/icons.dart`
+
 ## Thanks
 
 - Icon: [网商银行无线图标库](https://www.iconfont.cn/collections/detail?cid=1260)

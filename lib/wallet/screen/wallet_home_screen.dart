@@ -3,12 +3,12 @@ import 'dart:core';
 import 'package:flutter/material.dart';
 import 'package:flutter_font_icons/flutter_font_icons.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:handnote/constants/icons.dart';
 import 'package:handnote/wallet/model/wallet_asset_provider.dart';
 import 'package:handnote/wallet/screen/asset/wallet_asset_add_screen.dart';
 import 'package:handnote/wallet/widget/wallet_asset_list.dart';
 import 'package:handnote/widgets/currency_text.dart';
 import 'package:handnote/widgets/page_container.dart';
-import 'package:handnote/widgets/svg_icon.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 const double bannerHeight = 180;
@@ -117,7 +117,7 @@ class WalletHomeScreen extends HookConsumerWidget {
                       IconButton(
                         onPressed: () => maskAmount.value = !maskAmount.value,
                         icon: maskAmount.value
-                            ? const SvgIcon('eye_off', color: Colors.white, size: 20)
+                            ? Icon(systemIcon['eye-close'], color: Colors.white, size: 20)
                             : const Icon(Ionicons.eye),
                       ),
                     ],

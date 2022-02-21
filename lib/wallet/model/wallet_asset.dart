@@ -106,7 +106,7 @@ class WalletAsset {
       repaymentDate: repaymentDate ?? this.repaymentDate,
       billingDate: billingDate ?? this.billingDate,
       createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
+      updatedAt: updatedAt ?? DateTime.now(),
       deletedAt: deletedAt ?? this.deletedAt,
     );
   }
@@ -161,5 +161,5 @@ class WalletAsset {
   }
 
   @override
-  String toString() => 'WalletAsset { id:$id, category:${category.name}, type:${type.name}, name:$name }';
+  String toString() => 'WalletAsset(id:$id, category:${category.name}, type:${type.name}, name:$name)';
 }
