@@ -34,7 +34,7 @@ class WalletAssetSelectBankScreen extends StatelessWidget {
               ),
               child: ListTile(
                 title: Text(bankInfo.name),
-                leading: RoundIcon(bankInfo.icon, color: bankInfo.color),
+                leading: RoundIcon(bankInfo.icon),
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(

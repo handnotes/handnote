@@ -63,7 +63,7 @@ class WalletAssetEditScreen extends HookConsumerWidget {
                               ? Text(bankCardName, style: TextStyle(color: theme.disabledColor))
                               : null,
                           leading: bankInfo != null
-                              ? RoundIcon(bankInfo.icon, color: bankInfo.color)
+                              ? RoundIcon(bankInfo.icon)
                               : RoundIcon(walletAssetTypeIconMap[asset.type]),
                           contentPadding: const EdgeInsets.symmetric(horizontal: 0),
                         ),

@@ -27,9 +27,7 @@ class WalletAssetItem extends HookConsumerWidget {
       elevation: 8,
       shadowColor: Colors.black.withOpacity(0.1),
       child: ListTile(
-        leading: bankInfo != null
-            ? RoundIcon(bankInfo.icon, color: bankInfo.color)
-            : RoundIcon(walletAssetTypeIconMap[asset.type]),
+        leading: bankInfo != null ? RoundIcon(bankInfo.icon) : RoundIcon(walletAssetTypeIconMap[asset.type]),
         title: Text(asset.name),
         subtitle: subTitle.isEmpty ? null : Text(subTitle),
         trailing: CurrencyText(asset.balance, mask: maskBalance, monoFont: false),
