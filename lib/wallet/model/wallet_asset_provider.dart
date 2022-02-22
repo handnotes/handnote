@@ -11,12 +11,12 @@ class WalletAssetNotifier extends StateNotifier<List<WalletAsset>> {
 
   static const tableName = 'wallet_asset';
 
-  Future<void> getHomeScreenList() async {
+  Future<void> getList() async {
     final db = await DB.shared.instance;
     final List<Map<String, Object?>> list = await db.query(
       tableName,
       orderBy: 'created_at DESC',
-      where: 'deleted_at is null and show_in_home_page = 1',
+      where: 'deleted_at is null',
     );
     state = list.map((e) => WalletAsset.fromMap(e)).toList();
   }
@@ -25,14 +25,14 @@ class WalletAssetNotifier extends StateNotifier<List<WalletAsset>> {
     final db = await DB.shared.instance;
     final updated = asset.copyWith(createdAt: DateTime.now(), updatedAt: DateTime.now());
     await db.insert(tableName, updated.toMap());
-    await getHomeScreenList();
+    await getList();
   }
 
   Future<void> update(WalletAsset asset) async {
     final db = await DB.shared.instance;
     final updated = asset.copyWith(updatedAt: DateTime.now());
     await db.update(tableName, updated.toMap(), where: 'id = ?', whereArgs: [asset.id]);
-    await getHomeScreenList();
+    await getList();
   }
 
   Future<void> delete(WalletAsset asset) async {

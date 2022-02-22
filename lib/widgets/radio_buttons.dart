@@ -9,6 +9,7 @@ class RadioButtons extends HookWidget {
     this.onSelected,
     this.inverse = false,
     this.dense = false,
+    this.childMinSize = 0,
   }) : super(key: key);
 
   final List<String> textList;
@@ -16,6 +17,7 @@ class RadioButtons extends HookWidget {
   final ValueChanged<int>? onSelected;
   final bool inverse;
   final bool dense;
+  final double childMinSize;
 
   List<bool> getMenuStatus(int selected) => List.generate(textList.length, (index) => selected == index);
 
@@ -31,7 +33,7 @@ class RadioButtons extends HookWidget {
       padding: const EdgeInsets.all(8.0),
       child: LayoutBuilder(builder: (context, constraints) {
         final double height = dense ? 28 : 32;
-        final double minWidth = dense ? 0.0 : (constraints.maxWidth - textList.length - 1) / textList.length;
+        final double minWidth = dense ? childMinSize : (constraints.maxWidth - textList.length - 1) / textList.length;
 
         return ToggleButtons(
           children: textList.map((text) {

@@ -6,6 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:handnote/constants/icons.dart';
 import 'package:handnote/wallet/model/wallet_asset_provider.dart';
 import 'package:handnote/wallet/screen/asset/wallet_asset_add_screen.dart';
+import 'package:handnote/wallet/screen/bill/wallet_bill_edit_screen.dart';
 import 'package:handnote/wallet/widget/wallet_asset_list.dart';
 import 'package:handnote/widgets/currency_text.dart';
 import 'package:handnote/widgets/page_container.dart';
@@ -29,11 +30,11 @@ class WalletHomeScreen extends HookConsumerWidget {
 
     useEffect(() {
       // TODO: View hidden wallet assets
-      ref.read(walletAssetProvider.notifier).getHomeScreenList();
+      ref.read(walletAssetProvider.notifier).getList();
       return null;
     }, []);
 
-    final walletAssets = ref.watch(walletAssetProvider);
+    final walletAssets = ref.watch(walletAssetProvider).where((e) => e.showInHomePage).toList();
 
     return PageContainer(
       child: Scaffold(
@@ -205,7 +206,9 @@ class WalletHomeScreen extends HookConsumerWidget {
                     size: theme.textTheme.headline6?.fontSize,
                   ),
                   onPressed: () {
-                    // TODO: add a bill page
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const WalletBillEditScreen(),
+                    ));
                   },
                 ),
               ),

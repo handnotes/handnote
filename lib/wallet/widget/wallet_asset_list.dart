@@ -18,6 +18,7 @@ class WalletAssetList extends HookWidget {
   @override
   Widget build(BuildContext context) {
     List<WalletAsset> assets = this.assets;
+    final theme = Theme.of(context);
 
     if (inHomePage) {
       assets = this.assets.where((asset) => asset.showInHomePage).toList();
@@ -34,7 +35,15 @@ class WalletAssetList extends HookWidget {
           ),
           const SizedBox(height: 8),
           Column(children: [
-            for (var asset in assets) WalletAssetItem(asset, maskBalance: maskAmount),
+            for (var asset in assets)
+              WalletAssetItem(
+                asset,
+                allowEdit: true,
+                trailingBuilder: () => Text(
+                  maskAmount ? '****' : asset.balance.toString(),
+                  style: theme.textTheme.subtitle1,
+                ),
+              ),
           ]),
         ],
       ),

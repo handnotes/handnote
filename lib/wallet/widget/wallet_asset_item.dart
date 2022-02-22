@@ -6,35 +6,92 @@ import 'package:handnote/wallet/constants/wallet_icon_map.dart';
 import 'package:handnote/wallet/model/wallet_asset.dart';
 import 'package:handnote/wallet/model/wallet_asset_provider.dart';
 import 'package:handnote/wallet/screen/asset/wallet_asset_edit_screen.dart';
-import 'package:handnote/widgets/currency_text.dart';
 import 'package:handnote/widgets/round_icon.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class WalletAssetItem extends HookConsumerWidget {
-  final WalletAsset asset;
-  final bool maskBalance;
+  const WalletAssetItem(
+    this.asset, {
+    Key? key,
+    this.dense = false,
+    this.trailingBuilder,
+    this.onTap,
+    this.allowEdit = false,
+  }) : super(key: key);
 
-  const WalletAssetItem(this.asset, {Key? key, this.maskBalance = false}) : super(key: key);
+  final WalletAsset? asset;
+  final bool dense;
+  final Widget? Function()? trailingBuilder;
+  final GestureTapCallback? onTap;
+  final bool allowEdit;
 
   @override
   Widget build(BuildContext context, ref) {
+    return dense
+        ? _buildListTile(context, ref, asset)
+        : Card(
+            elevation: 8,
+            shadowColor: Colors.black.withOpacity(0.1),
+            child: _buildListTile(context, ref, asset),
+          );
+  }
+
+  ListTile _buildListTile(BuildContext context, WidgetRef ref, WalletAsset? asset) {
+    final theme = Theme.of(context);
+    final bankInfo = bankInfoMap[asset?.bank];
+    final subtitle = _getSubtitle(asset);
+    final assetIcon = asset == null
+        ? RoundIcon(
+            const Icon(Icons.account_balance_wallet),
+            color: theme.disabledColor,
+          )
+        : bankInfo != null
+            ? RoundIcon(bankInfo.icon)
+            : RoundIcon(walletAssetTypeIconMap[asset.type]);
+
+    return ListTile(
+      minVerticalPadding: 0,
+      leading: FittedBox(
+        alignment: Alignment.centerLeft,
+        child: assetIcon,
+      ),
+      title: Container(
+        height: 60,
+        alignment: Alignment.centerLeft,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              asset?.name ?? '选择账户',
+              style: theme.textTheme.subtitle1,
+              softWrap: false,
+              overflow: TextOverflow.fade,
+            ),
+            if (subtitle != null)
+              Text(
+                subtitle,
+                softWrap: false,
+                overflow: TextOverflow.fade,
+                style: theme.textTheme.caption,
+              )
+          ],
+        ),
+      ),
+      trailing: trailingBuilder != null ? trailingBuilder!() : null,
+      onTap: onTap,
+      onLongPress: allowEdit && asset != null ? () => _showAdvancedDialog(context, ref) : null,
+    );
+  }
+
+  String? _getSubtitle(WalletAsset? asset) {
+    if (asset == null) return null;
+
     final bankInfo = bankInfoMap[asset.bank];
     final String cardNumber = asset.cardNumber?.slice(-4) ?? '';
     final String bankCardName = (bankInfo != null ? assetTypeNameMap[asset.type] : null) ?? '';
     final String subTitle = (asset.remark.isNotEmpty ? asset.remark : '$bankCardName $cardNumber').trim();
-
-    return Card(
-      elevation: 8,
-      shadowColor: Colors.black.withOpacity(0.1),
-      child: ListTile(
-        leading: bankInfo != null ? RoundIcon(bankInfo.icon) : RoundIcon(walletAssetTypeIconMap[asset.type]),
-        title: Text(asset.name),
-        subtitle: subTitle.isEmpty ? null : Text(subTitle),
-        trailing: CurrencyText(asset.balance, mask: maskBalance, monoFont: false),
-        visualDensity: VisualDensity.standard,
-        onLongPress: () => _showAdvancedDialog(context, ref),
-      ),
-    );
+    return subTitle.isNotEmpty ? subTitle : null;
   }
 
   Future<int?> _showAdvancedDialog(BuildContext context, WidgetRef ref) {
@@ -49,7 +106,7 @@ class WalletAssetItem extends HookConsumerWidget {
             ),
           ),
           child: SimpleDialog(
-            title: Text(asset.name),
+            title: Text(asset!.name),
             children: [
               SimpleDialogOption(
                 child: const Text('隐藏'),
@@ -74,12 +131,14 @@ class WalletAssetItem extends HookConsumerWidget {
   }
 
   Future<void> _hideAsset(BuildContext context, WidgetRef ref) async {
-    await ref.read(walletAssetProvider.notifier).hide(asset);
+    await ref.read(walletAssetProvider.notifier).hide(asset!);
     Navigator.of(context).pop();
   }
 
   Future<void> _editAsset(BuildContext context, WidgetRef ref) async {
-    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => WalletAssetEditScreen(asset: asset)));
+    Navigator.of(context).pushReplacement(MaterialPageRoute(
+      builder: (context) => WalletAssetEditScreen(asset: asset!),
+    ));
   }
 
   Future<void> _deleteAsset(BuildContext context, WidgetRef ref) async {
@@ -88,7 +147,7 @@ class WalletAssetItem extends HookConsumerWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('确认删除'),
-        content: Text('确认删除资产：${asset.name}？'),
+        content: Text('确认删除资产：${asset!.name}？'),
         actions: [
           TextButton(
             autofocus: true,
@@ -99,7 +158,7 @@ class WalletAssetItem extends HookConsumerWidget {
             style: TextButton.styleFrom(primary: Theme.of(context).errorColor),
             child: const Text('确认'),
             onPressed: () async {
-              await ref.read(walletAssetProvider.notifier).delete(asset);
+              await ref.read(walletAssetProvider.notifier).delete(asset!);
               Navigator.of(context)
                 ..pop()
                 ..pop();
