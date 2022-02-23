@@ -122,18 +122,8 @@ class WalletAssetEditScreen extends HookConsumerWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(16),
-                  child: TextButton(
-                    style: TextButton.styleFrom(
-                      backgroundColor: theme.colorScheme.secondary,
-                      padding: const EdgeInsets.all(24),
-                    ),
-                    child: Text(
-                      '保存',
-                      style: theme.textTheme.subtitle1?.copyWith(
-                        letterSpacing: 1.5,
-                        color: theme.colorScheme.onPrimary,
-                      ),
-                    ),
+                  child: ElevatedButton(
+                    child: const Text('保存'),
                     onPressed: () async {
                       final updated = asset.copyWith(
                         remark: remark.value,

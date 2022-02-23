@@ -15,7 +15,7 @@ class WalletBillNotifier extends StateNotifier<List<WalletBill>> {
     final db = await DB.shared.instance;
     final List<Map<String, Object?>> list = await db.query(
       tableName,
-      orderBy: 'sort DESC',
+      orderBy: 'time DESC',
       where: 'deleted_at is null',
     );
     state = list.map((e) => WalletBill.fromMap(e)).toList();

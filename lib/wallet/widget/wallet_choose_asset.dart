@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:handnote/constants/constants.dart';
+import 'package:handnote/theme.dart';
 import 'package:handnote/wallet/model/wallet_asset.dart';
 import 'package:handnote/wallet/model/wallet_bill.dart';
 import 'package:handnote/wallet/widget/wallet_asset_item.dart';
@@ -13,8 +14,9 @@ class WalletBillEditAmount extends HookWidget {
     required this.asset,
     required this.assets,
     required this.onSelected,
-    required this.amount,
-    required this.onAmountChanged,
+    this.amount,
+    this.onAmountChanged,
+    this.amountController,
   }) : super(key: key);
 
   final WalletBillType billType;
@@ -22,8 +24,9 @@ class WalletBillEditAmount extends HookWidget {
   final List<WalletAsset> assets;
   final Function(WalletAsset? asset) onSelected;
 
-  final double amount;
-  final Function(double amount) onAmountChanged;
+  final double? amount;
+  final Function(double amount)? onAmountChanged;
+  final TextEditingController? amountController;
 
   @override
   Widget build(BuildContext context) {
@@ -47,10 +50,13 @@ class WalletBillEditAmount extends HookWidget {
             ),
             const VerticalDivider(thickness: 2, width: 32),
             Expanded(
-              child: TextField(
+              child: TextFormField(
+                initialValue: amount?.toStringAsFixed(2),
+                onChanged: (value) => onAmountChanged?.call(double.tryParse(value) ?? 0),
+                controller: amountController,
                 style: TextStyle(
                   fontSize: theme.textTheme.headline4?.fontSize,
-                  color: billType == WalletBillType.outcome ? Colors.red : Colors.green,
+                  color: billType == WalletBillType.outcome ? errorColor : successColor,
                   fontFamily: fontMonospace,
                 ),
                 decoration: InputDecoration(

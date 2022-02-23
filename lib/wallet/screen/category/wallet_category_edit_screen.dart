@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_iconpicker/flutter_iconpicker.dart';
 import 'package:handnote/constants/icons.dart';
+import 'package:handnote/theme.dart';
 import 'package:handnote/wallet/model/wallet_category.dart';
 import 'package:handnote/wallet/model/wallet_category_provider.dart';
 import 'package:handnote/widgets/page_container.dart';
@@ -20,7 +21,7 @@ class WalletCategoryEditScreen extends HookConsumerWidget {
 
   bool get isOutcome => category.type == WalletCategoryType.outcome;
 
-  Color get iconColor => isOutcome ? Colors.red[300]! : Colors.green[300]!;
+  Color get iconColor => isOutcome ? errorColor : successColor;
 
   static const defaultIcon = Icons.category;
 

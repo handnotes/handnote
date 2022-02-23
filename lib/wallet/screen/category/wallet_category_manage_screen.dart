@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:handnote/theme.dart';
 import 'package:handnote/wallet/model/wallet_category.dart';
 import 'package:handnote/wallet/model/wallet_category_provider.dart';
 import 'package:handnote/wallet/screen/category/wallet_category_edit_screen.dart';
@@ -44,7 +45,7 @@ class WalletCategoryManageScreen extends HookConsumerWidget {
                 itemBuilder: (context, index) {
                   final treeNode = categoryTree.children[index];
                   final bool displayChildren = expandedMap.value[treeNode.category.id] ?? false;
-                  final iconColor = type.value == WalletCategoryType.outcome ? Colors.red[300]! : Colors.green[300]!;
+                  final iconColor = type.value == WalletCategoryType.outcome ? errorColor : successColor;
 
                   return Column(
                     children: [
