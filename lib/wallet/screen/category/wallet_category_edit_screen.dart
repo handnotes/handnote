@@ -34,7 +34,6 @@ class WalletCategoryEditScreen extends HookConsumerWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text('${isEdit ? '编辑' : '新建'}${isOutcome ? '支出' : '收入'}${isTopLevel ? '大类' : '小类'}'),
-          leading: const BackButton(),
         ),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

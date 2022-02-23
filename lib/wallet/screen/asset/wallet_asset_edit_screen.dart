@@ -39,10 +39,6 @@ class WalletAssetEditScreen extends HookConsumerWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text("${isEdit ? '编辑' : '新建'}资产账户"),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, semanticLabel: '返回'),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
         ),
         body: Container(
           color: theme.scaffoldBackgroundColor,

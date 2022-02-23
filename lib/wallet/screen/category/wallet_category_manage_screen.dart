@@ -35,10 +35,6 @@ class WalletCategoryManageScreen extends HookConsumerWidget {
             selected: type.value.index,
             onSelected: (index) => type.value = WalletCategoryType.values[index],
           ),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, semanticLabel: 'Back'),
-            onPressed: Navigator.of(context).pop,
-          ),
         ),
         body: Column(
           children: [

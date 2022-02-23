@@ -21,7 +21,6 @@ class WalletBillEditScreen extends HookConsumerWidget {
     return PageContainer(
       child: Scaffold(
         appBar: AppBar(
-          leading: const BackButton(),
           title: RadioButtons(
             inverse: true,
             dense: true,

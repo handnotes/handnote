@@ -7,10 +7,7 @@ import 'package:handnote/widgets/page_container.dart';
 import 'package:handnote/widgets/round_icon.dart';
 
 class WalletAssetSelectBankScreen extends StatelessWidget {
-  const WalletAssetSelectBankScreen({
-    Key? key,
-    required this.asset,
-  }) : super(key: key);
+  const WalletAssetSelectBankScreen({Key? key, required this.asset}) : super(key: key);
 
   final WalletAsset asset;
 
