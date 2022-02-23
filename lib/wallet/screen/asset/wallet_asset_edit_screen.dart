@@ -33,7 +33,7 @@ class WalletAssetEditScreen extends HookConsumerWidget {
 
     final remark = useState<String>(asset.remark);
     final balance = useState<double>(asset.balance);
-    final cardNumber = useState<String>('');
+    final cardNumber = useState<String?>(asset.cardNumber);
 
     return PageContainer(
       child: Scaffold(
@@ -91,7 +91,7 @@ class WalletAssetEditScreen extends HookConsumerWidget {
                               hintText: '可填尾号进行辨识，或用于备忘',
                               border: InputBorder.none,
                             ),
-                            initialValue: asset.cardNumber,
+                            initialValue: cardNumber.value,
                             onChanged: (value) => cardNumber.value = value,
                           ),
                         ),
