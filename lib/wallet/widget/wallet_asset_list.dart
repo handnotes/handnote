@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:handnote/wallet/model/wallet_asset.dart';
+import 'package:handnote/wallet/screen/asset/wallet_asset_detail_screen.dart';
 import 'package:handnote/wallet/widget/wallet_asset_item.dart';
 
 class WalletAssetList extends HookWidget {
@@ -43,6 +44,11 @@ class WalletAssetList extends HookWidget {
                   maskAmount ? '****' : asset.balance.toString(),
                   style: theme.textTheme.subtitle1,
                 ),
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => WalletAssetDetailScreen(asset),
+                  ));
+                },
               ),
           ]),
         ],

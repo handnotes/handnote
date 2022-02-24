@@ -24,13 +24,13 @@ class WalletHomeScreen extends HookConsumerWidget {
     final titleOpacity = useState<double>(0);
     final maskAmount = useState(false);
     final scrollController = useScrollController();
-    scrollController.addListener(() {
-      titleOpacity.value = scrollController.offset > bannerHeight * 0.7 ? 1 : 0;
-    });
 
     useEffect(() {
       // TODO: View hidden wallet assets
       ref.read(walletAssetProvider.notifier).getList();
+      scrollController.addListener(() {
+        titleOpacity.value = scrollController.offset > bannerHeight * 0.7 ? 1 : 0;
+      });
       return null;
     }, []);
 

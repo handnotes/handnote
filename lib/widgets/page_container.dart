@@ -3,9 +3,14 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 class PageContainer extends StatelessWidget {
-  const PageContainer({Key? key, required this.child}) : super(key: key);
+  const PageContainer({
+    Key? key,
+    required this.child,
+    this.color,
+  }) : super(key: key);
 
   final Widget child;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -14,9 +19,10 @@ class PageContainer extends StatelessWidget {
     return Builder(
       builder: (context) => Container(
         padding: EdgeInsets.only(top: padding),
-        color: Theme.of(context).brightness == Brightness.dark
-            ? Theme.of(context).colorScheme.surface
-            : Theme.of(context).colorScheme.primary,
+        color: color ??
+            (Theme.of(context).brightness == Brightness.dark
+                ? Theme.of(context).colorScheme.surface
+                : Theme.of(context).colorScheme.primary),
         child: child,
       ),
     );

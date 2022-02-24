@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:handnote/theme.dart';
 import 'package:handnote/utils/nanoid.dart';
 
 enum WalletBillType {
@@ -37,6 +39,24 @@ class WalletBill {
   final DateTime createdAt;
   final DateTime updatedAt;
   final DateTime? deletedAt;
+
+  bool get isOutcome => inAmount == 0 && outAmount > 0;
+
+  bool get isIncome => inAmount > 0 && outAmount == 0;
+
+  bool get isInner => inAmount > 0 && outAmount > 0;
+
+  double get amount => isOutcome ? outAmount : inAmount;
+
+  WalletBillType get type {
+    if (isOutcome) {
+      return WalletBillType.outcome;
+    } else if (isIncome) {
+      return WalletBillType.income;
+    } else {
+      return WalletBillType.inner;
+    }
+  }
 
   WalletBill copyWith({
     String? id,
@@ -102,3 +122,9 @@ class WalletBill {
     );
   }
 }
+
+final billColorMap = <WalletBillType, Color>{
+  WalletBillType.outcome: errorColor,
+  WalletBillType.income: successColor,
+  WalletBillType.inner: primaryColor,
+};
