@@ -76,9 +76,9 @@ class WalletCategory {
       'icon': encodeIcon(icon),
       'sort': sort,
       'status': status.index,
-      'created_at': createdAt.millisecondsSinceEpoch,
-      'updated_at': updatedAt.millisecondsSinceEpoch,
-      'deleted_at': deletedAt?.millisecondsSinceEpoch,
+      'created_at': createdAt.toIso8601String(),
+      'updated_at': updatedAt.toIso8601String(),
+      'deleted_at': deletedAt?.toIso8601String(),
     };
     if (id != null) {
       map['id'] = id;
@@ -95,9 +95,9 @@ class WalletCategory {
       icon: decodeIcon(map['icon'] as String?),
       sort: map['sort'] as int,
       status: WalletCategoryStatus.values[map['status'] as int],
-      createdAt: DateTime.fromMillisecondsSinceEpoch(map['created_at'] as int),
-      updatedAt: DateTime.fromMillisecondsSinceEpoch(map['updated_at'] as int),
-      deletedAt: map['deleted_at'] == null ? null : DateTime.fromMillisecondsSinceEpoch(map['deleted_at'] as int),
+      createdAt: DateTime.parse(map['created_at']),
+      updatedAt: DateTime.parse(map['updated_at']),
+      deletedAt: map['deleted_at'] == null ? null : DateTime.parse(map['deleted_at']),
     );
   }
 

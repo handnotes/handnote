@@ -74,14 +74,14 @@ class WalletBill {
       'category': category,
       'sub_category': subCategory,
       'out_assets': outAssets,
-      'out_amount': outAmount,
+      'out_amount': outAmount.toStringAsFixed(2),
       'in_assets': inAssets,
-      'in_amount': inAmount,
-      'time': time.millisecondsSinceEpoch,
+      'in_amount': inAmount.toStringAsFixed(2),
+      'time': time.toIso8601String(),
       'description': description,
-      'created_at': createdAt.millisecondsSinceEpoch,
-      'updated_at': updatedAt.millisecondsSinceEpoch,
-      'deleted_at': deletedAt?.millisecondsSinceEpoch,
+      'created_at': createdAt.toIso8601String(),
+      'updated_at': updatedAt.toIso8601String(),
+      'deleted_at': deletedAt?.toIso8601String(),
     };
   }
 
@@ -94,11 +94,11 @@ class WalletBill {
       outAmount: map['out_amount'],
       inAssets: map['in_assets'],
       inAmount: map['in_amount'],
-      time: DateTime.fromMillisecondsSinceEpoch(map['time']),
+      time: DateTime.parse(map['time']),
       description: map['description'],
-      createdAt: DateTime.fromMillisecondsSinceEpoch(map['created_at']),
-      updatedAt: DateTime.fromMillisecondsSinceEpoch(map['updated_at']),
-      deletedAt: map['deleted_at'] == null ? null : DateTime.fromMillisecondsSinceEpoch(map['deleted_at']),
+      createdAt: DateTime.parse(map['created_at']),
+      updatedAt: DateTime.parse(map['updated_at']),
+      deletedAt: map['deleted_at'] == null ? null : DateTime.parse(map['deleted_at']),
     );
   }
 }

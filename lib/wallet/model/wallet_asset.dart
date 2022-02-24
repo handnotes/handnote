@@ -1,6 +1,7 @@
 import 'package:handnote/constants/bank.dart';
 import 'package:handnote/constants/enums.dart';
 import 'package:handnote/utils/extensions.dart'; // ignore: unused_import
+import 'package:handnote/utils/string.dart';
 import 'package:handnote/wallet/constants/wallet_asset_category.dart';
 import 'package:handnote/wallet/constants/wallet_asset_type.dart';
 
@@ -121,15 +122,15 @@ class WalletAsset {
       'show_in_home_page': showInHomePage ? 1 : 0,
       'allow_bill': allowBill ? 1 : 0,
       'not_counted': notCounted ? 1 : 0,
-      'init_amount': initAmount,
-      'balance': balance,
+      'init_amount': initAmount.toStringAsFixed(2),
+      'balance': balance.toStringAsFixed(2),
       'bank': bank?.name,
       'card_number': cardNumber,
-      'repayment_date': repaymentDate?.millisecondsSinceEpoch,
-      'billing_date': billingDate?.millisecondsSinceEpoch,
-      'created_at': createdAt.millisecondsSinceEpoch,
-      'updated_at': updatedAt.millisecondsSinceEpoch,
-      'deleted_at': deletedAt?.millisecondsSinceEpoch,
+      'repayment_date': repaymentDate?.toIso8601String(),
+      'billing_date': billingDate?.toIso8601String(),
+      'created_at': createdAt.toIso8601String(),
+      'updated_at': updatedAt.toIso8601String(),
+      'deleted_at': deletedAt?.toIso8601String(),
     };
     if (id != null) {
       map['id'] = id;
@@ -152,11 +153,11 @@ class WalletAsset {
       balance: map['balance'],
       bank: map['bank'] != null ? Bank.values.byName(map['bank']) : null,
       cardNumber: map['card_number'],
-      repaymentDate: map['repayment_date']?.let((it) => DateTime.fromMillisecondsSinceEpoch(it)),
-      billingDate: map['billing_date']?.let((it) => DateTime.fromMillisecondsSinceEpoch(it)),
-      createdAt: DateTime.fromMillisecondsSinceEpoch(map['created_at']),
-      updatedAt: DateTime.fromMillisecondsSinceEpoch(map['updated_at']),
-      deletedAt: map['deleted_at']?.let((it) => DateTime.fromMillisecondsSinceEpoch(it)),
+      repaymentDate: map['repayment_date']?.let((it) => DateTime.parse(it)),
+      billingDate: map['billing_date']?.let((it) => DateTime.parse(it)),
+      createdAt: DateTime.parse(map['created_at']),
+      updatedAt: DateTime.parse(map['updated_at']),
+      deletedAt: map['deleted_at']?.let((it) => DateTime.parse(it)),
     );
   }
 

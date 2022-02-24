@@ -7,9 +7,9 @@ CREATE TABLE wallet_category
     icon       TEXT,                       -- 分类图标
     sort       INTEGER NOT NULL DEFAULT 0, -- 排序
     status     INTEGER NOT NULL DEFAULT 1, -- 状态 (0: 禁用 1: 启用)
-    created_at INTEGER NOT NULL DEFAULT (STRFTIME('%s', 'now')),
-    updated_at INTEGER NOT NULL DEFAULT (STRFTIME('%s', 'now')),
-    deleted_at INTEGER
+    created_at DATETIME NOT NULL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')),
+    updated_at DATETIME NOT NULL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')),
+    deleted_at DATETIME
 );
 
 INSERT INTO wallet_category (id, pid, type, name, icon, sort)
