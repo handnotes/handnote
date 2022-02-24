@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+const Color primaryColor = Colors.blueGrey;
+final Color secondaryColor = Colors.red[300]!;
 final Color errorColor = Colors.red[300]!;
 final Color successColor = Colors.green[300]!;
 
@@ -13,7 +15,7 @@ final lightTheme = ThemeData(
   disabledColor: Colors.blueGrey[200],
   colorScheme: const ColorScheme.light().copyWith(
     primary: Colors.blueGrey,
-    secondary: Colors.red[300],
+    secondary: secondaryColor,
     onBackground: Colors.blueGrey,
     onPrimaryContainer: Colors.white,
     onSecondaryContainer: Colors.white,
@@ -21,8 +23,9 @@ final lightTheme = ThemeData(
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-      primary: Colors.red[300],
+      primary: errorColor,
       onPrimary: Colors.white,
+      elevation: 0,
     ),
   ),
   outlinedButtonTheme: OutlinedButtonThemeData(
@@ -39,15 +42,16 @@ final darkTheme = ThemeData(
   dividerColor: Colors.grey[800],
   backgroundColor: Colors.grey[800],
   colorScheme: const ColorScheme.dark().copyWith(
-    primary: Colors.blueGrey,
-    secondary: Colors.red[300],
+    secondary: secondaryColor,
     surface: Colors.grey[800],
+    onError: Colors.white,
+    onPrimary: Colors.blueGrey[200],
     onPrimaryContainer: Colors.white,
     onSecondaryContainer: Colors.white,
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
-      primary: Colors.red[300],
+      primary: Colors.blueGrey,
       onPrimary: Colors.white,
     ),
   ),

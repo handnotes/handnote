@@ -27,7 +27,7 @@ class RadioButtons extends HookWidget {
     final theme = Theme.of(context);
 
     final primary = inverse ? theme.colorScheme.onPrimaryContainer : theme.colorScheme.primary;
-    final primaryContainer = inverse ? theme.colorScheme.primary : theme.colorScheme.onPrimaryContainer;
+    final primaryContainer = inverse ? theme.colorScheme.primary : theme.colorScheme.onPrimary;
 
     return Padding(
       padding: const EdgeInsets.all(8.0),

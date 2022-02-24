@@ -14,9 +14,7 @@ class WalletBillEditAmount extends HookWidget {
     required this.asset,
     required this.assets,
     required this.onSelected,
-    this.amount,
-    this.onAmountChanged,
-    this.amountController,
+    required this.amountController,
   }) : super(key: key);
 
   final WalletBillType billType;
@@ -24,9 +22,7 @@ class WalletBillEditAmount extends HookWidget {
   final List<WalletAsset> assets;
   final Function(WalletAsset? asset) onSelected;
 
-  final double? amount;
-  final Function(double amount)? onAmountChanged;
-  final TextEditingController? amountController;
+  final TextEditingController amountController;
 
   @override
   Widget build(BuildContext context) {
@@ -51,8 +47,6 @@ class WalletBillEditAmount extends HookWidget {
             const VerticalDivider(thickness: 2, width: 32),
             Expanded(
               child: TextFormField(
-                initialValue: amount?.toStringAsFixed(2),
-                onChanged: (value) => onAmountChanged?.call(double.tryParse(value) ?? 0),
                 controller: amountController,
                 style: TextStyle(
                   fontSize: theme.textTheme.headline4?.fontSize,
@@ -66,7 +60,6 @@ class WalletBillEditAmount extends HookWidget {
                   contentPadding: const EdgeInsets.symmetric(horizontal: 16.0),
                   counterText: '',
                 ),
-                autofocus: true,
                 textAlign: TextAlign.right,
                 maxLength: 10,
                 keyboardType: TextInputType.number,

@@ -101,11 +101,7 @@ class WalletCategoryEditScreen extends HookConsumerWidget {
               child: SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  child: Text('保存', style: TextStyle(color: theme.colorScheme.onSecondaryContainer)),
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.all(24),
-                    primary: theme.colorScheme.secondary,
-                  ),
+                  child: const Text('保存'),
                   onPressed: () async {
                     if (isEdit) {
                       final updated = category.copyWith(

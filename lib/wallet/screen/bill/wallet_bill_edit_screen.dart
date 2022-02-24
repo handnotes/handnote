@@ -11,6 +11,7 @@ import 'package:handnote/wallet/widget/wallet_choose_asset.dart';
 import 'package:handnote/widgets/page_container.dart';
 import 'package:handnote/widgets/radio_buttons.dart';
 import 'package:handnote/widgets/round_icon.dart';
+import 'package:handnote/widgets/toast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class WalletBillEditScreen extends HookConsumerWidget {
@@ -26,20 +27,22 @@ class WalletBillEditScreen extends HookConsumerWidget {
     final assets = ref.watch(walletAssetProvider);
 
     // TODO: setup init value when edit
+    // TODO: add internal transfer billType
     final billType = useState(WalletBillType.outcome);
     final asset = useState<WalletAsset?>(null);
-    final amount = useState(0.0);
-    final time = useState<DateTime>(DateTime.now());
-    final description = useState<String?>(null);
+    final time = useState<DateTime>(bill?.time ?? DateTime.now());
     final category = useState<WalletCategory?>(null);
+
     final amountController = useTextEditingController();
+    final descriptionController = useTextEditingController();
 
     final categoryList = ref.watch(walletCategoryProvider).where((e) => e.type.index == billType.value.index).toList();
     final categoryTree = useMemoized(() => WalletCategoryTree.fromList(categoryList), [categoryList]);
 
     useEffect(() {
       ref.read(walletCategoryProvider.notifier).getList();
-      return null;
+      amountController.text = (bill?.inAmount ?? bill?.outAmount ?? '').toString();
+      descriptionController.text = bill?.description ?? '';
     }, []);
 
     final iconColor = billType.value == WalletBillType.outcome ? Colors.red[300] : Colors.green[300];
@@ -51,24 +54,32 @@ class WalletBillEditScreen extends HookConsumerWidget {
             ? '${time.value.year}年${time.value.month}月${time.value.day}日'
             : '${time.value.month}月${time.value.day}日';
 
-    Future<void> _save() async {
-      // TODO: validation (amount > 0, category != null)
+    Future<bool> _save() async {
+      final amount = double.tryParse(amountController.text) ?? 0;
+      final description = descriptionController.text;
+      if (amount <= 0) {
+        Toast.error(context, '请输入金额');
+        return false;
+      } else if (category.value == null) {
+        Toast.error(context, '请选择分类');
+        return false;
+      }
       WalletBill bill = this.bill ?? WalletBill();
       bill = bill.copyWith(
         category: category.value?.id,
         // TODO: add subcategory
         time: time.value,
-        description: description.value,
+        description: description,
       );
       if (billType.value == WalletBillType.outcome) {
         bill = bill.copyWith(
           outAssets: asset.value?.id,
-          outAmount: amount.value,
+          outAmount: amount,
         );
       } else {
         bill = bill.copyWith(
           inAssets: asset.value?.id,
-          inAmount: amount.value,
+          inAmount: amount,
         );
       }
       if (isEdit) {
@@ -76,6 +87,7 @@ class WalletBillEditScreen extends HookConsumerWidget {
       } else {
         await ref.read(walletBillProvider.notifier).add(bill);
       }
+      return true;
     }
 
     Future<void> _delete() async {
@@ -103,7 +115,6 @@ class WalletBillEditScreen extends HookConsumerWidget {
               asset: asset.value,
               assets: assets,
               onSelected: (newAsset) => asset.value = newAsset,
-              onAmountChanged: (newValue) => amount.value = newValue,
               amountController: amountController,
             ),
             Container(height: 16, color: theme.backgroundColor),
@@ -132,11 +143,10 @@ class WalletBillEditScreen extends HookConsumerWidget {
                     const VerticalDivider(),
                     Expanded(
                       child: TextFormField(
+                        controller: descriptionController,
                         decoration: const InputDecoration(
                           hintText: '备注',
                         ),
-                        initialValue: description.value,
-                        onChanged: (newValue) => description.value = newValue,
                       ),
                     ),
                   ],
@@ -202,10 +212,12 @@ class WalletBillEditScreen extends HookConsumerWidget {
                         child: OutlinedButton(
                           child: const Text('再记一笔'),
                           onPressed: () async {
-                            await _save();
-                            amountController.clear();
-                            description.value = '';
-                            // TODO: toast success and focus on amount
+                            final isSuccess = await _save();
+                            if (isSuccess) {
+                              amountController.clear();
+                              descriptionController.clear();
+                              // TODO: toast success and focus on amount
+                            }
                           },
                         ),
                       ),
@@ -214,8 +226,10 @@ class WalletBillEditScreen extends HookConsumerWidget {
                       child: ElevatedButton(
                         child: const Text('保存'),
                         onPressed: () async {
-                          await _save();
-                          Navigator.of(context).pop();
+                          final isSuccess = await _save();
+                          if (isSuccess) {
+                            Navigator.of(context).pop();
+                          }
                         },
                       ),
                     ),
