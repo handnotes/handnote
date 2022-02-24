@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:handnote/constants/bank.dart';
-import 'package:handnote/utils/string.dart';
-import 'package:handnote/wallet/constants/wallet_asset_type.dart';
 import 'package:handnote/wallet/constants/wallet_icon_map.dart';
 import 'package:handnote/wallet/model/wallet_asset.dart';
 import 'package:handnote/wallet/model/wallet_asset_provider.dart';
@@ -39,7 +37,6 @@ class WalletAssetItem extends HookConsumerWidget {
   ListTile _buildListTile(BuildContext context, WidgetRef ref, WalletAsset? asset) {
     final theme = Theme.of(context);
     final bankInfo = bankInfoMap[asset?.bank];
-    final subtitle = _getSubtitle(asset);
     final assetIcon = asset == null
         ? RoundIcon(
             const Icon(Icons.account_balance_wallet),
@@ -68,9 +65,9 @@ class WalletAssetItem extends HookConsumerWidget {
               softWrap: false,
               overflow: TextOverflow.fade,
             ),
-            if (subtitle != null)
+            if (asset?.subtitle != null)
               Text(
-                subtitle,
+                asset!.subtitle!,
                 softWrap: false,
                 overflow: TextOverflow.fade,
                 style: theme.textTheme.caption,
@@ -82,16 +79,6 @@ class WalletAssetItem extends HookConsumerWidget {
       onTap: onTap,
       onLongPress: allowEdit && asset != null ? () => _showAdvancedDialog(context, ref) : null,
     );
-  }
-
-  String? _getSubtitle(WalletAsset? asset) {
-    if (asset == null) return null;
-
-    final bankInfo = bankInfoMap[asset.bank];
-    final String cardNumber = asset.cardNumber?.slice(-4) ?? '';
-    final String bankCardName = (bankInfo != null ? assetTypeNameMap[asset.type] : null) ?? '';
-    final String subTitle = (asset.remark.isNotEmpty ? asset.remark : '$bankCardName $cardNumber').trim();
-    return subTitle.isNotEmpty ? subTitle : null;
   }
 
   Future<int?> _showAdvancedDialog(BuildContext context, WidgetRef ref) {

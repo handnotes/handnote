@@ -162,4 +162,12 @@ class WalletAsset {
 
   @override
   String toString() => 'WalletAsset(id:$id, category:${category.name}, type:${type.name}, name:$name)';
+
+  String? get subtitle {
+    final bankInfo = bankInfoMap[bank];
+    final String cardNumber = this.cardNumber?.slice(-4) ?? '';
+    final String bankCardName = (bankInfo != null ? assetTypeNameMap[type] : null) ?? '';
+    final String subTitle = (remark.isNotEmpty ? remark : '$bankCardName $cardNumber').trim();
+    return subTitle.isNotEmpty ? subTitle : null;
+  }
 }
