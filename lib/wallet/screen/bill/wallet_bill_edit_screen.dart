@@ -21,20 +21,27 @@ class WalletBillEditScreen extends HookConsumerWidget {
 
   get isEdit => bill != null;
 
+  get isInnerEdit => bill != null && bill!.inAmount != 0 && bill!.outAmount != 0;
+
   @override
   Widget build(BuildContext context, ref) {
     final theme = Theme.of(context);
     final assets = ref.watch(walletAssetProvider);
 
     // TODO: setup init value when edit
-    // TODO: add internal transfer billType
-    final billType = useState(WalletBillType.outcome);
-    final asset = useState<WalletAsset?>(null);
+    final billType = useState(isInnerEdit
+        ? WalletBillType.inner
+        : bill != null && bill!.outAmount != 0
+            ? WalletBillType.outcome
+            : WalletBillType.income);
+    final isInner = billType.value == WalletBillType.inner;
     final time = useState<DateTime>(bill?.time ?? DateTime.now());
     final category = useState<WalletCategory?>(null);
+    final descriptionController = useTextEditingController();
 
     final amountController = useTextEditingController();
-    final descriptionController = useTextEditingController();
+    final asset = useState<WalletAsset?>(null);
+    final transferAsset = useState<WalletAsset?>(null);
 
     final categoryList = ref.watch(walletCategoryProvider).where((e) => e.type.index == billType.value.index).toList();
     final categoryTree = useMemoized(() => WalletCategoryTree.fromList(categoryList), [categoryList]);
@@ -43,6 +50,7 @@ class WalletBillEditScreen extends HookConsumerWidget {
       ref.read(walletCategoryProvider.notifier).getList();
       amountController.text = (bill?.inAmount ?? bill?.outAmount ?? '').toString();
       descriptionController.text = bill?.description ?? '';
+      return null;
     }, []);
 
     final iconColor = billType.value == WalletBillType.outcome ? Colors.red[300] : Colors.green[300];
@@ -60,6 +68,12 @@ class WalletBillEditScreen extends HookConsumerWidget {
       if (amount <= 0) {
         Toast.error(context, '请输入金额');
         return false;
+      }
+      if (isInner) {
+        if (transferAsset.value == asset.value) {
+          Toast.error(context, '转入资产和转出资产不能相同');
+          return false;
+        }
       } else if (category.value == null) {
         Toast.error(context, '请选择分类');
         return false;
@@ -76,10 +90,17 @@ class WalletBillEditScreen extends HookConsumerWidget {
           outAssets: asset.value?.id,
           outAmount: amount,
         );
+      } else if (billType.value == WalletBillType.income) {
+        bill = bill.copyWith(
+          inAssets: asset.value?.id,
+          inAmount: amount,
+        );
       } else {
         bill = bill.copyWith(
           inAssets: asset.value?.id,
           inAmount: amount,
+          outAssets: transferAsset.value?.id,
+          outAmount: amount,
         );
       }
       if (isEdit) {
@@ -93,6 +114,12 @@ class WalletBillEditScreen extends HookConsumerWidget {
     Future<void> _delete() async {
       assert(bill != null);
       await ref.read(walletBillProvider.notifier).delete(bill!);
+    }
+
+    void _swapTransfer() {
+      final temp = transferAsset.value;
+      transferAsset.value = asset.value;
+      asset.value = temp;
     }
 
     return PageContainer(
@@ -111,12 +138,32 @@ class WalletBillEditScreen extends HookConsumerWidget {
           mainAxisSize: MainAxisSize.max,
           children: [
             WalletBillEditAmount(
-              billType: billType.value,
+              billType: isInner ? WalletBillType.outcome : billType.value,
               asset: asset.value,
               assets: assets,
               onSelected: (newAsset) => asset.value = newAsset,
               amountController: amountController,
             ),
+            if (isInner) ...[
+              Container(
+                alignment: Alignment.center,
+                child: OutlinedButton.icon(
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  ),
+                  icon: const RotatedBox(quarterTurns: 1, child: Icon(Icons.switch_left)),
+                  label: const Text('转至'),
+                  onPressed: _swapTransfer,
+                ),
+              ),
+              WalletBillEditAmount(
+                billType: WalletBillType.income,
+                asset: transferAsset.value,
+                assets: assets,
+                onSelected: (newAsset) => transferAsset.value = newAsset,
+                amountController: amountController,
+              ),
+            ],
             Container(height: 16, color: theme.backgroundColor),
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -153,41 +200,42 @@ class WalletBillEditScreen extends HookConsumerWidget {
                 ),
               ),
             ),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: GridView.extent(
-                // FIXME: grid view maybe overflow
-                shrinkWrap: true,
-                maxCrossAxisExtent: 76,
-                mainAxisSpacing: 8,
-                children: [
-                  for (final categoryNode in categoryTree.children)
-                    Builder(builder: (context) {
-                      final color = categoryNode.id == category.value?.id ? iconColor : theme.disabledColor;
-                      return Stack(
-                        children: [
-                          Positioned.fill(
-                            child: IconButton(
-                              visualDensity: VisualDensity.compact,
-                              icon: RoundIcon(Icon(categoryNode.category.icon, color: color)),
-                              onPressed: () => category.value = categoryNode.category,
+            if (!isInner)
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: GridView.extent(
+                  // FIXME: grid view maybe overflow
+                  shrinkWrap: true,
+                  maxCrossAxisExtent: 76,
+                  mainAxisSpacing: 8,
+                  children: [
+                    for (final categoryNode in categoryTree.children)
+                      Builder(builder: (context) {
+                        final color = categoryNode.id == category.value?.id ? iconColor : theme.disabledColor;
+                        return Stack(
+                          children: [
+                            Positioned.fill(
+                              child: IconButton(
+                                visualDensity: VisualDensity.compact,
+                                icon: RoundIcon(Icon(categoryNode.category.icon, color: color)),
+                                onPressed: () => category.value = categoryNode.category,
+                              ),
                             ),
-                          ),
-                          Positioned.fill(
-                            top: null,
-                            child: Text(
-                              categoryNode.category.name,
-                              style: TextStyle(color: color, fontSize: theme.textTheme.caption?.fontSize),
-                              textAlign: TextAlign.center,
+                            Positioned.fill(
+                              top: null,
+                              child: Text(
+                                categoryNode.category.name,
+                                style: TextStyle(color: color, fontSize: theme.textTheme.caption?.fontSize),
+                                textAlign: TextAlign.center,
+                              ),
                             ),
-                          ),
-                        ],
-                      );
-                    })
-                ],
+                          ],
+                        );
+                      })
+                  ],
+                ),
               ),
-            ),
             const Spacer(),
             IntrinsicHeight(
               child: Padding(

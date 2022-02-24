@@ -42,6 +42,7 @@ final darkTheme = ThemeData(
   dividerColor: Colors.grey[800],
   backgroundColor: Colors.grey[800],
   colorScheme: const ColorScheme.dark().copyWith(
+    primary: primaryColor,
     secondary: secondaryColor,
     surface: Colors.grey[800],
     onError: Colors.white,
