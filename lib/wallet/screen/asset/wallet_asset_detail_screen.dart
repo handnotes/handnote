@@ -44,18 +44,15 @@ class WalletAssetDetailScreen extends HookConsumerWidget {
     updateBalance() async {
       if (bills.isEmpty) return;
       balance.value = bills.fold(0.0, (value, element) => (value) + element.inAmount - element.outAmount);
-      await ref.read(walletAssetProvider.notifier).update(asset.copyWith(balance: balance.value));
+      if (asset.balance.toStringAsFixed(2) != balance.value.toStringAsFixed(2)) {
+        ref.read(walletAssetProvider.notifier).update(asset.copyWith(balance: balance.value));
+      }
     }
 
     useEffect(() {
       updateBalance();
       return null;
     }, [bills]);
-
-    useEffect(() {
-      ref.read(walletBillProvider.notifier).getList();
-      ref.read(walletCategoryProvider.notifier).getList();
-    }, []);
 
     return PageContainer(
       color: color,
@@ -130,7 +127,20 @@ class WalletAssetDetailScreen extends HookConsumerWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(category?.name ?? '未分类'),
-                                  Text('$month月${bill.time.day}日', style: theme.textTheme.caption),
+                                  RichText(
+                                    overflow: TextOverflow.ellipsis,
+                                    softWrap: false,
+                                    text: TextSpan(
+                                      children: [
+                                        TextSpan(text: '$month月${bill.time.day}日'),
+                                        TextSpan(
+                                          text: ' ${bill.description} ${bill.counterParty}',
+                                          style: TextStyle(color: theme.disabledColor),
+                                        ),
+                                      ],
+                                      style: theme.textTheme.caption,
+                                    ),
+                                  ),
                                 ],
                               ),
                               trailing: Text(

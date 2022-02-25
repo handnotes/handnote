@@ -5,6 +5,8 @@ import 'package:flutter_font_icons/flutter_font_icons.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:handnote/constants/icons.dart';
 import 'package:handnote/wallet/model/wallet_asset_provider.dart';
+import 'package:handnote/wallet/model/wallet_bill_provider.dart';
+import 'package:handnote/wallet/model/wallet_category_provider.dart';
 import 'package:handnote/wallet/screen/asset/wallet_asset_add_screen.dart';
 import 'package:handnote/wallet/screen/bill/wallet_bill_edit_screen.dart';
 import 'package:handnote/wallet/widget/wallet_asset_list.dart';
@@ -28,6 +30,11 @@ class WalletHomeScreen extends HookConsumerWidget {
     useEffect(() {
       // TODO: View hidden wallet assets
       ref.read(walletAssetProvider.notifier).getList();
+
+      // TODO: Load data in main page
+      ref.read(walletBillProvider.notifier).getList();
+      ref.read(walletCategoryProvider.notifier).getList();
+
       scrollController.addListener(() {
         titleOpacity.value = scrollController.offset > bannerHeight * 0.7 ? 1 : 0;
       });

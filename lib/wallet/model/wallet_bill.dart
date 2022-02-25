@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:handnote/constants/currency.dart';
 import 'package:handnote/theme.dart';
 import 'package:handnote/utils/nanoid.dart';
 
@@ -15,10 +16,13 @@ class WalletBill {
     this.subCategory,
     this.outAssets,
     this.outAmount = 0,
+    this.outAmountType,
     this.inAssets,
     this.inAmount = 0,
+    this.inAmountType,
     DateTime? time,
     this.description = '',
+    this.counterParty,
     DateTime? createdAt,
     DateTime? updatedAt,
     this.deletedAt,
@@ -32,10 +36,13 @@ class WalletBill {
   final int? subCategory;
   final int? outAssets;
   final double outAmount;
+  final Currency? outAmountType;
   final int? inAssets;
   final double inAmount;
+  final Currency? inAmountType;
   final DateTime time;
   final String description;
+  final String? counterParty;
   final DateTime createdAt;
   final DateTime updatedAt;
   final DateTime? deletedAt;
@@ -64,10 +71,13 @@ class WalletBill {
     int? subCategory,
     int? outAssets,
     double? outAmount,
+    Currency? outAmountType,
     int? inAssets,
     double? inAmount,
+    Currency? inAmountType,
     DateTime? time,
     String? description,
+    String? counterParty,
     DateTime? createdAt,
     DateTime? updatedAt,
     DateTime? deletedAt,
@@ -78,10 +88,13 @@ class WalletBill {
       subCategory: subCategory ?? this.subCategory,
       outAssets: outAssets ?? this.outAssets,
       outAmount: outAmount ?? this.outAmount,
+      outAmountType: outAmountType ?? this.outAmountType,
       inAssets: inAssets ?? this.inAssets,
       inAmount: inAmount ?? this.inAmount,
+      inAmountType: inAmountType ?? this.inAmountType,
       time: time ?? this.time,
       description: description ?? this.description,
+      counterParty: counterParty ?? this.counterParty,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       deletedAt: deletedAt ?? this.deletedAt,
@@ -95,10 +108,13 @@ class WalletBill {
       'sub_category': subCategory,
       'out_assets': outAssets,
       'out_amount': outAmount.toStringAsFixed(2),
+      'out_amount_type': outAmountType?.toString(),
       'in_assets': inAssets,
       'in_amount': inAmount.toStringAsFixed(2),
+      'in_amount_type': inAmountType?.toString(),
       'time': time.toIso8601String(),
       'description': description,
+      'counter_party': counterParty,
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
       'deleted_at': deletedAt?.toIso8601String(),
@@ -112,10 +128,13 @@ class WalletBill {
       subCategory: map['sub_category'],
       outAssets: map['out_assets'],
       outAmount: map['out_amount'],
+      outAmountType: currencyMap[map['out_amount_type']],
       inAssets: map['in_assets'],
       inAmount: map['in_amount'],
+      inAmountType: currencyMap[map['in_amount_type']],
       time: DateTime.parse(map['time']),
       description: map['description'],
+      counterParty: map['counter_party'],
       createdAt: DateTime.parse(map['created_at']),
       updatedAt: DateTime.parse(map['updated_at']),
       deletedAt: map['deleted_at'] == null ? null : DateTime.parse(map['deleted_at']),
@@ -127,4 +146,9 @@ final billColorMap = <WalletBillType, Color>{
   WalletBillType.outcome: errorColor,
   WalletBillType.income: successColor,
   WalletBillType.inner: primaryColor,
+};
+
+final currencyMap = <String, Currency>{
+  'RMB': Currency.RMB,
+  'USD': Currency.USD,
 };
