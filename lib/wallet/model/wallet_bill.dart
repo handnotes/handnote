@@ -108,16 +108,16 @@ class WalletBill {
       'sub_category': subCategory,
       'out_assets': outAssets,
       'out_amount': outAmount.toStringAsFixed(2),
-      'out_type': outAmountType?.toString(),
+      'out_type': outAmountType?.name,
       'in_assets': inAssets,
       'in_amount': inAmount.toStringAsFixed(2),
-      'in_type': inAmountType?.toString(),
-      'time': time.toIso8601String(),
+      'in_type': inAmountType?.name,
+      'time': time.toUtc().toIso8601String(),
       'description': description,
       'counter_party': counterParty,
-      'created_at': createdAt.toIso8601String(),
-      'updated_at': updatedAt.toIso8601String(),
-      'deleted_at': deletedAt?.toIso8601String(),
+      'created_at': createdAt.toUtc().toIso8601String(),
+      'updated_at': updatedAt.toUtc().toIso8601String(),
+      'deleted_at': deletedAt?.toUtc().toIso8601String(),
     };
   }
 

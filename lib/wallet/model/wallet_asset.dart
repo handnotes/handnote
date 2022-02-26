@@ -126,11 +126,11 @@ class WalletAsset {
       'balance': balance.toStringAsFixed(2),
       'bank': bank?.name,
       'card_number': cardNumber,
-      'repayment_date': repaymentDate?.toIso8601String(),
-      'billing_date': billingDate?.toIso8601String(),
-      'created_at': createdAt.toIso8601String(),
-      'updated_at': updatedAt.toIso8601String(),
-      'deleted_at': deletedAt?.toIso8601String(),
+      'repayment_date': repaymentDate?.toUtc().toIso8601String(),
+      'billing_date': billingDate?.toUtc().toIso8601String(),
+      'created_at': createdAt.toUtc().toIso8601String(),
+      'updated_at': updatedAt.toUtc().toIso8601String(),
+      'deleted_at': deletedAt?.toUtc().toIso8601String(),
     };
     if (id != null) {
       map['id'] = id;
