@@ -65,36 +65,48 @@ class WalletAssetDetailScreen extends HookConsumerWidget {
         body: CustomScrollView(
           controller: scrollController,
           slivers: [
-            SliverAppBar(
-              toolbarHeight: kToolbarHeight,
-              expandedHeight: 160,
-              backgroundColor: color,
-              leadingWidth: 72,
-              titleSpacing: 0,
-              title: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(asset.name, style: theme.textTheme.headline6),
-                  const SizedBox(width: 16),
-                  if (asset.subtitle != null) Text(asset.subtitle!),
-                  const Spacer(),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Text(
-                      '¥ ${balance.value.toStringAsFixed(2)}',
-                      style: theme.textTheme.headline6?.copyWith(
-                        fontFamily: fontMonospace,
-                      ),
-                    ),
+            Theme(
+              data: theme.copyWith(
+                textTheme: theme.textTheme.copyWith(
+                  headline6: theme.textTheme.headline6?.copyWith(
+                    color: theme.colorScheme.onPrimaryContainer,
                   ),
-                ],
+                ),
               ),
-              leading: RoundIcon(icon, size: 72, iconSize: 36),
-              stretch: true,
-              pinned: true,
-              flexibleSpace: FlexibleSpaceBar(
-                background: Container(color: color),
-              ),
+              child: Builder(builder: (context) {
+                final theme = Theme.of(context);
+                return SliverAppBar(
+                  toolbarHeight: kToolbarHeight,
+                  expandedHeight: 160,
+                  backgroundColor: color,
+                  leadingWidth: 72,
+                  titleSpacing: 0,
+                  title: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(asset.name, style: theme.textTheme.headline6),
+                      const SizedBox(width: 16),
+                      if (asset.subtitle != null) Text(asset.subtitle!),
+                      const Spacer(),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Text(
+                          '¥ ${balance.value.toStringAsFixed(2)}',
+                          style: theme.textTheme.headline6?.copyWith(
+                            fontFamily: fontMonospace,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  leading: RoundIcon(icon, size: 72, iconSize: 36),
+                  stretch: true,
+                  pinned: true,
+                  flexibleSpace: FlexibleSpaceBar(
+                    background: Container(color: color),
+                  ),
+                );
+              }),
             ),
             SliverList(
               delegate: SliverChildListDelegate([

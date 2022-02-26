@@ -15,16 +15,12 @@ class PageContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double padding = Platform.isMacOS ? 24 : 0;
+    final theme = Theme.of(context);
 
-    return Builder(
-      builder: (context) => Container(
-        padding: EdgeInsets.only(top: padding),
-        color: color ??
-            (Theme.of(context).brightness == Brightness.dark
-                ? Theme.of(context).colorScheme.surface
-                : Theme.of(context).colorScheme.primary),
-        child: child,
-      ),
+    return Container(
+      padding: EdgeInsets.only(top: padding),
+      color: color ?? theme.colorScheme.primaryContainer,
+      child: child,
     );
   }
 }

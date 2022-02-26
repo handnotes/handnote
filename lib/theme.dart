@@ -8,16 +8,16 @@ final Color successColor = Colors.green[300]!;
 final lightTheme = ThemeData(
   primarySwatch: Colors.blueGrey,
   brightness: Brightness.light,
-  primaryColor: Colors.blueGrey,
   backgroundColor: Colors.blueGrey[50],
   hintColor: Colors.grey,
   dividerColor: Colors.grey[200],
   disabledColor: Colors.blueGrey[200],
   colorScheme: const ColorScheme.light().copyWith(
-    primary: Colors.blueGrey,
-    secondary: secondaryColor,
-    onBackground: Colors.blueGrey,
+    primary: primaryColor,
+    onPrimary: Colors.white,
+    primaryContainer: primaryColor,
     onPrimaryContainer: Colors.white,
+    secondary: secondaryColor,
     onSecondaryContainer: Colors.white,
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(
@@ -38,17 +38,15 @@ final lightTheme = ThemeData(
 
 final darkTheme = ThemeData(
   brightness: Brightness.dark,
-  primaryColor: Colors.blueGrey,
+  primaryColor: primaryColor,
   dividerColor: Colors.grey[800],
   backgroundColor: Colors.grey[800],
   colorScheme: const ColorScheme.dark().copyWith(
     primary: primaryColor,
-    secondary: secondaryColor,
-    surface: Colors.grey[800],
-    onError: Colors.white,
-    onPrimary: Colors.blueGrey[200],
+    onPrimary: Colors.white,
+    primaryContainer: Colors.blueGrey[700],
     onPrimaryContainer: Colors.white,
-    onSecondaryContainer: Colors.white,
+    secondary: secondaryColor,
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(

@@ -71,7 +71,7 @@ class WalletHomeScreen extends HookConsumerWidget {
     return Theme(
       data: theme.copyWith(
         textTheme: theme.textTheme.apply(
-          bodyColor: theme.colorScheme.onPrimaryContainer,
+          bodyColor: theme.colorScheme.onPrimaryContainer.withOpacity(0.8),
           displayColor: theme.colorScheme.onPrimaryContainer,
         ),
         iconTheme: theme.iconTheme.copyWith(
@@ -81,6 +81,7 @@ class WalletHomeScreen extends HookConsumerWidget {
       child: Builder(builder: (context) {
         final theme = Theme.of(context);
         return SliverAppBar(
+          backgroundColor: theme.colorScheme.primaryContainer,
           toolbarHeight: kToolbarHeight - 12,
           pinned: true,
           expandedHeight: bannerHeight,
@@ -90,7 +91,10 @@ class WalletHomeScreen extends HookConsumerWidget {
             tween: Tween<double>(begin: 0, end: titleOpacity.value),
             duration: const Duration(milliseconds: 300),
             builder: (context, opacity, _) => AppBar(
-              title: Text('Handnote', style: TextStyle(color: Colors.white.withOpacity(opacity))),
+              title: Text(
+                'Handnote',
+                style: TextStyle(color: theme.colorScheme.onPrimaryContainer.withOpacity(opacity)),
+              ),
               primary: false,
               centerTitle: true,
               backgroundColor: Colors.transparent,
@@ -102,7 +106,7 @@ class WalletHomeScreen extends HookConsumerWidget {
                   // TODO: goto account book page
                 },
               ),
-            ),
+                ),
           ),
           flexibleSpace: FlexibleSpaceBar(
             background: Padding(
@@ -145,8 +149,8 @@ class WalletHomeScreen extends HookConsumerWidget {
                               maskAmount.value
                                   ? CurrencyText(income, mask: true)
                                   : income > 0
-                                      ? CurrencyText(income)
-                                      : Text('暂无收入', style: theme.textTheme.bodyText2),
+                                  ? CurrencyText(income)
+                                  : Text('暂无收入', style: theme.textTheme.bodyText2),
                             ],
                           ),
                         ),
@@ -158,19 +162,19 @@ class WalletHomeScreen extends HookConsumerWidget {
                           },
                           child: budget == 0
                               ? Row(
-                                  children: const [
-                                    Text('设置预算'),
-                                    SizedBox(width: 8),
-                                    Icon(Icons.admin_panel_settings_outlined, size: 18),
-                                  ],
-                                )
+                            children: const [
+                              Text('设置预算'),
+                              SizedBox(width: 8),
+                              Icon(Icons.admin_panel_settings_outlined, size: 18),
+                            ],
+                          )
                               : Row(
-                                  children: [
-                                    Text(budget - outcome > 0 ? '预算剩余' : '预算超支'),
-                                    const SizedBox(width: 8),
-                                    CurrencyText((budget - outcome).abs(), mask: maskAmount.value),
-                                  ],
-                                ),
+                            children: [
+                              Text(budget - outcome > 0 ? '预算剩余' : '预算超支'),
+                              const SizedBox(width: 8),
+                              CurrencyText((budget - outcome).abs(), mask: maskAmount.value),
+                            ],
+                          ),
                         ),
                       ),
                     ],
