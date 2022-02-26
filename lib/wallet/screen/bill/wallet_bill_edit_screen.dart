@@ -78,8 +78,8 @@ class WalletBillEditScreen extends HookConsumerWidget {
       WalletBill bill = this.bill ?? WalletBill();
       bill = bill.copyWith(
         // TODO: multiple currency type support
-        inAmountType: Currency.RMB,
-        outAmountType: Currency.RMB,
+        inAmountType: CurrencyType.RMB,
+        outAmountType: CurrencyType.RMB,
         category: category.value?.id,
         // TODO: add subcategory
         time: time.value,

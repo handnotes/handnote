@@ -36,10 +36,10 @@ class WalletBill {
   final int? subCategory;
   final int? outAssets;
   final double outAmount;
-  final Currency? outAmountType;
+  final CurrencyType? outAmountType;
   final int? inAssets;
   final double inAmount;
-  final Currency? inAmountType;
+  final CurrencyType? inAmountType;
   final DateTime time;
   final String description;
   final String? counterParty;
@@ -71,10 +71,10 @@ class WalletBill {
     int? subCategory,
     int? outAssets,
     double? outAmount,
-    Currency? outAmountType,
+    CurrencyType? outAmountType,
     int? inAssets,
     double? inAmount,
-    Currency? inAmountType,
+    CurrencyType? inAmountType,
     DateTime? time,
     String? description,
     String? counterParty,
@@ -148,7 +148,7 @@ final billColorMap = <WalletBillType, Color>{
   WalletBillType.inner: primaryColor,
 };
 
-final currencyMap = <String, Currency>{
-  'RMB': Currency.RMB,
-  'USD': Currency.USD,
+final currencyMap = <String, CurrencyType>{
+  'RMB': CurrencyType.RMB,
+  'USD': CurrencyType.USD,
 };
