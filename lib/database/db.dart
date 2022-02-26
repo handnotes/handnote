@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:handnote/main.dart';
 import 'package:logging/logging.dart';
 import 'package:path/path.dart' as path;
 import 'package:sqflite/sqflite.dart';
@@ -19,9 +21,14 @@ class DB with ChangeNotifier {
     return _database!;
   }
 
-  static Future<void> cleanDatabase() async {
+  static Future<void> cleanDatabase({BuildContext? context}) async {
     logger.info('Cleaning database...');
     await deleteDatabase(await _getDatabaseFileName());
+    if (context != null) {
+      await _database?.close();
+      _database = null;
+      HandnoteApp.restartApp(context);
+    }
   }
 
   static Future<String> _getDatabaseFileName() async {

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_font_icons/flutter_font_icons.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:handnote/constants/icons.dart';
+import 'package:handnote/database/db.dart';
+import 'package:handnote/theme.dart';
 import 'package:handnote/wallet/model/wallet_asset_provider.dart';
 import 'package:handnote/wallet/model/wallet_bill_provider.dart';
 import 'package:handnote/wallet/model/wallet_category_provider.dart';
@@ -45,10 +47,11 @@ class WalletHomeScreen extends HookConsumerWidget {
 
     return PageContainer(
       child: Scaffold(
+        drawer: _buildDrawer(context),
         body: CustomScrollView(
           controller: scrollController,
           slivers: [
-            _appBar(context, titleOpacity, maskAmount),
+            _buildAppBar(context, titleOpacity, maskAmount),
             SliverList(
               delegate: SliverChildListDelegate([
                 _addABillWidget(context),
@@ -61,7 +64,54 @@ class WalletHomeScreen extends HookConsumerWidget {
     );
   }
 
-  Widget _appBar(BuildContext context, ValueNotifier<double> titleOpacity, ValueNotifier<bool> maskAmount) {
+  Drawer _buildDrawer(BuildContext context) {
+    return Drawer(
+      child: ListView(
+        children: <Widget>[
+          const DrawerHeader(
+            child: Text('Handnote Wallet'),
+          ),
+          ListTile(
+            leading: const Icon(Icons.delete_forever),
+            title: const Text('清除数据'),
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: const Text('清除数据'),
+                    content: const Text('清除后将回回到初始状态，确定要清空数据吗？'),
+                    buttonPadding: const EdgeInsets.all(24),
+                    actions: [
+                      TextButton.icon(
+                        icon: const Icon(Icons.delete_forever),
+                        label: const Text('重置数据库'),
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.all(16),
+                          primary: errorColor,
+                        ),
+                        onPressed: () => DB.cleanDatabase(context: context),
+                      ),
+                      TextButton(
+                        child: const Text('取消'),
+                        autofocus: true,
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.all(16),
+                        ),
+                        onPressed: () => Navigator.of(context).pop(),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAppBar(BuildContext context, ValueNotifier<double> titleOpacity, ValueNotifier<bool> maskAmount) {
     double outcome = 1591.0;
     double income = 1;
     double budget = 10000;
@@ -87,6 +137,7 @@ class WalletHomeScreen extends HookConsumerWidget {
           expandedHeight: bannerHeight,
           stretch: true,
           titleSpacing: 0,
+          automaticallyImplyLeading: false,
           title: TweenAnimationBuilder<double>(
             tween: Tween<double>(begin: 0, end: titleOpacity.value),
             duration: const Duration(milliseconds: 300),
@@ -99,14 +150,7 @@ class WalletHomeScreen extends HookConsumerWidget {
               centerTitle: true,
               backgroundColor: Colors.transparent,
               shadowColor: Colors.transparent,
-              leading: IconButton(
-                icon: const Icon(Icons.book),
-                iconSize: 20,
-                onPressed: () {
-                  // TODO: goto account book page
-                },
-              ),
-                ),
+            ),
           ),
           flexibleSpace: FlexibleSpaceBar(
             background: Padding(
@@ -149,8 +193,8 @@ class WalletHomeScreen extends HookConsumerWidget {
                               maskAmount.value
                                   ? CurrencyText(income, mask: true)
                                   : income > 0
-                                  ? CurrencyText(income)
-                                  : Text('暂无收入', style: theme.textTheme.bodyText2),
+                                      ? CurrencyText(income)
+                                      : Text('暂无收入', style: theme.textTheme.bodyText2),
                             ],
                           ),
                         ),
@@ -161,20 +205,16 @@ class WalletHomeScreen extends HookConsumerWidget {
                             // TODO: setup budget page
                           },
                           child: budget == 0
-                              ? Row(
-                            children: const [
-                              Text('设置预算'),
-                              SizedBox(width: 8),
-                              Icon(Icons.admin_panel_settings_outlined, size: 18),
-                            ],
-                          )
-                              : Row(
-                            children: [
-                              Text(budget - outcome > 0 ? '预算剩余' : '预算超支'),
-                              const SizedBox(width: 8),
-                              CurrencyText((budget - outcome).abs(), mask: maskAmount.value),
-                            ],
-                          ),
+                              ? Row(children: const [
+                                  Text('设置预算'),
+                                  SizedBox(width: 8),
+                                  Icon(Icons.admin_panel_settings_outlined, size: 18),
+                                ])
+                              : Row(children: [
+                                  Text(budget - outcome > 0 ? '预算剩余' : '预算超支'),
+                                  const SizedBox(width: 8),
+                                  CurrencyText((budget - outcome).abs(), mask: maskAmount.value),
+                                ]),
                         ),
                       ),
                     ],

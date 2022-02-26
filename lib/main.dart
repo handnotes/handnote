@@ -10,8 +10,25 @@ void main() {
   runApp(const HandnoteApp());
 }
 
-class HandnoteApp extends StatelessWidget {
+class HandnoteApp extends StatefulWidget {
   const HandnoteApp({Key? key}) : super(key: key);
+
+  static restartApp(BuildContext context) {
+    context.findAncestorStateOfType<_HandnoteAppState>()?.restart();
+  }
+
+  @override
+  State<HandnoteApp> createState() => _HandnoteAppState();
+}
+
+class _HandnoteAppState extends State<HandnoteApp> {
+  Key key = UniqueKey();
+
+  void restart() {
+    setState(() {
+      key = UniqueKey();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,13 +38,16 @@ class HandnoteApp extends StatelessWidget {
       statusBarIconBrightness: Brightness.dark,
     ));
 
-    return ProviderScope(
-      child: MaterialApp(
-        title: 'Handnote',
-        theme: lightTheme,
-        darkTheme: darkTheme,
-        themeMode: ThemeMode.system,
-        home: const WalletHomeScreen(),
+    return Container(
+      key: key,
+      child: ProviderScope(
+        child: MaterialApp(
+          title: 'Handnote',
+          theme: lightTheme,
+          darkTheme: darkTheme,
+          themeMode: ThemeMode.system,
+          home: const WalletHomeScreen(),
+        ),
       ),
     );
   }
