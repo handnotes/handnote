@@ -247,9 +247,9 @@ class WalletHomeScreen extends HookConsumerWidget {
         elevation: 4.0,
         borderRadius: BorderRadius.circular(4),
         clipBehavior: Clip.antiAlias,
-        shadowColor: theme.colorScheme.secondary.withOpacity(0.5),
+        shadowColor: theme.colorScheme.secondaryContainer.withOpacity(0.4),
         child: Container(
-          color: theme.colorScheme.secondary,
+          color: theme.colorScheme.secondaryContainer,
           height: 48,
           child: Row(
             mainAxisSize: MainAxisSize.max,
@@ -259,7 +259,7 @@ class WalletHomeScreen extends HookConsumerWidget {
                 child: TextButton.icon(
                   label: Text(
                     '记一笔',
-                    style: theme.textTheme.headline6?.copyWith(color: theme.colorScheme.onPrimaryContainer),
+                    style: theme.textTheme.headline6?.copyWith(color: theme.colorScheme.onSecondaryContainer),
                   ),
                   icon: Icon(
                     Fontisto.plus_a,
@@ -273,7 +273,7 @@ class WalletHomeScreen extends HookConsumerWidget {
                   },
                 ),
               ),
-              const SizedBox(height: 28, child: VerticalDivider(color: Colors.white54, width: 0)),
+              const VerticalDivider(width: 0),
               TextButton(
                 child: Text(
                   '添加资产',

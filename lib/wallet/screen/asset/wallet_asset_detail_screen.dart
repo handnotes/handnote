@@ -31,11 +31,16 @@ class WalletAssetDetailScreen extends HookConsumerWidget {
     final scrollController = useScrollController();
     final bankInfo = asset.bank != null ? bankInfoMap[asset.bank] : null;
     final icon = bankInfo != null ? bankInfo.icon : walletAssetTypeIconMap[asset.type];
-    final color = icon is SvgIcon
+    Color color = (icon is SvgIcon
         ? icon.color
         : icon is Icon
             ? icon.color
-            : primaryColor;
+            : primaryColor)!;
+
+    if (theme.brightness == Brightness.dark) {
+      color = Color.alphaBlend(color.withOpacity(0.6), Colors.grey[900]!);
+    }
+
     final balance = useState(asset.balance);
 
     final bills = ref.watch(walletBillProvider).where((e) => e.inAssets == asset.id || e.outAssets == asset.id);
@@ -89,8 +94,9 @@ class WalletAssetDetailScreen extends HookConsumerWidget {
                 return SliverAppBar(
                   toolbarHeight: kToolbarHeight,
                   expandedHeight: 160,
-                  backgroundColor: color,
+                  collapsedHeight: 64,
                   leadingWidth: 72,
+                  backgroundColor: color,
                   titleSpacing: 0,
                   title: Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -110,7 +116,7 @@ class WalletAssetDetailScreen extends HookConsumerWidget {
                       ),
                     ],
                   ),
-                  leading: RoundIcon(icon, size: 72, iconSize: 36),
+                  leading: RoundIcon(icon, size: 72, iconSize: 36, color: color),
                   stretch: true,
                   pinned: true,
                   flexibleSpace: FlexibleSpaceBar(
