@@ -19,7 +19,6 @@ class WalletCategoryManageScreen extends HookConsumerWidget {
     final theme = Theme.of(context);
     final categoryList = ref.watch(walletCategoryProvider).where((element) => element.type == type.value).toList();
     final categoryTree = useMemoized(() => WalletCategoryTree.fromList(categoryList), [categoryList]);
-    final expandedMap = useState(<int, bool>{});
 
     useEffect(() {
       ref.read(walletCategoryProvider.notifier).getList();
@@ -44,50 +43,44 @@ class WalletCategoryManageScreen extends HookConsumerWidget {
                 itemCount: categoryTree.children.length,
                 itemBuilder: (context, index) {
                   final treeNode = categoryTree.children[index];
-                  final bool displayChildren = expandedMap.value[treeNode.category.id] ?? false;
                   final iconColor = type.value == WalletCategoryType.outcome ? errorColor : successColor;
 
-                  return Column(
-                    children: [
-                      ListTile(
-                        visualDensity: VisualDensity.standard,
-                        leading: Wrap(
-                          spacing: 8,
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          children: [
-                            Icon(displayChildren ? Icons.keyboard_arrow_down : Icons.keyboard_arrow_right),
-                            RoundIcon(Icon(treeNode.category.icon), color: treeNode.category.color),
-                          ],
-                        ),
-                        title: Text(treeNode.category.name),
-                        onTap: () {
-                          expandedMap.value = {...expandedMap.value, treeNode.id: !(displayChildren)};
-                        },
+                  return ExpansionTile(
+                    tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    controlAffinity: ListTileControlAffinity.leading,
+                    title: Container(
+                      transform: Matrix4.translationValues(-12, 0, 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          RoundIcon(Icon(treeNode.category.icon), color: treeNode.category.color),
+                          const SizedBox(width: 16),
+                          Text(treeNode.category.name),
+                        ],
                       ),
-                      if (displayChildren)
-                        Container(
-                          width: double.infinity,
-                          color: theme.backgroundColor,
-                          padding: const EdgeInsets.all(8),
-                          child: GridView.builder(
-                            shrinkWrap: true,
-                            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                              maxCrossAxisExtent: 104,
-                              childAspectRatio: 1,
-                              crossAxisSpacing: 8,
-                              mainAxisSpacing: 8,
-                            ),
-                            itemCount: treeNode.children.length + 1,
-                            itemBuilder: (context, index) {
-                              if (index == treeNode.children.length) {
-                                return _buildAddSubCategory(context, treeNode.category);
-                              } else {
-                                final child = treeNode.children[index];
-                                return _buildSubCategory(context, child, treeNode.category, iconColor);
-                              }
-                            },
+                    ),
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        color: theme.backgroundColor,
+                        padding: const EdgeInsets.all(8),
+                        child: GridView.builder(
+                          shrinkWrap: true,
+                          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                            maxCrossAxisExtent: 84,
+                            childAspectRatio: 1,
                           ),
+                          itemCount: treeNode.children.length + 1,
+                          itemBuilder: (context, index) {
+                            if (index == treeNode.children.length) {
+                              return _buildAddSubCategory(context, treeNode.category);
+                            } else {
+                              final child = treeNode.children[index];
+                              return _buildSubCategory(context, child, treeNode.category, iconColor);
+                            }
+                          },
                         ),
+                      ),
                     ],
                   );
                 },
@@ -124,18 +117,18 @@ class WalletCategoryManageScreen extends HookConsumerWidget {
     );
   }
 
-  Column _buildSubCategory(
+  Widget _buildSubCategory(
     BuildContext context,
     WalletCategoryTree child,
     WalletCategory parent,
     Color iconColor,
   ) {
     final theme = Theme.of(context);
-    return Column(
+    return Stack(
+      alignment: Alignment.center,
       children: [
-        SizedBox(
-          height: 64,
-          width: 64,
+        Positioned.fill(
+          top: -8,
           child: IconButton(
             icon: RoundIcon(
               Icon(child.category.icon),
@@ -148,38 +141,37 @@ class WalletCategoryManageScreen extends HookConsumerWidget {
             },
           ),
         ),
-        Text(child.category.name, style: TextStyle(color: theme.disabledColor)),
+        Positioned(
+          bottom: 4,
+          child: Text(child.category.name, style: TextStyle(color: theme.disabledColor)),
+        ),
       ],
     );
   }
 
-  Column _buildAddSubCategory(BuildContext context, WalletCategory parent) {
+  Widget _buildAddSubCategory(BuildContext context, WalletCategory parent) {
     final theme = Theme.of(context);
-    return Column(
+    return Stack(
+      alignment: Alignment.center,
       children: [
-        Container(
-          height: 64,
-          width: 64,
-          padding: const EdgeInsets.all(12),
-          child: Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: theme.disabledColor),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: IconButton(
-              icon: Icon(Icons.plus_one, color: theme.disabledColor, size: 22),
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => WalletCategoryEditScreen(
-                    WalletCategory(pid: parent.id, type: parent.type, icon: parent.icon),
-                    parent: parent,
-                  ),
-                ));
-              },
-            ),
+        Positioned.fill(
+          top: -8,
+          child: IconButton(
+            icon: RoundIcon(Icon(Icons.plus_one, color: theme.disabledColor)),
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => WalletCategoryEditScreen(
+                  WalletCategory(pid: parent.id, type: parent.type, icon: parent.icon),
+                  parent: parent,
+                ),
+              ));
+            },
           ),
         ),
-        Text('添加子类', style: TextStyle(color: theme.disabledColor)),
+        Positioned(
+          bottom: 4,
+          child: Text('添加子类', style: TextStyle(color: theme.disabledColor)),
+        ),
       ],
     );
   }

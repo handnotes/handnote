@@ -21,6 +21,8 @@ flutter test -d macos integration_test
   widget [![flutter/flutter/26336](https://img.shields.io/github/issues/detail/state/flutter/flutter/26336)](https://github.com/flutter/flutter/issues/26336)
 - [ ] Cannot re-open dialog with long press in integration
   test [![flutter/flutter/98804](https://img.shields.io/github/issues/detail/state/flutter/flutter/98804)](https://github.com/flutter/flutter/issues/98804)
+- [ ] Expandable sticky list for asset list and category management
+  screen (https://stackoverflow.com/a/48618537/7736393 https://juejin.cn/post/6887396184015208461)
 
 ## Development
 
