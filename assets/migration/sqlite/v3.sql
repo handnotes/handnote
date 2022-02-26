@@ -19,7 +19,7 @@ VALUES (0, NULL, 0, '', NULL, 0),
        (3, 0, 0, '借出', '{"pack":"custom","iconData":{"codePoint":58920,"fontFamily":"HandnoteIcon","fontPackage":null,"matchTextDirection":false}}', -1),
        (4, 0, 0, '还债', '{"pack":"custom","iconData":{"codePoint":58963,"fontFamily":"HandnoteIcon","fontPackage":null,"matchTextDirection":false}}', -1),
        (5, 0, 0, '利息支出', '{"pack":"custom","iconData":{"codePoint":58891,"fontFamily":"MaterialIcons","fontPackage":null,"matchTextDirection":false}}', -1),
-       (49, 0, 0, '其他支出', '{"pack":"custom","iconData":{"codePoint":58882,"fontFamily":"HandnoteIcon","fontPackage":null,"matchTextDirection":false}}', -2),
+       (49, 0, 0, '其他流出', '{"pack":"custom","iconData":{"codePoint":58882,"fontFamily":"HandnoteIcon","fontPackage":null,"matchTextDirection":false}}', -2),
 
        (50, 0, 1, '借入', '{"pack":"custom","iconData":{"codePoint":58994,"fontFamily":"HandnoteIcon","fontPackage":null,"matchTextDirection":false}}', -1),
        (51, 0, 1, '收债', '{"pack":"custom","iconData":{"codePoint":59662,"fontFamily":"HandnoteIcon","fontPackage":null,"matchTextDirection":false}}', -1),
@@ -28,7 +28,7 @@ VALUES (0, NULL, 0, '', NULL, 0),
        (54, 0, 1, '投资收益', '{"pack":"custom","iconData":{"codePoint":59344,"fontFamily":"HandnoteIcon","fontPackage":null,"matchTextDirection":false}}', -1),
        (55, 0, 1, '报销收入', '{"pack":"custom","iconData":{"codePoint":58637,"fontFamily":"MaterialIcons","fontPackage":null,"matchTextDirection":false}}', -1),
        (56, 0, 1, '退款', '{"pack":"custom","iconData":{"codePoint":58636,"fontFamily":"MaterialIcons","fontPackage":null,"matchTextDirection":false}}', -1),
-       (99, 0, 1, '其他收入', '{"pack":"custom","iconData":{"codePoint":58918,"fontFamily":"HandnoteIcon","fontPackage":null,"matchTextDirection":false}}', -2);
+       (99, 0, 1, '其他流入', '{"pack":"custom","iconData":{"codePoint":58918,"fontFamily":"HandnoteIcon","fontPackage":null,"matchTextDirection":false}}', -2);
 
 INSERT INTO wallet_category (id, pid, type, name, icon, sort)
 VALUES (100, 0, 0, '餐饮', '{"pack":"custom","iconData":{"codePoint":57946,"fontFamily":"MaterialIcons","fontPackage":null,"matchTextDirection":false}}', 0),
