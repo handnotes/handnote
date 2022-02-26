@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:handnote/constants/currency.dart';
 import 'package:handnote/wallet/model/wallet_asset.dart';
 import 'package:handnote/wallet/model/wallet_asset_provider.dart';
 import 'package:handnote/wallet/model/wallet_bill.dart';
@@ -21,35 +22,31 @@ class WalletBillEditScreen extends HookConsumerWidget {
 
   get isEdit => bill != null;
 
-  get isInnerEdit => bill != null && bill!.inAmount != 0 && bill!.outAmount != 0;
-
   @override
   Widget build(BuildContext context, ref) {
     final theme = Theme.of(context);
-    final assets = ref.watch(walletAssetProvider);
 
-    // TODO: setup init value when edit
-    final billType = useState(isInnerEdit
-        ? WalletBillType.inner
-        : bill != null && bill!.outAmount != 0
-            ? WalletBillType.outcome
-            : WalletBillType.income);
+    final billType = useState(bill?.type ?? WalletBillType.outcome);
     final isInner = billType.value == WalletBillType.inner;
     final time = useState<DateTime>(bill?.time ?? DateTime.now());
-    final category = useState<WalletCategory?>(null);
     final descriptionController = useTextEditingController();
-
     final amountController = useTextEditingController();
     final asset = useState<WalletAsset?>(null);
     final transferAsset = useState<WalletAsset?>(null);
+    final category = useState<WalletCategory?>(null);
 
-    final categoryList = ref.watch(walletCategoryProvider).where((e) => e.type.index == billType.value.index).toList();
-    final categoryTree = useMemoized(() => WalletCategoryTree.fromList(categoryList), [categoryList]);
+    final assets = ref.watch(walletAssetProvider);
+    final assetMap = useMemoized(() => {for (var e in assets) e.id: e}, [assets]);
+    final categories = ref.watch(walletCategoryProvider).where((e) => e.type.index == billType.value.index).toList();
+    final categoryMap = useMemoized(() => {for (var e in categories) e.id: e}, [categories]);
+    final categoryTree = useMemoized(() => WalletCategoryTree.fromList(categories), [categories]);
 
     useEffect(() {
-      ref.read(walletCategoryProvider.notifier).getList();
-      amountController.text = (bill?.inAmount ?? bill?.outAmount ?? '').toString();
+      amountController.text = (bill?.isOutcome == true ? bill?.outAmount : bill?.inAmount ?? '').toString();
       descriptionController.text = bill?.description ?? '';
+      asset.value = assetMap[bill?.isIncome == true ? bill!.inAssets : bill?.outAssets];
+      if (bill?.isInner == true) transferAsset.value = assetMap[bill?.inAssets];
+      category.value = bill?.category != null ? categoryMap[bill!.category] : null;
       return null;
     }, []);
 
@@ -80,6 +77,9 @@ class WalletBillEditScreen extends HookConsumerWidget {
       }
       WalletBill bill = this.bill ?? WalletBill();
       bill = bill.copyWith(
+        // TODO: multiple currency type support
+        inAmountType: Currency.RMB,
+        outAmountType: Currency.RMB,
         category: category.value?.id,
         // TODO: add subcategory
         time: time.value,
@@ -97,9 +97,9 @@ class WalletBillEditScreen extends HookConsumerWidget {
         );
       } else {
         bill = bill.copyWith(
-          inAssets: asset.value?.id,
+          inAssets: transferAsset.value?.id,
           inAmount: amount,
-          outAssets: transferAsset.value?.id,
+          outAssets: asset.value?.id,
           outAmount: amount,
         );
       }

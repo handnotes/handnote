@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_font_icons/flutter_font_icons.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:handnote/constants/bank.dart';
 import 'package:handnote/constants/constants.dart';
@@ -10,6 +11,7 @@ import 'package:handnote/wallet/model/wallet_asset_provider.dart';
 import 'package:handnote/wallet/model/wallet_bill.dart';
 import 'package:handnote/wallet/model/wallet_bill_provider.dart';
 import 'package:handnote/wallet/model/wallet_category_provider.dart';
+import 'package:handnote/wallet/screen/bill/wallet_bill_edit_screen.dart';
 import 'package:handnote/widgets/page_container.dart';
 import 'package:handnote/widgets/round_icon.dart';
 import 'package:handnote/widgets/svg_icon.dart';
@@ -40,10 +42,19 @@ class WalletAssetDetailScreen extends HookConsumerWidget {
     final billMonthly = useMemoized(() => groupBy(bills, (WalletBill e) => '${e.time.year}-${e.time.month}'), [bills]);
     final categories = ref.watch(walletCategoryProvider);
     final categoryMap = useMemoized(() => {for (var e in categories) e.id: e}, [categories]);
+    final assets = ref.watch(walletAssetProvider);
+    final assetMap = useMemoized(() => {for (var e in assets) e.id: e}, [assets]);
 
     updateBalance() async {
       if (bills.isEmpty) return;
-      balance.value = bills.fold(0.0, (value, element) => (value) + element.inAmount - element.outAmount);
+      balance.value = bills.fold(0.0, (value, element) {
+        if (element.inAssets == asset.id) {
+          return value + element.amount;
+        } else if (element.outAssets == asset.id) {
+          return value - element.amount;
+        }
+        return value;
+      });
       if (asset.balance.toStringAsFixed(2) != balance.value.toStringAsFixed(2)) {
         ref.read(walletAssetProvider.notifier).update(asset.copyWith(balance: balance.value));
       }
@@ -110,7 +121,7 @@ class WalletAssetDetailScreen extends HookConsumerWidget {
             ),
             SliverList(
               delegate: SliverChildListDelegate([
-                for (final yearMonth in billMonthly.keys)
+                for (final yearMonth in billMonthly.keys) ...[
                   Builder(builder: (context) {
                     final bills = billMonthly[yearMonth]!;
                     final year = int.parse(yearMonth.split('-')[0]);
@@ -126,19 +137,20 @@ class WalletAssetDetailScreen extends HookConsumerWidget {
                       tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       controlAffinity: ListTileControlAffinity.leading,
                       children: [
-                        for (final bill in bills)
+                        for (final bill in bills) ...[
+                          const Divider(height: 1),
                           Builder(builder: (context) {
                             final category = categoryMap[bill.category];
                             return ListTile(
                               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
                               leading: RoundIcon(
-                                Icon(category?.icon ?? Icons.category),
+                                Icon(bill.isInner ? FontAwesome.retweet : category?.icon ?? Icons.category),
                                 color: billColorMap[bill.type]!,
                               ),
                               title: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(category?.name ?? '未分类'),
+                                  Text(bill.isInner ? '内部转账' : category?.name ?? '未分类'),
                                   RichText(
                                     overflow: TextOverflow.ellipsis,
                                     softWrap: false,
@@ -155,17 +167,34 @@ class WalletAssetDetailScreen extends HookConsumerWidget {
                                   ),
                                 ],
                               ),
-                              trailing: Text(
-                                '¥ ${bill.amount.toStringAsFixed(2)}',
-                                style: theme.textTheme.subtitle1?.copyWith(
-                                  color: billColorMap[bill.type]!,
-                                ),
+                              trailing: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    '¥ ${bill.amount.toStringAsFixed(2)}',
+                                    style: theme.textTheme.subtitle1?.copyWith(
+                                      color: billColorMap[bill.type]!,
+                                    ),
+                                  ),
+                                  if (bill.isInner)
+                                    Text(
+                                      '${assetMap[bill.outAssets]?.name} > ${assetMap[bill.inAssets]?.name}',
+                                      style: theme.textTheme.caption,
+                                    )
+                                ],
                               ),
+                              onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => WalletBillEditScreen(bill: bill),
+                              )),
                             );
-                          }),
+                          })
+                        ],
                       ],
                     );
                   }),
+                  const Divider(height: 1),
+                ],
               ]),
             ),
           ],
