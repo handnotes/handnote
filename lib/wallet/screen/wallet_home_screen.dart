@@ -11,6 +11,7 @@ import 'package:handnote/wallet/model/wallet_bill_provider.dart';
 import 'package:handnote/wallet/model/wallet_category_provider.dart';
 import 'package:handnote/wallet/screen/asset/wallet_asset_add_screen.dart';
 import 'package:handnote/wallet/screen/bill/wallet_bill_edit_screen.dart';
+import 'package:handnote/wallet/screen/category/wallet_category_manage_screen.dart';
 import 'package:handnote/wallet/widget/wallet_asset_list.dart';
 import 'package:handnote/widgets/currency_text.dart';
 import 'package:handnote/widgets/page_container.dart';
@@ -106,6 +107,15 @@ class WalletHomeScreen extends HookConsumerWidget {
               );
             },
           ),
+          ListTile(
+            leading: const Icon(Icons.category),
+            title: const Text('分类管理'),
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const WalletCategoryManageScreen(),
+              ));
+            },
+          )
         ],
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:handnote/theme.dart';
 import 'package:handnote/utils/string.dart';
 
 enum WalletCategoryType {
@@ -41,6 +42,10 @@ class WalletCategory {
   final DateTime createdAt;
   final DateTime updatedAt;
   final DateTime? deletedAt;
+
+  bool get isSystem => id != null && id! < 100;
+
+  Color get color => type == WalletCategoryType.income ? successColor : errorColor;
 
   WalletCategory copyWith({
     int? id,

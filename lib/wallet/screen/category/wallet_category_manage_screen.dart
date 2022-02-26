@@ -56,7 +56,7 @@ class WalletCategoryManageScreen extends HookConsumerWidget {
                           crossAxisAlignment: WrapCrossAlignment.center,
                           children: [
                             Icon(displayChildren ? Icons.keyboard_arrow_down : Icons.keyboard_arrow_right),
-                            RoundIcon(Icon(treeNode.category.icon), color: iconColor),
+                            RoundIcon(Icon(treeNode.category.icon), color: treeNode.category.color),
                           ],
                         ),
                         title: Text(treeNode.category.name),
@@ -104,7 +104,6 @@ class WalletCategoryManageScreen extends HookConsumerWidget {
     final theme = Theme.of(context);
     return SizedBox(
       width: double.infinity,
-      height: 48,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(primary: theme.backgroundColor),
         child: Text(

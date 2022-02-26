@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 const Color primaryColor = Colors.blueGrey;
 final Color secondaryColor = Colors.red[300]!;
+final Color disabledColor = Colors.blueGrey[200]!;
 final Color errorColor = Colors.red[300]!;
 final Color successColor = Colors.green[300]!;
 
@@ -11,7 +12,7 @@ final lightTheme = ThemeData(
   backgroundColor: Colors.blueGrey[50],
   hintColor: Colors.grey,
   dividerColor: Colors.grey[200],
-  disabledColor: Colors.blueGrey[200],
+  disabledColor: disabledColor,
   colorScheme: const ColorScheme.light().copyWith(
     primary: primaryColor,
     onPrimary: Colors.white,
@@ -31,7 +32,7 @@ final lightTheme = ThemeData(
   outlinedButtonTheme: OutlinedButtonThemeData(
     style: OutlinedButton.styleFrom(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-      side: BorderSide(color: Colors.blueGrey[200]!),
+      side: BorderSide(color: disabledColor),
     ),
   ),
 );
