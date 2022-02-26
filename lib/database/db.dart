@@ -42,7 +42,6 @@ class DB with ChangeNotifier {
 
     if (kDebugMode) {
       Sqflite.setDebugModeOn(true);
-      await cleanDatabase();
     }
 
     return openDatabase(
