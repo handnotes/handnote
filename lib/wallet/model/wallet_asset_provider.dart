@@ -11,7 +11,7 @@ class WalletAssetNotifier extends StateNotifier<List<WalletAsset>> {
 
   static const tableName = 'wallet_asset';
 
-  Future<void> getList() async {
+  Future<void> loadData() async {
     final db = await DB.shared.instance;
     final List<Map<String, Object?>> list = await db.query(
       tableName,
@@ -21,23 +21,43 @@ class WalletAssetNotifier extends StateNotifier<List<WalletAsset>> {
     state = list.map((e) => WalletAsset.fromMap(e)).toList();
   }
 
-  Future<void> add(WalletAsset asset) async {
+  Future<WalletAsset?> getOne(int id) async {
     final db = await DB.shared.instance;
-    final updated = asset.copyWith(createdAt: DateTime.now(), updatedAt: DateTime.now());
-    await db.insert(tableName, updated.toMap());
-    await getList();
+    final List<Map<String, Object?>> list = await db.query(
+      tableName,
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+    if (list.isEmpty) return null;
+
+    assert(list.length == 1);
+    return WalletAsset.fromMap(list[0]);
   }
 
-  Future<void> update(WalletAsset asset) async {
+  Future<WalletAsset> add(WalletAsset asset) async {
     final db = await DB.shared.instance;
-    final updated = asset.copyWith(updatedAt: DateTime.now());
+    WalletAsset updated = asset.copyWith(createdAt: DateTime.now(), updatedAt: DateTime.now());
+    final id = await db.insert(tableName, updated.toMap());
+    final added = await getOne(id);
+    assert(added is WalletAsset);
+    state = [added!, ...state];
+    return added;
+  }
+
+  Future<WalletAsset> update(WalletAsset asset) async {
+    final db = await DB.shared.instance;
+    WalletAsset updated = asset.copyWith(updatedAt: DateTime.now());
     await db.update(tableName, updated.toMap(), where: 'id = ?', whereArgs: [asset.id]);
-    await getList();
+    updated = (await getOne(asset.id!))!;
+    state = state.map((e) => e.id == updated.id ? updated : e).toList();
+    return updated;
   }
 
   Future<void> delete(WalletAsset asset) async {
+    final db = await DB.shared.instance;
     var updated = asset.copyWith(deletedAt: DateTime.now());
-    await update(updated);
+    await db.update(tableName, updated.toMap(), where: 'id = ?', whereArgs: [asset.id]);
+    state = state.where((e) => e.id != updated.id).toList();
   }
 
   Future<void> hide(WalletAsset asset) async {

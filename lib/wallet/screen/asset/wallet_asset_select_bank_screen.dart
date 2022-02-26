@@ -32,14 +32,15 @@ class WalletAssetSelectBankScreen extends StatelessWidget {
               child: ListTile(
                 title: Text(bankInfo.name),
                 leading: RoundIcon(bankInfo.icon),
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => WalletAssetEditScreen(
-                        asset: asset.copyWith(bank: bankInfo.bank),
-                      ),
+                onTap: () async {
+                  final updatedAsset = await Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => WalletAssetEditScreen(
+                      asset: asset.copyWith(bank: bankInfo.bank),
                     ),
-                  );
+                  ));
+                  if (updatedAsset != null) {
+                    Navigator.of(context).pop(updatedAsset);
+                  }
                 },
               ),
             );

@@ -4,6 +4,7 @@ import 'package:handnote/constants/constants.dart';
 import 'package:handnote/theme.dart';
 import 'package:handnote/wallet/model/wallet_asset.dart';
 import 'package:handnote/wallet/model/wallet_bill.dart';
+import 'package:handnote/wallet/screen/asset/wallet_asset_add_screen.dart';
 import 'package:handnote/wallet/widget/wallet_asset_item.dart';
 import 'package:handnote/widgets/round_icon.dart';
 
@@ -41,7 +42,7 @@ class WalletBillEditAmount extends HookWidget {
               child: WalletAssetItem(
                 asset,
                 dense: true,
-                onTap: () => _chooseAsset(context, asset, noAssetIcon),
+                onTap: () => _buildAssetSelector(context, asset, noAssetIcon),
               ),
             ),
             const VerticalDivider(thickness: 2, width: 32),
@@ -71,7 +72,7 @@ class WalletBillEditAmount extends HookWidget {
     );
   }
 
-  Future<dynamic> _chooseAsset(BuildContext context, WalletAsset? previous, Widget? noAssetIcon) {
+  Future<dynamic> _buildAssetSelector(BuildContext context, WalletAsset? previous, Widget? noAssetIcon) {
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -80,7 +81,7 @@ class WalletBillEditAmount extends HookWidget {
           padding: const EdgeInsets.all(8.0),
           height: 500,
           child: ListView.separated(
-            itemCount: assets.length + 1,
+            itemCount: assets.length + 2,
             separatorBuilder: (context, index) => const Divider(height: 1),
             itemBuilder: (context, index) {
               if (index == assets.length) {
@@ -91,6 +92,18 @@ class WalletBillEditAmount extends HookWidget {
                   onTap: () {
                     onSelected(null);
                     Navigator.pop(context);
+                  },
+                );
+              } else if (index == assets.length + 1) {
+                return ListTile(
+                  leading: const Icon(Icons.add),
+                  title: const Text('添加账户'),
+                  onTap: () async {
+                    final asset = await Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => const WalletAssetAddScreen(),
+                    ));
+                    assert(asset is WalletAsset);
+                    onSelected(asset);
                   },
                 );
               } else {

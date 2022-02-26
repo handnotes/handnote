@@ -130,12 +130,13 @@ class WalletAssetEditScreen extends HookConsumerWidget {
                         balance: balance.value,
                         cardNumber: bankInfo != null ? cardNumber.value : null,
                       );
+                      WalletAsset updatedAsset;
                       if (isEdit) {
-                        await ref.read(walletAssetProvider.notifier).update(updated);
+                        updatedAsset = await ref.read(walletAssetProvider.notifier).update(updated);
                       } else {
-                        await ref.read(walletAssetProvider.notifier).add(updated);
+                        updatedAsset = await ref.read(walletAssetProvider.notifier).add(updated);
                       }
-                      Navigator.of(context).popUntil(ModalRoute.withName('/'));
+                      Navigator.of(context).pop(updatedAsset);
                     },
                   ),
                 ),

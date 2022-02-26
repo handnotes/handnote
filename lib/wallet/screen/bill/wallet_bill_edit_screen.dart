@@ -8,7 +8,7 @@ import 'package:handnote/wallet/model/wallet_bill_provider.dart';
 import 'package:handnote/wallet/model/wallet_category.dart';
 import 'package:handnote/wallet/model/wallet_category_provider.dart';
 import 'package:handnote/wallet/utils/category_tree.dart';
-import 'package:handnote/wallet/widget/wallet_choose_asset.dart';
+import 'package:handnote/wallet/widget/wallet_bill_edit_amount.dart';
 import 'package:handnote/widgets/page_container.dart';
 import 'package:handnote/widgets/radio_buttons.dart';
 import 'package:handnote/widgets/round_icon.dart';

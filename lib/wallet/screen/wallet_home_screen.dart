@@ -32,7 +32,7 @@ class WalletHomeScreen extends HookConsumerWidget {
 
     useEffect(() {
       // TODO: View hidden wallet assets
-      ref.read(walletAssetProvider.notifier).getList();
+      ref.read(walletAssetProvider.notifier).loadData();
 
       // TODO: Load data in main page
       ref.read(walletBillProvider.notifier).getList();

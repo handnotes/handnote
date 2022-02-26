@@ -99,11 +99,14 @@ class WalletAssetAddScreen extends HookWidget {
                   ? Text(item.description, style: TextStyle(color: theme.disabledColor))
                   : null,
           visualDensity: VisualDensity.standard,
-          onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(
+          onTap: () async {
+            final updatedAsset = await Navigator.of(context).push(MaterialPageRoute(
                 builder: (_) => item.hasSecondaryMenu
                     ? WalletAssetSelectBankScreen(asset: asset)
                     : WalletAssetEditScreen(asset: asset)));
+            if (updatedAsset != null) {
+              Navigator.of(context).pop(updatedAsset);
+            }
           },
         ),
       );
