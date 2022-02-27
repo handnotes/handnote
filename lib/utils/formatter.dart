@@ -12,5 +12,7 @@ final currencyDollarFormatter = NumberFormat.currency(
 );
 
 final dateFormat = DateFormat('yyyy-MM-dd');
+final dateFormatCn = DateFormat('yyyy年MM月dd日');
+final monthDayFormatCn = DateFormat('MM月dd日');
 
 final miniDateFormat = DateFormat('yyMMdd');

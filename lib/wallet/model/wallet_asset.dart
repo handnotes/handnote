@@ -27,9 +27,6 @@ class WalletAsset {
   /// 不计入资产总额
   final bool notCounted;
 
-  /// 初始金额
-  final double initAmount;
-
   final double balance;
 
   final Bank? bank;
@@ -58,7 +55,6 @@ class WalletAsset {
     this.showInHomePage = true,
     this.allowBill = true,
     this.notCounted = false,
-    this.initAmount = 0,
     this.balance = 0,
     this.bank,
     this.cardNumber,
@@ -100,7 +96,6 @@ class WalletAsset {
       showInHomePage: showInHomePage ?? this.showInHomePage,
       allowBill: allowBill ?? this.allowBill,
       notCounted: notCounted ?? this.notCounted,
-      initAmount: initAmount ?? this.initAmount,
       balance: balance ?? this.balance,
       bank: bank ?? this.bank,
       cardNumber: cardNumber ?? this.cardNumber,
@@ -122,7 +117,6 @@ class WalletAsset {
       'show_in_home_page': showInHomePage ? 1 : 0,
       'allow_bill': allowBill ? 1 : 0,
       'not_counted': notCounted ? 1 : 0,
-      'init_amount': initAmount.toStringAsFixed(2),
       'balance': balance.toStringAsFixed(2),
       'bank': bank?.name,
       'card_number': cardNumber,
@@ -149,7 +143,6 @@ class WalletAsset {
       showInHomePage: map['show_in_home_page'] == 1,
       allowBill: map['allow_bill'] == 1,
       notCounted: map['not_counted'] == 1,
-      initAmount: map['init_amount'],
       balance: map['balance'],
       bank: map['bank'] != null ? Bank.values.byName(map['bank']) : null,
       cardNumber: map['card_number'],

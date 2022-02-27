@@ -37,7 +37,7 @@ class WalletHomeScreen extends HookConsumerWidget {
       ref.read(walletAssetProvider.notifier).loadData();
 
       // TODO: Load data in main page
-      ref.read(walletBillProvider.notifier).getList();
+      ref.read(walletBillProvider.notifier).loadData();
       ref.read(walletCategoryProvider.notifier).getList();
 
       scrollController.addListener(() {

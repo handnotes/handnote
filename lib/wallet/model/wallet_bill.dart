@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:handnote/constants/currency.dart';
 import 'package:handnote/theme.dart';
 import 'package:handnote/utils/nanoid.dart';
+import 'package:handnote/wallet/constants/wallet_system_category.dart';
 
 enum WalletBillType {
   outcome,
@@ -68,6 +69,14 @@ class WalletBill {
       return WalletBillType.outcome;
     }
   }
+
+  WalletBill.adjustBalance({required int assetId, required double balance})
+      : this(
+          category: walletSystemCategoryIdMap[WalletSystemCategory.adjustBalance],
+          inAssets: assetId,
+          inAmountType: CurrencyType.RMB,
+          inAmount: balance,
+        );
 
   WalletBill copyWith({
     String? id,

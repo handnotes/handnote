@@ -1,3 +1,9 @@
-const Map<String, int> walletCategoryIdMap = {
-  'refund': 56,
+enum WalletSystemCategory {
+  adjustBalance,
+  refund,
+}
+
+const Map<WalletSystemCategory, int> walletSystemCategoryIdMap = {
+  WalletSystemCategory.adjustBalance: -1,
+  WalletSystemCategory.refund: 56,
 };

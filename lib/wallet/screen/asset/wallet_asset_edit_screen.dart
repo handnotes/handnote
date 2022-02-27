@@ -6,6 +6,8 @@ import 'package:handnote/wallet/constants/wallet_asset_type.dart';
 import 'package:handnote/wallet/constants/wallet_icon_map.dart';
 import 'package:handnote/wallet/model/wallet_asset.dart';
 import 'package:handnote/wallet/model/wallet_asset_provider.dart';
+import 'package:handnote/wallet/model/wallet_bill.dart';
+import 'package:handnote/wallet/model/wallet_bill_provider.dart';
 import 'package:handnote/widgets/page_container.dart';
 import 'package:handnote/widgets/round_icon.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -16,6 +18,8 @@ class WalletAssetEditScreen extends HookConsumerWidget {
   final WalletAsset asset;
 
   bool get isEdit => asset.id != null;
+
+  double get originalBalance => asset.balance;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -135,6 +139,13 @@ class WalletAssetEditScreen extends HookConsumerWidget {
                         updatedAsset = await ref.read(walletAssetProvider.notifier).update(updated);
                       } else {
                         updatedAsset = await ref.read(walletAssetProvider.notifier).add(updated);
+                      }
+                      if (updatedAsset.balance != originalBalance) {
+                        var walletBill = WalletBill.adjustBalance(
+                          assetId: updatedAsset.id!,
+                          balance: updatedAsset.balance,
+                        );
+                        await ref.read(walletBillProvider.notifier).add(walletBill);
                       }
                       Navigator.of(context).pop(updatedAsset);
                     },

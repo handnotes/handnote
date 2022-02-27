@@ -1,4 +1,5 @@
 import 'package:handnote/database/db.dart';
+import 'package:handnote/wallet/constants/wallet_system_category.dart';
 import 'package:handnote/wallet/model/wallet_bill_provider.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logging/logging.dart';
@@ -58,11 +59,11 @@ class WalletAssetNotifier extends StateNotifier<List<WalletAsset>> {
     return updated;
   }
 
-  Future<void> reloadBalance(int? assetId, {double? originalBalance}) async {
-    if (assetId == null) return;
+  Future<double> reloadBalance(int? assetId, {double? originalBalance}) async {
+    if (assetId == null) return 0;
     final db = await DB.shared.instance;
-    final balance = await _getBalance(assetId);
-    if (balance == originalBalance) return;
+    final balance = await _queryBalance(assetId);
+    if (balance == originalBalance) return balance;
     await db.update(
       tableName,
       {'balance': balance},
@@ -70,6 +71,7 @@ class WalletAssetNotifier extends StateNotifier<List<WalletAsset>> {
       whereArgs: [assetId],
     );
     state = state.map((e) => e.id == assetId ? e.copyWith(balance: balance) : e).toList();
+    return balance;
   }
 
   Future<void> delete(WalletAsset asset) async {
@@ -84,16 +86,35 @@ class WalletAssetNotifier extends StateNotifier<List<WalletAsset>> {
     await update(updated);
   }
 
-  Future<double> _getBalance(int assetId) async {
+  Future<DateTime?> _queryLatestAdjustBalanceDate(int assetId) async {
     final db = await DB.shared.instance;
-    var result = await db.rawQuery(
-        'select SUM(out_amount) as total from ${WalletBillNotifier.tableName} where out_assets = ? and deleted_at is null',
-        [assetId]);
+    final adjustBalanceCategoryId = walletSystemCategoryIdMap[WalletSystemCategory.adjustBalance];
+    final list = await db.query(
+      WalletBillNotifier.tableName,
+      where: 'category = $adjustBalanceCategoryId and in_assets = ? and deleted_at is null',
+      whereArgs: [assetId],
+      orderBy: 'time DESC',
+      limit: 1,
+    );
+    return list.isEmpty ? null : DateTime.parse(list.first['time'] as String);
+  }
+
+  Future<double> _queryBalance(int assetId) async {
+    final db = await DB.shared.instance;
+    final fromDate = (await _queryLatestAdjustBalanceDate(assetId)) ?? DateTime.fromMillisecondsSinceEpoch(0);
+
+    var result = await db.rawQuery("""select SUM(out_amount) as total from ${WalletBillNotifier.tableName} 
+           where out_assets = ? 
+             and datetime(time) >= datetime('$fromDate') 
+             and deleted_at is null""", [assetId]);
     final double outAmount = double.tryParse('${result.first['total']}') ?? 0;
-    result = await db.rawQuery(
-        'select SUM(in_amount) as total from ${WalletBillNotifier.tableName} where in_assets = ? and deleted_at is null',
-        [assetId]);
+
+    result = await db.rawQuery("""select SUM(in_amount) as total from ${WalletBillNotifier.tableName} 
+        where in_assets = ? 
+          and datetime(time) >= datetime('$fromDate') 
+          and deleted_at is null""", [assetId]);
     final inAmount = double.tryParse('${result.first['total']}') ?? 0;
+
     return double.tryParse((inAmount - outAmount).toStringAsFixed(2)) ?? 0;
   }
 }

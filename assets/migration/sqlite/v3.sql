@@ -21,6 +21,8 @@ VALUES (0, NULL, 0, '', NULL, 0),
        (5, 0, 0, '利息支出', '{"pack":"custom","iconData":{"codePoint":58891,"fontFamily":"MaterialIcons","fontPackage":null,"matchTextDirection":false}}', -1),
        (49, 0, 0, '其他流出', '{"pack":"custom","iconData":{"codePoint":58882,"fontFamily":"HandnoteIcon","fontPackage":null,"matchTextDirection":false}}', -2),
 
+       (-1, NULL, 0, '余额调整', '', -2),
+
        (50, 0, 1, '借入', '{"pack":"custom","iconData":{"codePoint":58994,"fontFamily":"HandnoteIcon","fontPackage":null,"matchTextDirection":false}}', -1),
        (51, 0, 1, '收债', '{"pack":"custom","iconData":{"codePoint":59662,"fontFamily":"HandnoteIcon","fontPackage":null,"matchTextDirection":false}}', -1),
        (52, 0, 1, '利息收入', '{"pack":"custom","iconData":{"codePoint":58910,"fontFamily":"HandnoteIcon","fontPackage":null,"matchTextDirection":false}}', -1),

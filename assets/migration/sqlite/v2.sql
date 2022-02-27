@@ -9,7 +9,6 @@ CREATE TABLE wallet_asset
     show_in_home_page INTEGER   NOT NULL DEFAULT 1, -- 是否在首页显示 (0: 不显示 1: 显示)
     allow_bill        INTEGER   NOT NULL DEFAULT 1, -- 是否允许记账
     not_counted       INTEGER   NOT NULL DEFAULT 1, -- 是否不计入账单
-    init_amount       REAL DEFAULT 0,               -- 初始金额
     balance           REAL DEFAULT 0,               -- 余额
     bank              TEXT,                         -- 银行
     card_number       TEXT,                         -- 卡号

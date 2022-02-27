@@ -110,7 +110,7 @@ class WalletBillImported {
       );
     } else if (isRefund) {
       bill = bill.copyWith(
-        category: walletCategoryIdMap['refund'],
+        category: walletSystemCategoryIdMap[WalletSystemCategory.refund],
         inAmountType: currencyType,
         inAmount: amount,
         inAssets: toAsset?.id ?? 0,

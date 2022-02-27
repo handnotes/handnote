@@ -11,7 +11,7 @@ class WalletBillNotifier extends StateNotifier<List<WalletBill>> {
 
   static const tableName = 'wallet_bill';
 
-  Future<void> getList() async {
+  Future<void> loadData() async {
     final db = await DB.shared.instance;
     final List<Map<String, Object?>> list = await db.query(
       tableName,
@@ -25,7 +25,7 @@ class WalletBillNotifier extends StateNotifier<List<WalletBill>> {
     final db = await DB.shared.instance;
     final updated = bill.copyWith(createdAt: DateTime.now(), updatedAt: DateTime.now());
     await db.insert(tableName, updated.toMap());
-    await getList();
+    state = [updated, ...state];
   }
 
   Future<void> addList(List<WalletBill> bills) async {
@@ -36,19 +36,21 @@ class WalletBillNotifier extends StateNotifier<List<WalletBill>> {
       batch.insert(tableName, updated.toMap());
     }
     await batch.commit(noResult: true);
-    await getList();
+    await loadData();
   }
 
   Future<void> update(WalletBill bill) async {
     final db = await DB.shared.instance;
     final updated = bill.copyWith(updatedAt: DateTime.now());
     await db.update(tableName, updated.toMap(), where: 'id = ?', whereArgs: [bill.id]);
-    await getList();
+    state = state.map((e) => e.id == bill.id ? updated : e).toList();
   }
 
   Future<void> delete(WalletBill bill) async {
-    var updated = bill.copyWith(deletedAt: DateTime.now());
-    await update(updated);
+    final db = await DB.shared.instance;
+    final updated = bill.copyWith(deletedAt: DateTime.now());
+    await db.update(tableName, updated.toMap(), where: 'id = ?', whereArgs: [bill.id]);
+    state = [...state.where((e) => e.id != bill.id)];
   }
 }
 
