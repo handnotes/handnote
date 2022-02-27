@@ -1,4 +1,5 @@
 import 'package:handnote/database/db.dart';
+import 'package:handnote/wallet/model/wallet_bill_provider.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logging/logging.dart';
 
@@ -19,6 +20,10 @@ class WalletAssetNotifier extends StateNotifier<List<WalletAsset>> {
       where: 'deleted_at is null',
     );
     state = list.map((e) => WalletAsset.fromMap(e)).toList();
+
+    for (var asset in [...state]) {
+      reloadBalance(asset.id, originalBalance: asset.balance);
+    }
   }
 
   Future<WalletAsset?> getOne(int id) async {
@@ -53,6 +58,20 @@ class WalletAssetNotifier extends StateNotifier<List<WalletAsset>> {
     return updated;
   }
 
+  Future<void> reloadBalance(int? assetId, {double? originalBalance}) async {
+    if (assetId == null) return;
+    final db = await DB.shared.instance;
+    final balance = await _getBalance(assetId);
+    if (balance == originalBalance) return;
+    await db.update(
+      tableName,
+      {'balance': balance},
+      where: 'id = ?',
+      whereArgs: [assetId],
+    );
+    state = state.map((e) => e.id == assetId ? e.copyWith(balance: balance) : e).toList();
+  }
+
   Future<void> delete(WalletAsset asset) async {
     final db = await DB.shared.instance;
     var updated = asset.copyWith(deletedAt: DateTime.now());
@@ -63,6 +82,19 @@ class WalletAssetNotifier extends StateNotifier<List<WalletAsset>> {
   Future<void> hide(WalletAsset asset) async {
     var updated = asset.copyWith(showInHomePage: false);
     await update(updated);
+  }
+
+  Future<double> _getBalance(int assetId) async {
+    final db = await DB.shared.instance;
+    var result = await db.rawQuery(
+        'select SUM(out_amount) as total from ${WalletBillNotifier.tableName} where out_assets = ? and deleted_at is null',
+        [assetId]);
+    final double outAmount = double.tryParse('${result.first['total']}') ?? 0;
+    result = await db.rawQuery(
+        'select SUM(in_amount) as total from ${WalletBillNotifier.tableName} where in_assets = ? and deleted_at is null',
+        [assetId]);
+    final inAmount = double.tryParse('${result.first['total']}') ?? 0;
+    return double.tryParse((inAmount - outAmount).toStringAsFixed(2)) ?? 0;
   }
 }
 

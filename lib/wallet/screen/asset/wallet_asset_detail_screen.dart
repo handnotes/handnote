@@ -50,23 +50,8 @@ class WalletAssetDetailScreen extends HookConsumerWidget {
     final assets = ref.watch(walletAssetProvider);
     final assetMap = useMemoized(() => {for (var e in assets) e.id: e}, [assets]);
 
-    updateBalance() async {
-      if (bills.isEmpty) return;
-      balance.value = bills.fold(0.0, (value, element) {
-        if (element.inAssets == asset.id) {
-          return value + element.amount;
-        } else if (element.outAssets == asset.id) {
-          return value - element.amount;
-        }
-        return value;
-      });
-      if (asset.balance.toStringAsFixed(2) != balance.value.toStringAsFixed(2)) {
-        ref.read(walletAssetProvider.notifier).update(asset.copyWith(balance: balance.value));
-      }
-    }
-
     useEffect(() {
-      updateBalance();
+      ref.read(walletAssetProvider.notifier).reloadBalance(asset.id, originalBalance: asset.balance);
       return null;
     }, [bills]);
 
