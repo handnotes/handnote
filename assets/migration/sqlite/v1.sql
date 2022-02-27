@@ -1,7 +1,5 @@
-CREATE TABLE common
+CREATE TABLE common_data
 (
-    key   TEXT PRIMARY KEY UNIQUE NOT NULL,
+    key   TEXT PRIMARY KEY,
     value TEXT
 );
-INSERT INTO common (key, value)
-VALUES ('last_update_at', NULL);

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_font_icons/flutter_font_icons.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:handnote/constants/icons.dart';
+import 'package:handnote/database/common_data.dart';
+import 'package:handnote/database/common_data_provider.dart';
 import 'package:handnote/database/db.dart';
 import 'package:handnote/theme.dart';
 import 'package:handnote/wallet/model/wallet_asset_provider.dart';
@@ -30,23 +32,31 @@ class WalletHomeScreen extends HookConsumerWidget {
     final titleOpacity = useState<double>(0);
     final maskAmount = useState(false);
     final scrollController = useScrollController();
+    final commonData = ref.watch(commonDataProvider);
 
     useEffect(() {
-      // TODO: View hidden wallet assets
-      // TODO: Auto reload balance each asset
+      ref.read(commonDataProvider.notifier).loadData();
       ref.read(walletAssetProvider.notifier).loadData();
 
-      // TODO: Load data in main page
-      ref.read(walletBillProvider.notifier).loadData();
+      ref.read(walletBillProvider.notifier).loadData().then((value) {
+        _updateTotalBalance(ref);
+      });
       ref.read(walletCategoryProvider.notifier).getList();
 
       scrollController.addListener(() {
         titleOpacity.value = scrollController.offset > bannerHeight * 0.7 ? 1 : 0;
       });
-      return null;
     }, []);
 
     final walletAssets = ref.watch(walletAssetProvider).where((e) => e.showInHomePage).toList();
+    final totalBalance = useMemoized(
+      () => walletAssets.fold<double>(0, (previous, asset) => previous + asset.balance),
+      [walletAssets],
+    );
+
+    useEffect(() {
+      _updateTotalBalance(ref);
+    }, [totalBalance]);
 
     return PageContainer(
       child: Scaffold(
@@ -54,7 +64,7 @@ class WalletHomeScreen extends HookConsumerWidget {
         body: CustomScrollView(
           controller: scrollController,
           slivers: [
-            _buildAppBar(context, titleOpacity, maskAmount),
+            _buildAppBar(context, titleOpacity, maskAmount, commonData),
             SliverList(
               delegate: SliverChildListDelegate([
                 _addABillWidget(context),
@@ -128,10 +138,15 @@ class WalletHomeScreen extends HookConsumerWidget {
     );
   }
 
-  Widget _buildAppBar(BuildContext context, ValueNotifier<double> titleOpacity, ValueNotifier<bool> maskAmount) {
-    double outcome = 1591.0;
-    double income = 1;
-    double budget = 10000;
+  Widget _buildAppBar(
+    BuildContext context,
+    ValueNotifier<double> titleOpacity,
+    ValueNotifier<bool> maskAmount,
+    CommonData commonData,
+  ) {
+    final double income = commonData.walletLatest30dIncome;
+    final double outcome = commonData.walletLatest30dOutcome;
+    const double budget = 10000;
 
     final theme = Theme.of(context);
 
@@ -176,16 +191,21 @@ class WalletHomeScreen extends HookConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('本月支出', style: theme.textTheme.subtitle1),
+                  Text('近30天支出', style: theme.textTheme.subtitle1),
                   const SizedBox(height: 12),
                   Row(
                     children: [
                       Expanded(
-                        child: CurrencyText(
-                          outcome,
-                          mask: maskAmount.value,
-                          style: theme.textTheme.headline4,
-                        ),
+                        child: TweenAnimationBuilder(
+                            tween: Tween<double>(begin: outcome, end: outcome),
+                            duration: const Duration(milliseconds: 500),
+                            builder: (context, value, _) {
+                              return CurrencyText(
+                                value as double,
+                                mask: maskAmount.value,
+                                style: theme.textTheme.headline4,
+                              );
+                            }),
                       ),
                       IconButton(
                         onPressed: () => maskAmount.value = !maskAmount.value,
@@ -205,12 +225,16 @@ class WalletHomeScreen extends HookConsumerWidget {
                           },
                           child: Row(
                             children: [
-                              Text('本月收入', style: theme.textTheme.bodyText2),
+                              Text('近30天收入', style: theme.textTheme.bodyText2),
                               const SizedBox(width: 8),
                               maskAmount.value
                                   ? CurrencyText(income, mask: true)
                                   : income > 0
-                                      ? CurrencyText(income)
+                                      ? TweenAnimationBuilder(
+                                          tween: Tween<double>(begin: income, end: income),
+                                          duration: const Duration(milliseconds: 500),
+                                          builder: (context, value, _) => CurrencyText(value as double),
+                                        )
                                       : Text('暂无收入', style: theme.textTheme.bodyText2),
                             ],
                           ),
@@ -264,18 +288,18 @@ class WalletHomeScreen extends HookConsumerWidget {
             children: <Widget>[
               Expanded(
                 child: TextButton.icon(
-                  label: Text(
-                    '记一笔',
-                    style: theme.textTheme.headline6?.copyWith(color: theme.colorScheme.onSecondaryContainer),
-                  ),
                   icon: Icon(
                     Fontisto.plus_a,
                     color: theme.colorScheme.onPrimaryContainer,
                     size: theme.textTheme.headline6?.fontSize,
                   ),
+                  label: Text(
+                    '记一笔',
+                    style: theme.textTheme.headline6?.copyWith(color: theme.colorScheme.onSecondaryContainer),
+                  ),
                   onPressed: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const WalletBillEditScreen(),
+                      builder: (context) => const WalletBillEditScreen(isEdit: false),
                     ));
                   },
                 ),
@@ -298,5 +322,24 @@ class WalletHomeScreen extends HookConsumerWidget {
         ),
       ),
     );
+  }
+
+  void _updateTotalBalance(WidgetRef ref) {
+    final bills = ref
+        .read(walletBillProvider)
+        .where(
+          (bill) =>
+              (bill.category ?? 0) >= 0 &&
+              bill.time.isAfter(
+                DateTime.now().subtract(const Duration(days: 30)),
+              ),
+        )
+        .toList();
+    final income = bills.fold<double>(0, (income, bill) => income + bill.inAmount);
+    final outcome = bills.fold<double>(0, (outcome, bill) => outcome + bill.outAmount);
+    ref.read(commonDataProvider.notifier).save({
+      CommonDataKey.walletLatest30dIncome: income.toString(),
+      CommonDataKey.walletLatest30dOutcome: outcome.toString(),
+    });
   }
 }

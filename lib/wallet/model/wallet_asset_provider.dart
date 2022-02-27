@@ -60,7 +60,7 @@ class WalletAssetNotifier extends StateNotifier<List<WalletAsset>> {
   }
 
   Future<double> reloadBalance(int? assetId, {double? originalBalance}) async {
-    if (assetId == null) return 0;
+    if (assetId == null || assetId <= 0) return 0;
     final db = await DB.shared.instance;
     final balance = await _queryBalance(assetId);
     if (balance == originalBalance) return balance;

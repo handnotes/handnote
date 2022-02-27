@@ -22,7 +22,6 @@ class WalletCategoryManageScreen extends HookConsumerWidget {
 
     useEffect(() {
       ref.read(walletCategoryProvider.notifier).getList();
-      return null;
     }, []);
 
     return PageContainer(

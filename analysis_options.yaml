@@ -24,6 +24,7 @@ linter:
   rules:
     prefer_single_quotes: true
     lines_longer_than_80_chars: false
+    body_might_complete_normally_nullable: false
 
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options

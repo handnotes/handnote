@@ -16,11 +16,14 @@ import 'package:handnote/widgets/toast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class WalletBillEditScreen extends HookConsumerWidget {
-  const WalletBillEditScreen({Key? key, this.bill}) : super(key: key);
+  const WalletBillEditScreen({
+    Key? key,
+    this.bill,
+    this.isEdit = true,
+  }) : super(key: key);
 
   final WalletBill? bill;
-
-  get isEdit => bill != null;
+  final bool isEdit;
 
   @override
   Widget build(BuildContext context, ref) {
@@ -49,7 +52,6 @@ class WalletBillEditScreen extends HookConsumerWidget {
       asset.value = assetMap[bill?.isIncome == true ? bill!.inAssets : bill?.outAssets];
       if (bill?.isInnerTransfer == true) transferAsset.value = assetMap[bill?.inAssets];
       category.value = bill?.category != null ? categoryMap[bill!.category] : null;
-      return null;
     }, []);
 
     final iconColor = billType.value == WalletBillType.outcome ? Colors.red[300] : Colors.green[300];
@@ -110,6 +112,8 @@ class WalletBillEditScreen extends HookConsumerWidget {
       } else {
         await ref.read(walletBillProvider.notifier).add(bill);
       }
+      await ref.read(walletAssetProvider.notifier).reloadBalance(bill.inAssets);
+      await ref.read(walletAssetProvider.notifier).reloadBalance(bill.outAssets);
       return true;
     }
 

@@ -15,6 +15,7 @@ import 'package:handnote/wallet/model/wallet_bill.dart';
 import 'package:handnote/wallet/model/wallet_bill_provider.dart';
 import 'package:handnote/wallet/model/wallet_category.dart';
 import 'package:handnote/wallet/model/wallet_category_provider.dart';
+import 'package:handnote/wallet/screen/asset/wallet_asset_edit_screen.dart';
 import 'package:handnote/wallet/screen/bill/wallet_bill_edit_screen.dart';
 import 'package:handnote/widgets/page_container.dart';
 import 'package:handnote/widgets/round_icon.dart';
@@ -56,12 +57,12 @@ class WalletAssetDetailScreen extends HookConsumerWidget {
     final assetMap = useMemoized(() => {for (var e in assets) e.id: e}, [assets]);
 
     useEffect(() {
-      ref
-          .read(walletAssetProvider.notifier)
-          .reloadBalance(asset.id, originalBalance: asset.balance)
-          .then((value) => balance.value = value);
-      return null;
+      ref.read(walletAssetProvider.notifier).reloadBalance(asset.id, originalBalance: asset.balance);
     }, []);
+
+    useEffect(() {
+      balance.value = assetMap[asset.id]?.balance ?? 0;
+    }, [assetMap]);
 
     return PageContainer(
       color: color,
@@ -70,6 +71,14 @@ class WalletAssetDetailScreen extends HookConsumerWidget {
           backgroundColor: color,
           elevation: 0,
           title: const Text('资产详情'),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.edit),
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => WalletAssetEditScreen(asset: asset)));
+              },
+            ),
+          ],
         ),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -104,12 +113,18 @@ class WalletAssetDetailScreen extends HookConsumerWidget {
                             const Spacer(),
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                              child: Text(
-                                '¥ ${balance.value.toStringAsFixed(2)}',
-                                style: theme.textTheme.headline6?.copyWith(
-                                  fontFamily: fontMonospace,
-                                ),
-                              ),
+                              child: TweenAnimationBuilder(
+                                  tween: Tween(begin: balance.value, end: balance.value),
+                                  duration: const Duration(milliseconds: 1000),
+                                  curve: Curves.easeOutCirc,
+                                  builder: (context, value, _) {
+                                    return Text(
+                                      '¥ ${(value as double).toStringAsFixed(2)}',
+                                      style: theme.textTheme.headline6?.copyWith(
+                                        fontFamily: fontMonospace,
+                                      ),
+                                    );
+                                  }),
                             ),
                           ],
                         ),
@@ -130,6 +145,7 @@ class WalletAssetDetailScreen extends HookConsumerWidget {
                           final year = int.parse(yearMonth.split('-')[0]);
                           final month = int.parse(yearMonth.split('-')[1]);
                           return ExpansionTile(
+                            initiallyExpanded: yearMonth == billMonthly.keys.first,
                             title: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -166,6 +182,7 @@ class WalletAssetDetailScreen extends HookConsumerWidget {
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => WalletBillEditScreen(
                     bill: WalletBill(outAssets: asset.id),
+                    isEdit: false,
                   ),
                 ));
               },
@@ -235,7 +252,7 @@ class WalletAssetDetailScreen extends HookConsumerWidget {
                       children: [
                         TextSpan(text: monthDayFormatCn.format(bill.time)),
                         TextSpan(
-                          text: ' ${bill.description} ${bill.counterParty}',
+                          text: ' ${[bill.description, bill.counterParty].whereNotNull().join(' ')}',
                           style: TextStyle(color: theme.disabledColor),
                         ),
                       ],

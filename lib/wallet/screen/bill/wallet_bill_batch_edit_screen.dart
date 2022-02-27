@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:handnote/constants/currency.dart';
 import 'package:handnote/wallet/model/wallet_asset.dart';
+import 'package:handnote/wallet/model/wallet_asset_provider.dart';
 import 'package:handnote/wallet/model/wallet_bill.dart';
 import 'package:handnote/wallet/model/wallet_bill_provider.dart';
 import 'package:handnote/wallet/model/wallet_category.dart';
@@ -52,7 +53,6 @@ class WalletBillBatchEditScreen extends HookConsumerWidget {
       descriptionController.text = description;
       counterPartyController.text = counterParty;
       category.value = categoryId != null ? categoryMap[categoryId] : null;
-      return null;
     }, []);
 
     final iconColor = billType.value == WalletBillType.outcome ? Colors.red[300] : Colors.green[300];
@@ -104,6 +104,8 @@ class WalletBillBatchEditScreen extends HookConsumerWidget {
         return bill;
       }).toList();
       await ref.read(walletBillProvider.notifier).addList(bills);
+      await ref.read(walletAssetProvider.notifier).reloadBalance(bills.first.inAssets);
+      await ref.read(walletAssetProvider.notifier).reloadBalance(bills.first.outAssets);
       return true;
     }
 
