@@ -55,17 +55,17 @@ class WalletBill {
 
   bool get isIncome => inAmount > 0 && outAmount == 0;
 
-  bool get isInner => inAmount > 0 && outAmount > 0;
+  bool get isInnerTransfer => inAmount > 0 && outAmount > 0;
 
   double get amount => isOutcome ? outAmount : inAmount;
 
   WalletBillType get type {
-    if (isOutcome) {
-      return WalletBillType.outcome;
+    if (isInnerTransfer) {
+      return WalletBillType.innerTransfer;
     } else if (isIncome) {
       return WalletBillType.income;
     } else {
-      return WalletBillType.innerTransfer;
+      return WalletBillType.outcome;
     }
   }
 

@@ -63,131 +63,153 @@ class WalletAssetDetailScreen extends HookConsumerWidget {
           elevation: 0,
           title: const Text('资产详情'),
         ),
-        body: CustomScrollView(
-          controller: scrollController,
-          slivers: [
-            Theme(
-              data: theme.copyWith(
-                textTheme: theme.textTheme.copyWith(
-                  headline6: theme.textTheme.headline6?.copyWith(
-                    color: theme.colorScheme.onPrimaryContainer,
-                  ),
-                ),
-              ),
-              child: Builder(builder: (context) {
-                final theme = Theme.of(context);
-                return SliverAppBar(
-                  toolbarHeight: kToolbarHeight,
-                  expandedHeight: 160,
-                  collapsedHeight: 64,
-                  leadingWidth: 72,
-                  backgroundColor: color,
-                  titleSpacing: 0,
-                  title: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(asset.name, style: theme.textTheme.headline6),
-                      const SizedBox(width: 16),
-                      if (asset.subtitle != null) Text(asset.subtitle!),
-                      const Spacer(),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Text(
-                          '¥ ${balance.value.toStringAsFixed(2)}',
-                          style: theme.textTheme.headline6?.copyWith(
-                            fontFamily: fontMonospace,
-                          ),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              child: CustomScrollView(
+                controller: scrollController,
+                slivers: [
+                  Theme(
+                    data: theme.copyWith(
+                      textTheme: theme.textTheme.copyWith(
+                        headline6: theme.textTheme.headline6?.copyWith(
+                          color: theme.colorScheme.onPrimaryContainer,
                         ),
                       ),
-                    ],
-                  ),
-                  leading: RoundIcon(icon, size: 72, iconSize: 36, color: color),
-                  stretch: true,
-                  pinned: true,
-                  flexibleSpace: FlexibleSpaceBar(
-                    background: Container(color: color),
-                  ),
-                );
-              }),
-            ),
-            SliverList(
-              delegate: SliverChildListDelegate([
-                for (final yearMonth in billMonthly.keys) ...[
-                  Builder(builder: (context) {
-                    final bills = billMonthly[yearMonth]!;
-                    final year = int.parse(yearMonth.split('-')[0]);
-                    final month = int.parse(yearMonth.split('-')[1]);
-                    return ExpansionTile(
-                      title: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('$month月', style: theme.textTheme.subtitle1),
-                          Text('$year年', style: theme.textTheme.caption),
-                        ],
-                      ),
-                      tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      controlAffinity: ListTileControlAffinity.leading,
-                      children: [
-                        for (final bill in bills) ...[
-                          const Divider(height: 1),
-                          Builder(builder: (context) {
-                            final category = categoryMap[bill.category];
-                            return ListTile(
-                              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-                              leading: RoundIcon(
-                                Icon(bill.isInner ? FontAwesome.retweet : category?.icon ?? Icons.category),
-                                color: billColorMap[bill.type]!,
+                    ),
+                    child: Builder(builder: (context) {
+                      final theme = Theme.of(context);
+                      return SliverAppBar(
+                        toolbarHeight: kToolbarHeight,
+                        expandedHeight: 160,
+                        collapsedHeight: 64,
+                        leadingWidth: 72,
+                        backgroundColor: color,
+                        titleSpacing: 0,
+                        title: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(asset.name, style: theme.textTheme.headline6),
+                            const SizedBox(width: 16),
+                            if (asset.subtitle != null) Text(asset.subtitle!),
+                            const Spacer(),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                              child: Text(
+                                '¥ ${balance.value.toStringAsFixed(2)}',
+                                style: theme.textTheme.headline6?.copyWith(
+                                  fontFamily: fontMonospace,
+                                ),
                               ),
-                              title: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(bill.isInner ? '内部转账' : category?.name ?? '未分类'),
-                                  RichText(
-                                    overflow: TextOverflow.ellipsis,
-                                    softWrap: false,
-                                    text: TextSpan(
-                                      children: [
-                                        TextSpan(text: '$month月${bill.time.day}日'),
-                                        TextSpan(
-                                          text: ' ${bill.description} ${bill.counterParty}',
-                                          style: TextStyle(color: theme.disabledColor),
-                                        ),
-                                      ],
-                                      style: theme.textTheme.caption,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              trailing: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Text(
-                                    '¥ ${bill.amount.toStringAsFixed(2)}',
-                                    style: theme.textTheme.subtitle1?.copyWith(
+                            ),
+                          ],
+                        ),
+                        leading: RoundIcon(icon, size: 72, iconSize: 36, color: color),
+                        stretch: true,
+                        pinned: true,
+                        flexibleSpace: FlexibleSpaceBar(
+                          background: Container(color: color),
+                        ),
+                      );
+                    }),
+                  ),
+                  SliverList(
+                    delegate: SliverChildListDelegate([
+                      for (final yearMonth in billMonthly.keys) ...[
+                        Builder(builder: (context) {
+                          final bills = billMonthly[yearMonth]!;
+                          final year = int.parse(yearMonth.split('-')[0]);
+                          final month = int.parse(yearMonth.split('-')[1]);
+                          return ExpansionTile(
+                            title: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('$month月', style: theme.textTheme.subtitle1),
+                                Text('$year年', style: theme.textTheme.caption),
+                              ],
+                            ),
+                            tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            controlAffinity: ListTileControlAffinity.leading,
+                            children: [
+                              for (final bill in bills) ...[
+                                const Divider(height: 1),
+                                Builder(builder: (context) {
+                                  final category = categoryMap[bill.category];
+                                  return ListTile(
+                                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                                    leading: RoundIcon(
+                                      Icon(bill.isInnerTransfer
+                                          ? FontAwesome.retweet
+                                          : category?.icon ?? Icons.category),
                                       color: billColorMap[bill.type]!,
                                     ),
-                                  ),
-                                  if (bill.isInner)
-                                    Text(
-                                      '${assetMap[bill.outAssets]?.name ?? '未选择'} > ${assetMap[bill.inAssets]?.name ?? '未选择'}',
-                                      style: theme.textTheme.caption,
-                                    )
-                                ],
-                              ),
-                              onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => WalletBillEditScreen(bill: bill),
-                              )),
-                            );
-                          })
-                        ],
+                                    title: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(bill.isInnerTransfer ? '内部转账' : category?.name ?? '未分类'),
+                                        RichText(
+                                          overflow: TextOverflow.ellipsis,
+                                          softWrap: false,
+                                          text: TextSpan(
+                                            children: [
+                                              TextSpan(text: '$month月${bill.time.day}日'),
+                                              TextSpan(
+                                                text: ' ${bill.description} ${bill.counterParty}',
+                                                style: TextStyle(color: theme.disabledColor),
+                                              ),
+                                            ],
+                                            style: theme.textTheme.caption,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    trailing: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          '¥ ${bill.amount.toStringAsFixed(2)}',
+                                          style: theme.textTheme.subtitle1?.copyWith(
+                                            color: billColorMap[bill.type]!,
+                                          ),
+                                        ),
+                                        if (bill.isInnerTransfer)
+                                          Text(
+                                            '${assetMap[bill.outAssets]?.name ?? '未选择'} > ${assetMap[bill.inAssets]?.name ?? '未选择'}',
+                                            style: theme.textTheme.caption,
+                                          )
+                                      ],
+                                    ),
+                                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (context) => WalletBillEditScreen(bill: bill),
+                                    )),
+                                  );
+                                })
+                              ],
+                            ],
+                          );
+                        }),
+                        const Divider(height: 1),
                       ],
-                    );
-                  }),
-                  const Divider(height: 1),
+                    ]),
+                  ),
                 ],
-              ]),
+              ),
             ),
+            OutlinedButton(
+              child: const Text('记一笔'),
+              style: OutlinedButton.styleFrom(
+                side: BorderSide(width: 0, color: theme.dividerColor),
+              ),
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => WalletBillEditScreen(
+                    bill: WalletBill(outAssets: asset.id),
+                  ),
+                ));
+              },
+            )
           ],
         ),
       ),

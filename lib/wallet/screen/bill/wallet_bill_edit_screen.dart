@@ -30,6 +30,7 @@ class WalletBillEditScreen extends HookConsumerWidget {
     final isInner = billType.value == WalletBillType.innerTransfer;
     final time = useState<DateTime>(bill?.time ?? DateTime.now());
     final descriptionController = useTextEditingController();
+    final counterPartyController = useTextEditingController();
     final amountController = useTextEditingController();
     final asset = useState<WalletAsset?>(null);
     final transferAsset = useState<WalletAsset?>(null);
@@ -44,8 +45,9 @@ class WalletBillEditScreen extends HookConsumerWidget {
     useEffect(() {
       amountController.text = (bill?.isOutcome == true ? bill?.outAmount : bill?.inAmount ?? '').toString();
       descriptionController.text = bill?.description ?? '';
+      counterPartyController.text = bill?.counterParty ?? '';
       asset.value = assetMap[bill?.isIncome == true ? bill!.inAssets : bill?.outAssets];
-      if (bill?.isInner == true) transferAsset.value = assetMap[bill?.inAssets];
+      if (bill?.isInnerTransfer == true) transferAsset.value = assetMap[bill?.inAssets];
       category.value = bill?.category != null ? categoryMap[bill!.category] : null;
       return null;
     }, []);
@@ -200,43 +202,61 @@ class WalletBillEditScreen extends HookConsumerWidget {
                 ),
               ),
             ),
-            if (!isInner)
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: GridView.extent(
-                  // FIXME: grid view maybe overflow
-                  shrinkWrap: true,
-                  maxCrossAxisExtent: 76,
-                  mainAxisSpacing: 8,
+            if (bill?.importedId != null)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16),
+                child: Row(
                   children: [
-                    for (final categoryNode in categoryTree.children)
-                      Builder(builder: (context) {
-                        final color = categoryNode.id == category.value?.id ? iconColor : theme.disabledColor;
-                        return Stack(
-                          children: [
-                            Positioned.fill(
-                              child: IconButton(
-                                visualDensity: VisualDensity.compact,
-                                icon: RoundIcon(Icon(categoryNode.category.icon, color: color)),
-                                onPressed: () => category.value = categoryNode.category,
-                              ),
-                            ),
-                            Positioned.fill(
-                              top: null,
-                              child: Text(
-                                categoryNode.category.name,
-                                style: TextStyle(color: color, fontSize: theme.textTheme.caption?.fontSize),
-                                textAlign: TextAlign.center,
-                              ),
-                            ),
-                          ],
-                        );
-                      })
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      margin: const EdgeInsets.only(right: 8),
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(4),
+                        color: theme.disabledColor,
+                      ),
+                      child: Text('已导入', style: theme.textTheme.caption),
+                    ),
                   ],
                 ),
               ),
-            const Spacer(),
+            if (!isInner)
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8.0),
+                  child: GridView.extent(
+                    // FIXME: grid view maybe overflow
+                    shrinkWrap: true,
+                    maxCrossAxisExtent: 76,
+                    mainAxisSpacing: 8,
+                    children: [
+                      for (final categoryNode in categoryTree.children)
+                        Builder(builder: (context) {
+                          final color = categoryNode.id == category.value?.id ? iconColor : theme.disabledColor;
+                          return Stack(
+                            children: [
+                              Positioned.fill(
+                                child: IconButton(
+                                  visualDensity: VisualDensity.compact,
+                                  icon: RoundIcon(Icon(categoryNode.category.icon, color: color)),
+                                  onPressed: () => category.value = categoryNode.category,
+                                ),
+                              ),
+                              Positioned.fill(
+                                top: null,
+                                child: Text(
+                                  categoryNode.category.name,
+                                  style: TextStyle(color: color, fontSize: theme.textTheme.caption?.fontSize),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ],
+                          );
+                        })
+                    ],
+                  ),
+                ),
+              ),
             IntrinsicHeight(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
