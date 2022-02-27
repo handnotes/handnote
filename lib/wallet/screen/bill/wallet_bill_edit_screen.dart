@@ -27,7 +27,7 @@ class WalletBillEditScreen extends HookConsumerWidget {
     final theme = Theme.of(context);
 
     final billType = useState(bill?.type ?? WalletBillType.outcome);
-    final isInner = billType.value == WalletBillType.inner;
+    final isInner = billType.value == WalletBillType.innerTransfer;
     final time = useState<DateTime>(bill?.time ?? DateTime.now());
     final descriptionController = useTextEditingController();
     final amountController = useTextEditingController();

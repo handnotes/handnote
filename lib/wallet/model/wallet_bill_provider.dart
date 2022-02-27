@@ -28,6 +28,17 @@ class WalletBillNotifier extends StateNotifier<List<WalletBill>> {
     await getList();
   }
 
+  Future<void> addList(List<WalletBill> bills) async {
+    final db = await DB.shared.instance;
+    final batch = db.batch();
+    for (final bill in bills) {
+      final updated = bill.copyWith(createdAt: DateTime.now(), updatedAt: DateTime.now());
+      batch.insert(tableName, updated.toMap());
+    }
+    await batch.commit(noResult: true);
+    await getList();
+  }
+
   Future<void> update(WalletBill bill) async {
     final db = await DB.shared.instance;
     final updated = bill.copyWith(updatedAt: DateTime.now());

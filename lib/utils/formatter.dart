@@ -10,3 +10,7 @@ final currencyDollarFormatter = NumberFormat.currency(
   symbol: '\$',
   decimalDigits: 2,
 );
+
+final dateFormat = DateFormat('yyyy-MM-dd');
+
+final miniDateFormat = DateFormat('yyMMdd');

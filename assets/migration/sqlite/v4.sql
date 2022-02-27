@@ -12,6 +12,7 @@ CREATE TABLE wallet_bill
     time          DATETIME NOT NULL, -- 交易时间
     description   TEXT,              -- 描述
     counter_party TEXT,              -- 交易对方
+    imported_id   TEXT,              -- 导入账单批次唯一标识符, 用于识别重复导入
     created_at    DATETIME NOT NULL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')),
     updated_at    DATETIME NOT NULL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')),
     deleted_at    DATETIME

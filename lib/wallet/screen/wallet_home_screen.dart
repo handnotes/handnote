@@ -11,6 +11,7 @@ import 'package:handnote/wallet/model/wallet_bill_provider.dart';
 import 'package:handnote/wallet/model/wallet_category_provider.dart';
 import 'package:handnote/wallet/screen/asset/wallet_asset_add_screen.dart';
 import 'package:handnote/wallet/screen/bill/wallet_bill_edit_screen.dart';
+import 'package:handnote/wallet/screen/bill/wallet_bill_import_screen.dart';
 import 'package:handnote/wallet/screen/category/wallet_category_manage_screen.dart';
 import 'package:handnote/wallet/widget/wallet_asset_list.dart';
 import 'package:handnote/widgets/currency_text.dart';
@@ -32,6 +33,7 @@ class WalletHomeScreen extends HookConsumerWidget {
 
     useEffect(() {
       // TODO: View hidden wallet assets
+      // TODO: Auto reload balance each asset
       ref.read(walletAssetProvider.notifier).loadData();
 
       // TODO: Load data in main page
@@ -73,6 +75,20 @@ class WalletHomeScreen extends HookConsumerWidget {
             child: Text('Handnote Wallet'),
           ),
           ListTile(
+            leading: const Icon(Icons.category),
+            title: const Text('分类管理'),
+            onTap: () => Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => const WalletCategoryManageScreen(),
+            )),
+          ),
+          ListTile(
+            leading: const Icon(FontAwesome5Solid.file_import),
+            title: const Text('导入账单'),
+            onTap: () => Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => const WalletBillImportScreen(),
+            )),
+          ),
+          ListTile(
             leading: const Icon(Icons.delete_forever),
             title: const Text('清除数据'),
             onTap: () {
@@ -107,15 +123,6 @@ class WalletHomeScreen extends HookConsumerWidget {
               );
             },
           ),
-          ListTile(
-            leading: const Icon(Icons.category),
-            title: const Text('分类管理'),
-            onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => const WalletCategoryManageScreen(),
-              ));
-            },
-          )
         ],
       ),
     );

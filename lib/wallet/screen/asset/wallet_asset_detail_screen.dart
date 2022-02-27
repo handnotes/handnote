@@ -185,7 +185,7 @@ class WalletAssetDetailScreen extends HookConsumerWidget {
                                   ),
                                   if (bill.isInner)
                                     Text(
-                                      '${assetMap[bill.outAssets]?.name} > ${assetMap[bill.inAssets]?.name}',
+                                      '${assetMap[bill.outAssets]?.name ?? '未选择'} > ${assetMap[bill.inAssets]?.name ?? '未选择'}',
                                       style: theme.textTheme.caption,
                                     )
                                 ],

@@ -6,7 +6,7 @@ import 'package:handnote/utils/nanoid.dart';
 enum WalletBillType {
   outcome,
   income,
-  inner,
+  innerTransfer,
 }
 
 class WalletBill {
@@ -23,6 +23,7 @@ class WalletBill {
     DateTime? time,
     this.description = '',
     this.counterParty,
+    this.importedId,
     DateTime? createdAt,
     DateTime? updatedAt,
     this.deletedAt,
@@ -43,6 +44,9 @@ class WalletBill {
   final DateTime time;
   final String description;
   final String? counterParty;
+
+  /// Used to distinguish whether the imported data is repeated
+  final String? importedId;
   final DateTime createdAt;
   final DateTime updatedAt;
   final DateTime? deletedAt;
@@ -61,7 +65,7 @@ class WalletBill {
     } else if (isIncome) {
       return WalletBillType.income;
     } else {
-      return WalletBillType.inner;
+      return WalletBillType.innerTransfer;
     }
   }
 
@@ -78,6 +82,7 @@ class WalletBill {
     DateTime? time,
     String? description,
     String? counterParty,
+    String? importedId,
     DateTime? createdAt,
     DateTime? updatedAt,
     DateTime? deletedAt,
@@ -95,6 +100,7 @@ class WalletBill {
       time: time ?? this.time,
       description: description ?? this.description,
       counterParty: counterParty ?? this.counterParty,
+      importedId: importedId ?? this.importedId,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       deletedAt: deletedAt ?? this.deletedAt,
@@ -115,6 +121,7 @@ class WalletBill {
       'time': time.toUtc().toIso8601String(),
       'description': description,
       'counter_party': counterParty,
+      'imported_id': importedId,
       'created_at': createdAt.toUtc().toIso8601String(),
       'updated_at': updatedAt.toUtc().toIso8601String(),
       'deleted_at': deletedAt?.toUtc().toIso8601String(),
@@ -135,6 +142,7 @@ class WalletBill {
       time: DateTime.parse(map['time']),
       description: map['description'],
       counterParty: map['counter_party'],
+      importedId: map['imported_id'],
       createdAt: DateTime.parse(map['created_at']),
       updatedAt: DateTime.parse(map['updated_at']),
       deletedAt: map['deleted_at'] == null ? null : DateTime.parse(map['deleted_at']),
@@ -145,7 +153,7 @@ class WalletBill {
 final billColorMap = <WalletBillType, Color>{
   WalletBillType.outcome: errorColor,
   WalletBillType.income: successColor,
-  WalletBillType.inner: primaryColor,
+  WalletBillType.innerTransfer: primaryColor,
 };
 
 final currencyMap = <String, CurrencyType>{
