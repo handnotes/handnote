@@ -26,7 +26,7 @@ final lightTheme = ThemeData(
   ),
   elevatedButtonTheme: ElevatedButtonThemeData(
     style: ElevatedButton.styleFrom(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       primary: errorColor,
       onPrimary: Colors.white,
       elevation: 0,
@@ -34,7 +34,7 @@ final lightTheme = ThemeData(
   ),
   outlinedButtonTheme: OutlinedButtonThemeData(
     style: OutlinedButton.styleFrom(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       side: BorderSide(color: disabledColor),
     ),
   ),
@@ -68,12 +68,12 @@ final darkTheme = ThemeData(
     style: ElevatedButton.styleFrom(
       primary: secondaryColor.withOpacity(0.7),
       onPrimary: darkTextColor,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
     ),
   ),
   outlinedButtonTheme: OutlinedButtonThemeData(
     style: OutlinedButton.styleFrom(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
       side: BorderSide(color: Colors.blueGrey[300]!),
       primary: Colors.blueGrey[200],
     ),
