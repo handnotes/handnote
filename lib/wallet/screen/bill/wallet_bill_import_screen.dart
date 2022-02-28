@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:collection/collection.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:handnote/constants/bank.dart';
@@ -18,7 +20,7 @@ class WalletBillImportScreen extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, ref) {
-    final jsonString = useState('');
+    final jsonStringController = useTextEditingController();
     final report = useState<WalletBillImportedReport?>(null);
     final asset = useState<WalletAsset?>(null);
 
@@ -32,20 +34,40 @@ class WalletBillImportScreen extends HookConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              TextField(
-                decoration: const InputDecoration(
-                  hintText: '请粘贴账单 JSON 内容',
-                  border: OutlineInputBorder(),
-                ),
-                maxLength: null,
-                keyboardType: TextInputType.multiline,
-                onChanged: (value) => jsonString.value = value,
+              Row(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  OutlinedButton(
+                    child: const Text('选择文件'),
+                    onPressed: () async {
+                      final result = await FilePicker.platform.pickFiles();
+                      if (result != null) {
+                        final file = File(result.files.single.path ?? '');
+                        final content = await file.readAsString();
+                        jsonStringController.text = content;
+                      }
+                    },
+                  ),
+                  const VerticalDivider(),
+                  Expanded(
+                    child: TextField(
+                      controller: jsonStringController,
+                      decoration: const InputDecoration(
+                        hintText: '请粘贴账单 JSON 内容',
+                        border: OutlineInputBorder(),
+                      ),
+                      maxLength: null,
+                      keyboardType: TextInputType.multiline,
+                      onChanged: (value) => jsonStringController.text = value,
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 16.0),
               ElevatedButton(
                 child: const Text('分析'),
                 onPressed: () {
-                  report.value = WalletBillImportedReport.fromMap(json.decode(jsonString.value));
+                  report.value = WalletBillImportedReport.fromMap(json.decode(jsonStringController.value.text));
                   assert(report.value != null);
                 },
               ),
