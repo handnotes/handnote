@@ -23,14 +23,17 @@ class WalletBillBatchEditScreen extends HookConsumerWidget {
     required this.description,
     required this.counterParty,
     this.asset,
+    this.transferAsset,
     this.categoryId,
-  }) : super(key: key);
+  })  : assert(!(transferAsset != null && type != WalletBillType.innerTransfer)),
+        super(key: key);
 
   final List<WalletBill> bills;
   final WalletBillType? type;
   final String description;
   final String counterParty;
   final WalletAsset? asset;
+  final WalletAsset? transferAsset;
   final int? categoryId;
 
   @override
@@ -42,7 +45,7 @@ class WalletBillBatchEditScreen extends HookConsumerWidget {
     final descriptionController = useTextEditingController();
     final counterPartyController = useTextEditingController();
     final asset = useState<WalletAsset?>(this.asset);
-    final transferAsset = useState<WalletAsset?>(null);
+    final transferAsset = useState<WalletAsset?>(this.transferAsset);
     final category = useState<WalletCategory?>(null);
 
     final categories = ref.watch(walletCategoryProvider).where((e) => e.type.index == billType.value.index).toList();

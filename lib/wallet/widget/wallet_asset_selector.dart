@@ -68,6 +68,7 @@ class WalletAssetSelector extends HookConsumerWidget {
                 return WalletAssetItem(
                   element,
                   dense: true,
+                  allowEdit: true,
                   trailingBuilder: () => element.id == previous?.id ? const Icon(Icons.check) : null,
                   onTap: () {
                     onSelected(element);

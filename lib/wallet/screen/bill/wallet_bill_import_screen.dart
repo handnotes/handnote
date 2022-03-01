@@ -7,7 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:handnote/constants/bank.dart';
 import 'package:handnote/utils/formatter.dart';
+import 'package:handnote/wallet/constants/wallet_asset_type.dart';
+import 'package:handnote/wallet/constants/wallet_system_category.dart';
 import 'package:handnote/wallet/model/wallet_asset.dart';
+import 'package:handnote/wallet/model/wallet_asset_provider.dart';
 import 'package:handnote/wallet/model/wallet_bill.dart';
 import 'package:handnote/wallet/model/wallet_bill_imported.dart';
 import 'package:handnote/wallet/screen/bill/wallet_bill_batch_edit_screen.dart';
@@ -23,6 +26,7 @@ class WalletBillImportScreen extends HookConsumerWidget {
     final jsonStringController = useTextEditingController();
     final report = useState<WalletBillImportedReport?>(null);
     final asset = useState<WalletAsset?>(null);
+    final assets = ref.watch(walletAssetProvider);
 
     return PageContainer(
       child: Scaffold(
@@ -31,8 +35,7 @@ class WalletBillImportScreen extends HookConsumerWidget {
         ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+          child: ListView(
             children: [
               Row(
                 mainAxisSize: MainAxisSize.max,
@@ -55,6 +58,7 @@ class WalletBillImportScreen extends HookConsumerWidget {
                       decoration: const InputDecoration(
                         hintText: '请粘贴账单 JSON 内容',
                         border: OutlineInputBorder(),
+                        contentPadding: EdgeInsets.all(8),
                       ),
                       maxLength: null,
                       keyboardType: TextInputType.multiline,
@@ -69,9 +73,14 @@ class WalletBillImportScreen extends HookConsumerWidget {
                 onPressed: () {
                   report.value = WalletBillImportedReport.fromMap(json.decode(jsonStringController.value.text));
                   assert(report.value != null);
+                  if (bankInfoMap.keys.map((e) => e.name).contains(report.value!.accountName)) {
+                    // TODO: support credit card
+                    asset.value = assets.firstWhere(
+                        (e) => e.bank?.name == report.value!.accountName && e.type == WalletAssetType.debitCard);
+                  }
                 },
               ),
-              if (report.value != null) _handleImport(context, report, asset),
+              if (report.value != null) ..._handleImport(context, report, asset, assets),
             ],
           ),
         ),
@@ -79,21 +88,28 @@ class WalletBillImportScreen extends HookConsumerWidget {
     );
   }
 
-  Widget _handleImport(BuildContext context, ValueNotifier<WalletBillImportedReport?> reportValueNotifier,
-      ValueNotifier<WalletAsset?> asset) {
+  List<Widget> _handleImport(
+    BuildContext context,
+    ValueNotifier<WalletBillImportedReport?> reportValueNotifier,
+    ValueNotifier<WalletAsset?> asset,
+    List<WalletAsset> assets,
+  ) {
     final report = reportValueNotifier.value!;
-    final bySummary = groupBy(report.bills, (WalletBillImported bill) => bill.summary);
+    var bySummary = groupBy(report.bills, (WalletBillImported bill) => bill.summary).entries.toList();
+    bySummary.sort((a, b) => b.value.length.compareTo(a.value.length));
 
-    return Expanded(
-      child: ListView(children: [
-        WalletAssetSelector(asset: asset.value, onSelected: (value) => asset.value = value),
-        Text('导入账户：${report.accountName} (${bankInfoMap[Bank.values.byName(report.accountName)]?.name}储蓄卡)'),
-        Text('时间范围：${dateFormat.format(report.startDate)} ~ ${dateFormat.format(report.endDate)}'),
-        Text('总支出：${report.totalOutcome}'),
-        Text('总收入：${report.totalIncome}'),
-        Text('总比数：${report.count}'),
-        for (final summary in bySummary.keys)
-          Column(
+    return [
+      WalletAssetSelector(asset: asset.value, onSelected: (value) => asset.value = value),
+      Text('导入账户：${report.accountName} (${bankInfoMap[Bank.values.byName(report.accountName)]?.name}储蓄卡)'),
+      Text('时间范围：${dateFormat.format(report.startDate)} ~ ${dateFormat.format(report.endDate)}'),
+      Text('总支出：${report.totalOutcome}'),
+      Text('总收入：${report.totalIncome}'),
+      Text('总比数：${report.count}'),
+      for (final map in bySummary)
+        Builder(builder: (context) {
+          final summary = map.key;
+          final bills = map.value;
+          return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Divider(),
@@ -104,16 +120,8 @@ class WalletBillImportScreen extends HookConsumerWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
                 ),
                 onPressed: () async {
-                  final bills = bySummary[summary]!;
                   final result = await Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => WalletBillBatchEditScreen(
-                      bills: bills.map((e) => e.toBill(identifier: report.identifier)).toList(),
-                      asset: asset.value,
-                      // TODO: identify the type and category
-                      type: bills.first.isIncome ? WalletBillType.income : WalletBillType.outcome,
-                      description: bills.first.tradeType,
-                      counterParty: [bills.first.counterParty, bills.first.cardNumber].whereNotNull().join(' '),
-                    ),
+                    builder: (context) => walletBillBatchEditScreen(summary, bills, report, asset.value, assets),
                   ));
                   if (result == true) {
                     reportValueNotifier.value = reportValueNotifier.value!.copyWith(
@@ -123,14 +131,85 @@ class WalletBillImportScreen extends HookConsumerWidget {
                   }
                 },
               ),
-              for (final bill in bySummary[summary]!)
+              for (final bill in bills)
                 Text(
                   '${dateFormat.format(bill.datetime)} ${bill.amount} \t${bill.tradeType} ${bill.counterParty} ${bill.cardNumber ?? ''}',
                   softWrap: false,
                 ),
             ],
-          ),
-      ]),
+          );
+        }),
+    ];
+  }
+
+  Widget walletBillBatchEditScreen(
+    String summary,
+    List<WalletBillImported> bills,
+    WalletBillImportedReport report,
+    WalletAsset? asset,
+    List<WalletAsset> assets,
+  ) {
+    if (summary.contains(RegExp(r'(快捷支付|还款|转出|转入)'))) {
+      WalletAssetType? assetType;
+      String? cardNumber;
+      if (summary.contains('微信')) {
+        assetType = WalletAssetType.wechat;
+      } else if (summary.contains('支付宝')) {
+        assetType = WalletAssetType.alipay;
+      } else if (summary.contains('京东')) {
+        assetType = WalletAssetType.jd;
+      } else if (summary.contains('信用卡')) {
+        assetType = WalletAssetType.creditCard;
+        cardNumber = summary.split(' ').last;
+      }
+      var outcomeAsset = asset;
+      var transferAsset = assetType != null
+          ? assets.firstWhereOrNull(
+              (element) => element.type == assetType && (cardNumber != null ? element.cardNumber == cardNumber : true))
+          : null;
+      if (bills.first.amount > 0) {
+        outcomeAsset = transferAsset;
+        transferAsset = asset;
+      }
+      return WalletBillBatchEditScreen(
+        bills: bills.map((e) => e.toBill(identifier: report.identifier)).toList(),
+        type: WalletBillType.innerTransfer,
+        asset: outcomeAsset,
+        transferAsset: transferAsset,
+        description: bills.first.tradeType,
+        counterParty: [bills.first.counterParty, bills.first.cardNumber].whereNotNull().join(' '),
+      );
+    }
+
+    if (summary.contains('退款')) {
+      return WalletBillBatchEditScreen(
+        bills: bills.map((e) => e.toBill(identifier: report.identifier)).toList(),
+        type: WalletBillType.income,
+        asset: asset,
+        description: bills.first.tradeType,
+        counterParty: [bills.first.counterParty, bills.first.cardNumber].whereNotNull().join(' '),
+        categoryId: walletSystemCategoryIdMap[WalletSystemCategory.refund],
+      );
+    }
+
+    if (summary.contains('结息')) {
+      return WalletBillBatchEditScreen(
+        bills: bills.map((e) => e.toBill(identifier: report.identifier)).toList(),
+        type: WalletBillType.income,
+        asset: asset,
+        description: bills.first.tradeType,
+        counterParty: [bills.first.counterParty, bills.first.cardNumber].whereNotNull().join(' '),
+        categoryId: walletSystemCategoryIdMap[WalletSystemCategory.interestIncome],
+      );
+    }
+
+    return WalletBillBatchEditScreen(
+      bills: bills.map((e) => e.toBill(identifier: report.identifier)).toList(),
+      asset: asset,
+      // TODO: identify the type and category
+      type: bills.first.isIncome ? WalletBillType.income : WalletBillType.outcome,
+      description: bills.first.tradeType,
+      counterParty: [bills.first.counterParty, bills.first.cardNumber].whereNotNull().join(' '),
     );
   }
 }
