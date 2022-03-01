@@ -33,6 +33,14 @@ class WalletAssetDetailScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final theme = Theme.of(context);
+    final categories = ref.watch(walletCategoryProvider);
+    final categoryMap = useMemoized(() => {for (var e in categories) e.id: e}, [categories]);
+    final assets = ref.watch(walletAssetProvider);
+    final asset = assets.firstWhere((element) => element.id == this.asset.id);
+    final assetMap = useMemoized(() => {for (var e in assets) e.id: e}, [assets]);
+    final bills = ref.watch(walletBillProvider).where((e) => e.inAssets == asset.id || e.outAssets == asset.id);
+    final billMonthly = useMemoized(() => groupBy(bills, (WalletBill e) => '${e.time.year}-${e.time.month}'), [bills]);
+
     final tapPosition = useState<Offset?>(null);
     final scrollController = useScrollController();
     final bankInfo = asset.bank != null ? bankInfoMap[asset.bank] : null;
@@ -48,21 +56,13 @@ class WalletAssetDetailScreen extends HookConsumerWidget {
     }
 
     final balance = useState(asset.balance);
-
-    final bills = ref.watch(walletBillProvider).where((e) => e.inAssets == asset.id || e.outAssets == asset.id);
-    final billMonthly = useMemoized(() => groupBy(bills, (WalletBill e) => '${e.time.year}-${e.time.month}'), [bills]);
-    final categories = ref.watch(walletCategoryProvider);
-    final categoryMap = useMemoized(() => {for (var e in categories) e.id: e}, [categories]);
-    final assets = ref.watch(walletAssetProvider);
-    final assetMap = useMemoized(() => {for (var e in assets) e.id: e}, [assets]);
+    useEffect(() {
+      balance.value = assetMap[asset.id]?.balance ?? 0;
+    }, [assetMap]);
 
     useEffect(() {
       ref.read(walletAssetProvider.notifier).reloadBalance(asset.id, originalBalance: asset.balance);
     }, []);
-
-    useEffect(() {
-      balance.value = assetMap[asset.id]?.balance ?? 0;
-    }, [assetMap]);
 
     return PageContainer(
       color: color,

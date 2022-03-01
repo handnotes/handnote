@@ -35,6 +35,9 @@ class WalletAssetEditScreen extends HookConsumerWidget {
       remarkHint = '如工资卡、房贷卡等';
     }
 
+    final originalName = bankInfo != null ? bankInfo.name : asset.name;
+    final initName = walletAssetTypeOthers.contains(asset.type) ? '' : originalName;
+    final name = useState<String>(isEdit ? asset.name : originalName);
     final remark = useState<String>(asset.remark);
     final balance = useState<double>(asset.balance);
     final cardNumber = useState<String?>(asset.cardNumber);
@@ -58,14 +61,21 @@ class WalletAssetEditScreen extends HookConsumerWidget {
                       Semantics(
                         explicitChildNodes: true,
                         child: ListTile(
-                          title: bankInfo != null ? Text(bankInfo.name) : Text(asset.name),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 0),
                           trailing: bankCardName.isNotEmpty
                               ? Text(bankCardName, style: TextStyle(color: theme.disabledColor))
                               : null,
+                          title: TextFormField(
+                            initialValue: isEdit ? asset.name : initName,
+                            decoration: InputDecoration(
+                              hintText: originalName,
+                              border: InputBorder.none,
+                            ),
+                            onChanged: (value) => name.value = value,
+                          ),
                           leading: bankInfo != null
                               ? RoundIcon(bankInfo.icon)
                               : RoundIcon(walletAssetTypeIconMap[asset.type]),
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 0),
                         ),
                       ),
                       const Divider(),
@@ -88,7 +98,7 @@ class WalletAssetEditScreen extends HookConsumerWidget {
                           child: TextFormField(
                             decoration: const InputDecoration(
                               labelText: '卡号',
-                              hintText: '可填尾号进行辨识，或用于备忘',
+                              hintText: '可填尾号进行辨识，也用于导入时自动识别',
                               border: InputBorder.none,
                             ),
                             initialValue: cardNumber.value,
@@ -130,6 +140,7 @@ class WalletAssetEditScreen extends HookConsumerWidget {
                     child: const Text('保存'),
                     onPressed: () async {
                       final updated = asset.copyWith(
+                        name: name.value,
                         remark: remark.value,
                         balance: balance.value,
                         cardNumber: bankInfo != null ? cardNumber.value : null,

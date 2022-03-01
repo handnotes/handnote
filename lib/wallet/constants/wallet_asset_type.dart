@@ -34,6 +34,13 @@ enum WalletAssetType {
   otherPayable,
 }
 
+var walletAssetTypeOthers = [
+  WalletAssetType.otherAsset,
+  WalletAssetType.otherCredit,
+  WalletAssetType.otherPayable,
+  WalletAssetType.otherReceivable
+];
+
 const assetTypeNameMap = <WalletAssetType, String>{
   WalletAssetType.debitCard: '储蓄卡',
   WalletAssetType.digitalAssets: '数字资产',
