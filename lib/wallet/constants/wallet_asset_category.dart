@@ -1,6 +1,9 @@
 enum WalletAssetCategory {
-  /// 资金
+  /// 资金账户
   fund,
+
+  /// 信贷账户
+  credit,
 
   /// 应收
   receivable,
@@ -9,4 +12,4 @@ enum WalletAssetCategory {
   payable,
 }
 
-const walletAssetCategory = ['资金', '应收', '应付'];
+const walletAssetCategory = ['资金账户', '信贷账户', '应收账户', '应付账户'];

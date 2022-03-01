@@ -4,7 +4,6 @@ import 'package:handnote/wallet/constants/wallet_asset_type.dart';
 import 'package:handnote/widgets/svg_icon.dart';
 
 final Map<WalletAssetType, Widget> walletAssetTypeIconMap = {
-  WalletAssetType.creditCard: Icon(FontAwesome5Brands.cc_visa, color: Colors.orange[300], size: 20),
   WalletAssetType.debitCard: Icon(FontAwesome5.credit_card, color: Colors.orange[300], size: 20),
   WalletAssetType.cash: Icon(Icons.money, color: Colors.orange[300], size: 24),
   WalletAssetType.alipay: SvgIcon('alipay', color: Colors.blue[300]),
@@ -20,6 +19,10 @@ final Map<WalletAssetType, Widget> walletAssetTypeIconMap = {
   WalletAssetType.haircutCard: Icon(Ionicons.cut, color: Colors.orange[300], size: 26),
   WalletAssetType.digitalAssets: Icon(FontAwesome.bitcoin, color: Colors.orange[300], size: 26),
   WalletAssetType.otherAsset: Icon(FontAwesome5Solid.money_check_alt, color: Colors.orange[300], size: 18),
+  // credit account
+  WalletAssetType.creditCard: Icon(FontAwesome5Brands.cc_visa, color: Colors.orange[300], size: 20),
+  WalletAssetType.huabei: SvgIcon('huabei', color: Colors.blue[300], size: 20),
+  WalletAssetType.baitiao: SvgIcon('jd', color: Colors.red[300], size: 20),
   // receivable
   WalletAssetType.borrowOut: SvgIcon('borrow_out', color: Colors.green[300], size: 22),
   WalletAssetType.reimburse: Icon(Ionicons.receipt, color: Colors.green[300], size: 22),
@@ -28,5 +31,6 @@ final Map<WalletAssetType, Widget> walletAssetTypeIconMap = {
   WalletAssetType.borrowIn: SvgIcon('borrow_in', color: Colors.blue[300], size: 22),
   WalletAssetType.loan: SvgIcon('loan', color: Colors.blue[300], size: 30),
   WalletAssetType.jiebei: SvgIcon('jiebei', size: 24, color: Colors.blue[300]),
+  WalletAssetType.jintiao: SvgIcon('jd', size: 24, color: Colors.blue[300]),
   WalletAssetType.otherPayable: Icon(FontAwesome5Solid.sign_out_alt, color: Colors.blue[300], size: 22),
 };

@@ -1,5 +1,4 @@
 enum WalletAssetType {
-  creditCard,
   debitCard,
   alipay,
   wechat,
@@ -16,6 +15,12 @@ enum WalletAssetType {
   digitalAssets, // steam, ethereum, digitalYuan, etc.
   otherAsset,
 
+  // Credit account
+  creditCard,
+  huabei,
+  baitiao,
+  otherCredit,
+
   // Receivable
   borrowOut,
   reimburse,
@@ -25,17 +30,16 @@ enum WalletAssetType {
   borrowIn,
   loan,
   jiebei,
+  jintiao,
   otherPayable,
 }
 
 const assetTypeNameMap = <WalletAssetType, String>{
-  WalletAssetType.creditCard: '信用卡',
   WalletAssetType.debitCard: '储蓄卡',
+  WalletAssetType.digitalAssets: '数字资产',
   WalletAssetType.alipay: '支付宝',
   WalletAssetType.wechat: '微信钱包',
   WalletAssetType.jd: '京东钱包',
-  WalletAssetType.neteasePay: '网易支付',
-  WalletAssetType.tenpay: '财付通',
   WalletAssetType.meituan: '美团钱包',
   WalletAssetType.cash: '现金钱包',
   WalletAssetType.schoolCard: '校园卡',
@@ -43,13 +47,19 @@ const assetTypeNameMap = <WalletAssetType, String>{
   WalletAssetType.foodCard: '餐卡',
   WalletAssetType.shoppingCard: '购物卡',
   WalletAssetType.haircutCard: '理发卡',
-  WalletAssetType.digitalAssets: '数字资产',
   WalletAssetType.otherAsset: '其他资产',
+  // Credit account
+  WalletAssetType.creditCard: '信用卡',
+  WalletAssetType.huabei: '蚂蚁花呗',
+  WalletAssetType.baitiao: '京东白条',
+  // Receivable
   WalletAssetType.borrowOut: '借出',
   WalletAssetType.reimburse: '报销',
-  WalletAssetType.otherReceivable: '其他待收款项',
+  WalletAssetType.otherReceivable: '其他应收',
+  // Payable
   WalletAssetType.borrowIn: '借入',
   WalletAssetType.loan: '贷款',
-  WalletAssetType.jiebei: '借呗',
-  WalletAssetType.otherPayable: '其他应付款项',
+  WalletAssetType.jiebei: '蚂蚁借呗',
+  WalletAssetType.jintiao: '京东金条',
+  WalletAssetType.otherPayable: '其他应付',
 };

@@ -48,10 +48,12 @@ VALUES (100, 0, 0, '餐饮', '{"pack":"custom","iconData":{"codePoint":57946,"fo
        (112, 0, 0, '旅行', '{"pack":"custom","iconData":{"codePoint":58009,"fontFamily":"MaterialIcons","fontPackage":null,"matchTextDirection":false}}', 0),
        (113, 0, 0, '育儿', '{"pack":"custom","iconData":{"codePoint":57539,"fontFamily":"MaterialIcons","fontPackage":null,"matchTextDirection":false}}', 0),
        (114, 0, 0, '宠物', '{"pack":"custom","iconData":{"codePoint":58885,"fontFamily":"HandnoteIcon","fontPackage":null,"matchTextDirection":false}}', 0),
+       (115, 0, 0, '转出', '{"pack":"custom","iconData":{"codePoint":58739,"fontFamily":"MaterialIcons","fontPackage":null,"matchTextDirection":false}}', 0),
 
        (150, 0, 1, '薪资', '{"pack":"custom","iconData":{"codePoint":59043,"fontFamily":"HandnoteIcon","fontPackage":null,"matchTextDirection":false}}', 0),
        (151, 0, 1, '奖金', '{"pack":"custom","iconData":{"codePoint":58360,"fontFamily":"MaterialIcons","fontPackage":null,"matchTextDirection":false}}', 0),
        (152, 0, 1, '兼职', '{"pack":"custom","iconData":{"codePoint":58897,"fontFamily":"HandnoteIcon","fontPackage":null,"matchTextDirection":false}}', 0),
+       (153, 0, 1, '转入', '{"pack":"custom","iconData":{"codePoint":58380,"fontFamily":"MaterialIcons","fontPackage":null,"matchTextDirection":false}}', 0),
        (199, 0, 1, '意外所得', '{"pack":"custom","iconData":{"codePoint":59009,"fontFamily":"HandnoteIcon","fontPackage":null,"matchTextDirection":false}}', 0);
 
 INSERT INTO wallet_category (pid, type, name, icon, sort) VALUES

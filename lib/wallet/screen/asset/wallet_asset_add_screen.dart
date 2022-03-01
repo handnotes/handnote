@@ -11,16 +11,15 @@ import 'package:handnote/widgets/radio_buttons.dart';
 import 'package:handnote/widgets/round_icon.dart';
 
 const walletAssetTypeList = <WalletAddAssetItem>[
-  WalletAddAssetItem(category: WalletAssetCategory.fund, type: WalletAssetType.creditCard, hasSecondaryMenu: true),
   WalletAddAssetItem(category: WalletAssetCategory.fund, type: WalletAssetType.debitCard, hasSecondaryMenu: true),
   // TODO: add digital asset select page
   // WalletAddAssetItem(category: WalletAssetCategory.fund, type: WalletAssetType.digitalAssets, hasSecondaryMenu: true),
   WalletAddAssetItem(category: WalletAssetCategory.fund, type: WalletAssetType.alipay, description: '支持导入账单'),
   WalletAddAssetItem(category: WalletAssetCategory.fund, type: WalletAssetType.wechat, description: '支持导入账单'),
   WalletAddAssetItem(category: WalletAssetCategory.fund, type: WalletAssetType.jd),
-  WalletAddAssetItem(category: WalletAssetCategory.fund, type: WalletAssetType.neteasePay),
+  // WalletAddAssetItem(category: WalletAssetCategory.fund, type: WalletAssetType.neteasePay),
   WalletAddAssetItem(category: WalletAssetCategory.fund, type: WalletAssetType.meituan),
-  WalletAddAssetItem(category: WalletAssetCategory.fund, type: WalletAssetType.tenpay),
+  // WalletAddAssetItem(category: WalletAssetCategory.fund, type: WalletAssetType.tenpay),
   WalletAddAssetItem(category: WalletAssetCategory.fund, type: WalletAssetType.shoppingCard),
   WalletAddAssetItem(category: WalletAssetCategory.fund, type: WalletAssetType.busCard),
   WalletAddAssetItem(category: WalletAssetCategory.fund, type: WalletAssetType.schoolCard),
@@ -28,6 +27,10 @@ const walletAssetTypeList = <WalletAddAssetItem>[
   WalletAddAssetItem(category: WalletAssetCategory.fund, type: WalletAssetType.haircutCard),
   WalletAddAssetItem(category: WalletAssetCategory.fund, type: WalletAssetType.cash, systemName: '现金钱包'),
   WalletAddAssetItem(category: WalletAssetCategory.fund, type: WalletAssetType.otherAsset),
+  // credit account
+  WalletAddAssetItem(category: WalletAssetCategory.credit, type: WalletAssetType.creditCard, hasSecondaryMenu: true),
+  WalletAddAssetItem(category: WalletAssetCategory.credit, type: WalletAssetType.huabei),
+  WalletAddAssetItem(category: WalletAssetCategory.credit, type: WalletAssetType.baitiao),
   // receivable
   WalletAddAssetItem(category: WalletAssetCategory.receivable, type: WalletAssetType.borrowOut),
   WalletAddAssetItem(category: WalletAssetCategory.receivable, type: WalletAssetType.reimburse),
@@ -36,6 +39,7 @@ const walletAssetTypeList = <WalletAddAssetItem>[
   WalletAddAssetItem(category: WalletAssetCategory.payable, type: WalletAssetType.borrowIn),
   WalletAddAssetItem(category: WalletAssetCategory.payable, type: WalletAssetType.loan),
   WalletAddAssetItem(category: WalletAssetCategory.payable, type: WalletAssetType.jiebei),
+  WalletAddAssetItem(category: WalletAssetCategory.payable, type: WalletAssetType.jintiao),
   WalletAddAssetItem(category: WalletAssetCategory.payable, type: WalletAssetType.otherPayable),
 ];
 
