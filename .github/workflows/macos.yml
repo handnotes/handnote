@@ -20,16 +20,14 @@ jobs:
     if: github.event_name == 'push' && !startsWith(github.ref, 'refs/tags/')
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '2.10.x'
+          flutter-version: '3.0.x'
           channel: stable
 
       - run: flutter --version
-
-      - run: flutter config --enable-macos-desktop
 
       - run: flutter doctor -v
 
@@ -57,15 +55,13 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - uses: subosito/flutter-action@v2
         with:
-          flutter-version: '2.10.x'
+          flutter-version: '3.0.x'
           channel: stable
       - run: flutter --version
-
-      - run: flutter config --enable-macos-desktop
 
       - run: flutter doctor -v
 
