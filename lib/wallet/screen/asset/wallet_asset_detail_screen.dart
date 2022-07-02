@@ -104,6 +104,7 @@ class WalletAssetDetailScreen extends HookConsumerWidget {
                         leadingWidth: 72,
                         backgroundColor: color,
                         titleSpacing: 0,
+                        // FIXME: overflowed text
                         title: Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
