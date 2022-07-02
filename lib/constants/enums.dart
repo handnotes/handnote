@@ -4,5 +4,6 @@ enum Status { inactive, active }
 
 enum MenuAction {
   edit,
+  enable,
   delete,
 }

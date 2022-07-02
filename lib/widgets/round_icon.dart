@@ -9,12 +9,14 @@ class RoundIcon extends StatelessWidget {
     this.size = 36,
     this.iconSize,
     this.color = Colors.blueGrey,
+    this.borderSide,
   }) : super(key: key);
 
   final Widget? icon;
   final double? size;
   final Color color;
   final double? iconSize;
+  final BorderSide? borderSide;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +41,7 @@ class RoundIcon extends StatelessWidget {
 
     return Material(
       clipBehavior: Clip.antiAlias,
-      shape: const CircleBorder(),
+      shape: CircleBorder(side: borderSide ?? BorderSide.none),
       color: color,
       child: SizedBox(
         height: size,

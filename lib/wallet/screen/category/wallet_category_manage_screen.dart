@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:handnote/constants/enums.dart';
 import 'package:handnote/theme.dart';
 import 'package:handnote/wallet/model/wallet_category.dart';
 import 'package:handnote/wallet/model/wallet_category_provider.dart';
@@ -43,6 +44,7 @@ class WalletCategoryManageScreen extends HookConsumerWidget {
                 itemBuilder: (context, index) {
                   final treeNode = categoryTree.children[index];
                   final iconColor = type.value == WalletCategoryType.outcome ? errorColor : successColor;
+                  final isEnabled = treeNode.category.status == WalletCategoryStatus.enable;
 
                   return ExpansionTile(
                     tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -51,12 +53,50 @@ class WalletCategoryManageScreen extends HookConsumerWidget {
                       transform: Matrix4.translationValues(-12, 0, 0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
+                        children: isEnabled ? [
                           RoundIcon(Icon(treeNode.category.icon), color: treeNode.category.color),
                           const SizedBox(width: 16),
                           Text(treeNode.category.name),
+                        ]:[
+                          RoundIcon(Icon(treeNode.category.icon), color: Colors.black38),
+                          const SizedBox(width: 16),
+                          Text(treeNode.category.name, style: const TextStyle(color: Colors.black38)),
                         ],
                       ),
+                    ),
+                    trailing: PopupMenuButton(
+                      onSelected: (value) {
+                        switch (value) {
+                          case MenuAction.edit:
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => WalletCategoryEditScreen(treeNode.category),
+                            ));
+                            break;
+                          case MenuAction.enable:
+                            var newStatus = isEnabled ? WalletCategoryStatus.disable : WalletCategoryStatus.enable;
+                            final updated = treeNode.category.copyWith(status: newStatus);
+                            ref.read(walletCategoryProvider.notifier).update(updated);
+                            break;
+                          case MenuAction.delete:
+                            // TODO: delete confirmation
+                            ref.read(walletCategoryProvider.notifier).delete(treeNode.category);
+                            break;
+                        }
+                      },
+                      itemBuilder: (context) => [
+                        const PopupMenuItem(
+                          value: MenuAction.edit,
+                          child: Text('编辑'),
+                        ),
+                        PopupMenuItem(
+                          value: MenuAction.enable,
+                          child: Text(isEnabled ? '停用' : '启用'),
+                        ),
+                        const PopupMenuItem(
+                          value: MenuAction.delete,
+                          child: Text('删除'),
+                        ),
+                      ],
                     ),
                     children: [
                       Container(
@@ -97,14 +137,8 @@ class WalletCategoryManageScreen extends HookConsumerWidget {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-        style: ElevatedButton.styleFrom(primary: theme.backgroundColor),
-        child: Text(
-          '添加大类',
-          style: TextStyle(
-            color: theme.colorScheme.onBackground,
-            fontSize: theme.textTheme.subtitle1?.fontSize,
-          ),
-        ),
+        style: ElevatedButton.styleFrom(primary: theme.backgroundColor, padding: const EdgeInsets.all(20)),
+        child: Text('添加大类', style: theme.textTheme.subtitle1),
         onPressed: () {
           Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => WalletCategoryEditScreen(

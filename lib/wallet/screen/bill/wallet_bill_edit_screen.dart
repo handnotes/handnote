@@ -7,6 +7,7 @@ import 'package:handnote/wallet/model/wallet_bill.dart';
 import 'package:handnote/wallet/model/wallet_bill_provider.dart';
 import 'package:handnote/wallet/model/wallet_category.dart';
 import 'package:handnote/wallet/model/wallet_category_provider.dart';
+import 'package:handnote/wallet/screen/category/wallet_category_manage_screen.dart';
 import 'package:handnote/wallet/utils/category_tree.dart';
 import 'package:handnote/wallet/widget/wallet_bill_edit_amount.dart';
 import 'package:handnote/widgets/page_container.dart';
@@ -229,35 +230,9 @@ class WalletBillEditScreen extends HookConsumerWidget {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8.0),
                   child: GridView.extent(
-                    // FIXME: grid view maybe overflow
-                    shrinkWrap: true,
                     maxCrossAxisExtent: 76,
                     mainAxisSpacing: 8,
-                    children: [
-                      for (final categoryNode in categoryTree.children)
-                        Builder(builder: (context) {
-                          final color = categoryNode.id == category.value?.id ? iconColor : theme.disabledColor;
-                          return Stack(
-                            children: [
-                              Positioned.fill(
-                                child: IconButton(
-                                  visualDensity: VisualDensity.compact,
-                                  icon: RoundIcon(Icon(categoryNode.category.icon, color: color)),
-                                  onPressed: () => category.value = categoryNode.category,
-                                ),
-                              ),
-                              Positioned.fill(
-                                top: null,
-                                child: Text(
-                                  categoryNode.category.name,
-                                  style: TextStyle(color: color, fontSize: theme.textTheme.caption?.fontSize),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ],
-                          );
-                        })
-                    ],
+                    children: _buildCategories(context, categoryTree, category, iconColor),
                   ),
                 ),
               ),
@@ -313,5 +288,64 @@ class WalletBillEditScreen extends HookConsumerWidget {
         ),
       ),
     );
+  }
+
+  List<Widget> _buildCategories(BuildContext context,
+      WalletCategoryTree categoryTree,
+      ValueNotifier<WalletCategory?> category,
+      Color? iconColor,) {
+    final theme = Theme.of(context);
+    return [
+      for (final categoryNode in categoryTree.children) _buildCategoryItem(context, categoryNode, category, iconColor),
+      Stack(children: [
+        Positioned.fill(
+          child: IconButton(
+            icon: RoundIcon(
+              const Icon(Icons.settings, color: Colors.transparent),
+              borderSide: BorderSide(color: theme.disabledColor),
+            ),
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const WalletCategoryManageScreen(),
+              ));
+            },
+          ),
+        ),
+        Positioned.fill(
+          top: null,
+          bottom: -2,
+          child: Text(
+            '管理',
+            style: TextStyle(color: theme.disabledColor, fontSize: theme.textTheme.caption?.fontSize),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ]),
+    ];
+  }
+
+  Widget _buildCategoryItem(BuildContext context,
+      WalletCategoryTree categoryNode,
+      ValueNotifier<WalletCategory?> category,
+      Color? iconColor,) {
+    final theme = Theme.of(context);
+    final color = categoryNode.id == category.value?.id ? iconColor : theme.disabledColor;
+    return Stack(children: [
+      Positioned.fill(
+        child: IconButton(
+          icon: RoundIcon(Icon(categoryNode.category.icon, color: color)),
+          onPressed: () => category.value = categoryNode.category,
+        ),
+      ),
+      Positioned.fill(
+        top: null,
+        bottom: -2,
+        child: Text(
+          categoryNode.category.name,
+          style: TextStyle(color: color, fontSize: theme.textTheme.caption?.fontSize),
+          textAlign: TextAlign.center,
+        ),
+      ),
+    ]);
   }
 }

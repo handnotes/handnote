@@ -18,7 +18,7 @@ class WalletCategoryTree {
     final groupMap = groupBy(categoryList, (WalletCategory category) => category.pid);
 
     WalletCategoryTree _fromList(WalletCategory node) {
-      final children = groupMap[node.id] ?? [];
+      final children = (groupMap[node.id] ?? []).sorted((a, b) => a.status.index.compareTo(b.status.index));
       return WalletCategoryTree(
         id: node.id!,
         pid: node.pid,
