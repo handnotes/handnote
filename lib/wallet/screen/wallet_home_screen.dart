@@ -68,6 +68,7 @@ class WalletHomeScreen extends HookConsumerWidget {
             SliverList(
               delegate: SliverChildListDelegate([
                 _addABillWidget(context),
+                // WalletBookList([]),
                 WalletAssetList(walletAssets, maskAmount: maskAmount.value),
               ]),
             )
