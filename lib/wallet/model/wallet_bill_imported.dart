@@ -167,8 +167,8 @@ class WalletBillImportedReport {
       startDate: DateTime.parse(map['startDate']),
       endDate: DateTime.parse(map['endDate']),
       count: map['count'],
-      totalIncome: map['totalIncome'],
-      totalOutcome: map['totalOutcome'],
+      totalIncome: double.tryParse("${map['totalIncome']}") ?? 0,
+      totalOutcome: double.tryParse("${map['totalOutcome']}") ?? 0,
       bills: (map['bills'] as List<dynamic>).map((e) => WalletBillImported.fromMap(e)).toList(),
     );
   }

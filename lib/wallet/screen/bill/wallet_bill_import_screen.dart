@@ -101,10 +101,10 @@ class WalletBillImportScreen extends HookConsumerWidget {
     return [
       WalletAssetSelector(asset: asset.value, onSelected: (value) => asset.value = value),
       Text('导入账户：${report.accountName} (${bankInfoMap[Bank.values.byName(report.accountName)]?.name}储蓄卡)'),
-      Text('时间范围：${dateFormat.format(report.startDate)} ~ ${dateFormat.format(report.endDate)}'),
-      Text('总支出：${report.totalOutcome}'),
-      Text('总收入：${report.totalIncome}'),
-      Text('总比数：${report.count}'),
+      Text('时间范围：${dateFormat.format(report.startDate.toLocal())} ~ ${dateFormat.format(report.endDate.toLocal())}'),
+      Text('总支出：${report.totalOutcome.toStringAsFixed(2)}'),
+      Text('总收入：${report.totalIncome.toStringAsFixed(2)}'),
+      Text('总条数：${report.count}'),
       for (final map in bySummary)
         Builder(builder: (context) {
           final summary = map.key;
@@ -133,7 +133,7 @@ class WalletBillImportScreen extends HookConsumerWidget {
               ),
               for (final bill in bills)
                 Text(
-                  '${dateFormat.format(bill.datetime)} ${bill.amount} \t${bill.tradeType} ${bill.counterParty} ${bill.cardNumber ?? ''}',
+                  '${dateFormat.format(bill.datetime)} ${bill.amount.toStringAsFixed(2)} \t${bill.tradeType} ${bill.counterParty} ${bill.cardNumber ?? ''}',
                   softWrap: false,
                 ),
             ],
