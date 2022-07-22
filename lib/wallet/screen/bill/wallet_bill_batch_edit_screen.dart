@@ -80,7 +80,7 @@ class WalletBillBatchEditScreen extends HookConsumerWidget {
           bill = bill.copyWith(
             outAssets: asset.value?.id,
             outAmount: bill.amount,
-            outAmountType: CurrencyType.RMB,
+            outAmountType: CurrencyType.CNY,
             inAssets: null,
             inAmount: null,
             inAmountType: null,
@@ -89,7 +89,7 @@ class WalletBillBatchEditScreen extends HookConsumerWidget {
           bill = bill.copyWith(
             inAssets: asset.value?.id,
             inAmount: bill.amount,
-            inAmountType: CurrencyType.RMB,
+            inAmountType: CurrencyType.CNY,
             outAssets: null,
             outAmount: null,
             outAmountType: null,
@@ -98,10 +98,10 @@ class WalletBillBatchEditScreen extends HookConsumerWidget {
           bill = bill.copyWith(
             inAssets: transferAsset.value?.id,
             inAmount: bill.amount,
-            inAmountType: CurrencyType.RMB,
+            inAmountType: CurrencyType.CNY,
             outAssets: asset.value?.id,
             outAmount: bill.amount,
-            outAmountType: CurrencyType.RMB,
+            outAmountType: CurrencyType.CNY,
           );
         }
         return bill;

@@ -74,7 +74,7 @@ class WalletBill {
       : this(
           category: walletSystemCategoryIdMap[WalletSystemCategory.adjustBalance],
           inAssets: assetId,
-          inAmountType: CurrencyType.RMB,
+          inAmountType: CurrencyType.CNY,
           inAmount: balance,
         );
 
@@ -166,6 +166,6 @@ final billColorMap = <WalletBillType, Color>{
 };
 
 final currencyMap = <String, CurrencyType>{
-  'RMB': CurrencyType.RMB,
+  'CNY': CurrencyType.CNY,
   'USD': CurrencyType.USD,
 };
