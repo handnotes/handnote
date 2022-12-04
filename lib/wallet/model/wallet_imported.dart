@@ -5,15 +5,15 @@ import 'package:handnote/wallet/constants/wallet_system_category.dart';
 import 'package:handnote/wallet/model/wallet_asset.dart';
 import 'package:handnote/wallet/model/wallet_bill.dart';
 
-enum BillImportedType {
+enum WalletImportedBillType {
   transfer,
   income,
   outcome,
   refund,
 }
 
-class WalletBillImported {
-  const WalletBillImported({
+class WalletImportedBill {
+  const WalletImportedBill({
     required this.datetime,
     required this.currencyType,
     required this.amount,
@@ -27,7 +27,7 @@ class WalletBillImported {
   final DateTime datetime;
   final CurrencyType currencyType;
   final double amount;
-  final BillImportedType billType;
+  final WalletImportedBillType billType;
 
   /// 交易类型
   final String tradeType;
@@ -41,22 +41,22 @@ class WalletBillImported {
   /// 转入转出卡号
   final String? cardNumber;
 
-  bool get isIncome => billType == BillImportedType.income;
+  bool get isIncome => billType == WalletImportedBillType.income;
 
-  bool get isOutcome => billType == BillImportedType.outcome;
+  bool get isOutcome => billType == WalletImportedBillType.outcome;
 
-  bool get isTransfer => billType == BillImportedType.transfer;
+  bool get isTransfer => billType == WalletImportedBillType.transfer;
 
-  bool get isRefund => billType == BillImportedType.refund;
+  bool get isRefund => billType == WalletImportedBillType.refund;
 
   String get summary => [tradeType, counterParty, cardNumber].whereNotNull().join(' ');
 
-  factory WalletBillImported.fromMap(Map<String, dynamic> map) {
-    return WalletBillImported(
+  factory WalletImportedBill.fromMap(Map<String, dynamic> map) {
+    return WalletImportedBill(
       datetime: DateTime.parse(map['datetime']),
       currencyType: CurrencyType.values.byName(map['currencyType']),
       amount: double.tryParse("${map['amount']}") ?? 0,
-      billType: BillImportedType.values.byName(map['billType']),
+      billType: WalletImportedBillType.values.byName(map['billType']),
       tradeType: map['tradeType'],
       counterParty: map['counterParty'],
       productName: map['productName'],
@@ -120,8 +120,8 @@ class WalletBillImported {
   }
 }
 
-class WalletBillImportedReport {
-  WalletBillImportedReport({
+class WalletImportedReport {
+  WalletImportedReport({
     required this.accountName,
     required this.startDate,
     required this.endDate,
@@ -137,20 +137,20 @@ class WalletBillImportedReport {
   final int count;
   final double totalIncome;
   final double totalOutcome;
-  List<WalletBillImported> bills;
+  List<WalletImportedBill> bills;
 
   String? get identifier => '$accountName-${miniDateFormat.format(startDate)}-${miniDateFormat.format(endDate)}';
 
-  WalletBillImportedReport copyWith({
+  WalletImportedReport copyWith({
     String? accountName,
     DateTime? startDate,
     DateTime? endDate,
     int? count,
     double? totalIncome,
     double? totalOutcome,
-    List<WalletBillImported>? bills,
+    List<WalletImportedBill>? bills,
   }) {
-    return WalletBillImportedReport(
+    return WalletImportedReport(
       accountName: accountName ?? this.accountName,
       startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,
@@ -161,15 +161,15 @@ class WalletBillImportedReport {
     );
   }
 
-  factory WalletBillImportedReport.fromMap(Map<String, dynamic> map) {
-    return WalletBillImportedReport(
+  factory WalletImportedReport.fromMap(Map<String, dynamic> map) {
+    return WalletImportedReport(
       accountName: map['accountName'],
       startDate: DateTime.parse(map['startDate']),
       endDate: DateTime.parse(map['endDate']),
       count: map['count'],
       totalIncome: double.tryParse("${map['totalIncome']}") ?? 0,
       totalOutcome: double.tryParse("${map['totalOutcome']}") ?? 0,
-      bills: (map['bills'] as List<dynamic>).map((e) => WalletBillImported.fromMap(e)).toList(),
+      bills: (map['bills'] as List<dynamic>).map((e) => WalletImportedBill.fromMap(e)).toList(),
     );
   }
 }

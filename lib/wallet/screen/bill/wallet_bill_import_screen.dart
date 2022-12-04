@@ -12,7 +12,7 @@ import 'package:handnote/wallet/constants/wallet_system_category.dart';
 import 'package:handnote/wallet/model/wallet_asset.dart';
 import 'package:handnote/wallet/model/wallet_asset_provider.dart';
 import 'package:handnote/wallet/model/wallet_bill.dart';
-import 'package:handnote/wallet/model/wallet_bill_imported.dart';
+import 'package:handnote/wallet/model/wallet_imported.dart';
 import 'package:handnote/wallet/screen/bill/wallet_bill_batch_edit_screen.dart';
 import 'package:handnote/wallet/widget/wallet_asset_selector.dart';
 import 'package:handnote/widgets/page_container.dart';
@@ -24,7 +24,7 @@ class WalletBillImportScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final jsonStringController = useTextEditingController();
-    final report = useState<WalletBillImportedReport?>(null);
+    final report = useState<WalletImportedReport?>(null);
     final asset = useState<WalletAsset?>(null);
     final assets = ref.watch(walletAssetProvider);
 
@@ -71,7 +71,7 @@ class WalletBillImportScreen extends HookConsumerWidget {
               ElevatedButton(
                 child: const Text('分析'),
                 onPressed: () {
-                  report.value = WalletBillImportedReport.fromMap(json.decode(jsonStringController.value.text));
+                  report.value = WalletImportedReport.fromMap(json.decode(jsonStringController.value.text));
                   assert(report.value != null);
                   if (bankInfoMap.keys.map((e) => e.name).contains(report.value!.accountName)) {
                     // TODO: support credit card
@@ -90,12 +90,12 @@ class WalletBillImportScreen extends HookConsumerWidget {
 
   List<Widget> _handleImport(
     BuildContext context,
-    ValueNotifier<WalletBillImportedReport?> reportValueNotifier,
+    ValueNotifier<WalletImportedReport?> reportValueNotifier,
     ValueNotifier<WalletAsset?> asset,
     List<WalletAsset> assets,
   ) {
     final report = reportValueNotifier.value!;
-    var bySummary = groupBy(report.bills, (WalletBillImported bill) => bill.summary).entries.toList();
+    var bySummary = groupBy(report.bills, (WalletImportedBill bill) => bill.summary).entries.toList();
     bySummary.sort((a, b) => b.value.length.compareTo(a.value.length));
 
     return [
@@ -144,8 +144,8 @@ class WalletBillImportScreen extends HookConsumerWidget {
 
   Widget walletBillBatchEditScreen(
     String summary,
-    List<WalletBillImported> bills,
-    WalletBillImportedReport report,
+    List<WalletImportedBill> bills,
+    WalletImportedReport report,
     WalletAsset? asset,
     List<WalletAsset> assets,
   ) {
