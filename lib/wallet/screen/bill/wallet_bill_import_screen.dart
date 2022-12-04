@@ -16,6 +16,7 @@ import 'package:handnote/wallet/model/wallet_imported.dart';
 import 'package:handnote/wallet/screen/bill/wallet_bill_batch_edit_screen.dart';
 import 'package:handnote/wallet/widget/wallet_asset_selector.dart';
 import 'package:handnote/widgets/page_container.dart';
+import 'package:handnote/widgets/toast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class WalletBillImportScreen extends HookConsumerWidget {
@@ -28,6 +29,20 @@ class WalletBillImportScreen extends HookConsumerWidget {
     final asset = useState<WalletAsset?>(null);
     final assets = ref.watch(walletAssetProvider);
 
+    void _handleAnalysis() {
+      report.value = WalletImportedReport.fromMap(json.decode(jsonStringController.value.text));
+      assert(report.value != null);
+      var accountName = report.value!.accountName;
+      if (accountName == 'alipay') {
+        asset.value = assets.firstWhere((e) => e.type == WalletAssetType.alipay);
+      } else if (accountName == 'wechat') {
+        asset.value = assets.firstWhere((e) => e.type == WalletAssetType.wechat);
+      } else if (bankInfoMap.keys.map((e) => e.name).contains(accountName)) {
+        // TODO: support credit card
+        asset.value = assets.firstWhere((e) => e.bank?.name == accountName && e.type == WalletAssetType.debitCard);
+      }
+    }
+
     return PageContainer(
       child: Scaffold(
         appBar: AppBar(
@@ -37,48 +52,45 @@ class WalletBillImportScreen extends HookConsumerWidget {
           padding: const EdgeInsets.all(16.0),
           child: ListView(
             children: [
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  OutlinedButton(
-                    child: const Text('选择文件'),
-                    onPressed: () async {
-                      final result = await FilePicker.platform.pickFiles();
-                      if (result != null) {
-                        final file = File(result.files.single.path ?? '');
-                        final content = await file.readAsString();
-                        jsonStringController.text = content;
-                      }
-                    },
-                  ),
-                  const VerticalDivider(),
-                  Expanded(
-                    child: TextField(
-                      controller: jsonStringController,
-                      decoration: const InputDecoration(
-                        hintText: '请粘贴账单 JSON 内容',
-                        border: OutlineInputBorder(),
-                        contentPadding: EdgeInsets.all(8),
-                      ),
-                      maxLength: null,
-                      keyboardType: TextInputType.multiline,
-                      onChanged: (value) => jsonStringController.text = value,
+              SizedBox(
+                height: 48,
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    OutlinedButton(
+                      child: const Text('选择文件'),
+                      onPressed: () async {
+                        final result = await FilePicker.platform.pickFiles();
+                        if (result != null) {
+                          final file = File(result.files.single.path ?? '');
+                          final content = await file.readAsString();
+                          jsonStringController.text = content;
+                          _handleAnalysis();
+                        }
+                      },
                     ),
-                  ),
-                ],
+                    const VerticalDivider(),
+                    Expanded(
+                      child: TextField(
+                        controller: jsonStringController,
+                        decoration: const InputDecoration(
+                          hintText: '请粘贴账单 JSON 内容',
+                          border: OutlineInputBorder(),
+                          contentPadding: EdgeInsets.all(8),
+                        ),
+                        maxLength: null,
+                        keyboardType: TextInputType.multiline,
+                        onChanged: (value) => jsonStringController.text = value,
+                      ),
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: 16.0),
               ElevatedButton(
                 child: const Text('分析'),
-                onPressed: () {
-                  report.value = WalletImportedReport.fromMap(json.decode(jsonStringController.value.text));
-                  assert(report.value != null);
-                  if (bankInfoMap.keys.map((e) => e.name).contains(report.value!.accountName)) {
-                    // TODO: support credit card
-                    asset.value = assets.firstWhere(
-                        (e) => e.bank?.name == report.value!.accountName && e.type == WalletAssetType.debitCard);
-                  }
-                },
+                onPressed: _handleAnalysis,
               ),
               if (report.value != null) ..._handleImport(context, report, asset, assets),
             ],
@@ -100,15 +112,18 @@ class WalletBillImportScreen extends HookConsumerWidget {
 
     return [
       WalletAssetSelector(asset: asset.value, onSelected: (value) => asset.value = value),
-      Text('导入账户：${report.accountName} (${bankInfoMap[Bank.values.byName(report.accountName)]?.name}储蓄卡)'),
+      // TODO: support alipay (${bankInfoMap[Bank.values.byName(report.accountName)]?.name}储蓄卡)'
+      Text('导入账户：${report.accountName}'),
       Text('时间范围：${dateFormat.format(report.startDate.toLocal())} ~ ${dateFormat.format(report.endDate.toLocal())}'),
       Text('总支出：${report.totalOutcome.toStringAsFixed(2)}'),
       Text('总收入：${report.totalIncome.toStringAsFixed(2)}'),
       Text('总条数：${report.count}'),
       for (final map in bySummary)
         Builder(builder: (context) {
-          final summary = map.key;
           final bills = map.value;
+          final bill = bills.elementAt(0);
+          final summary =
+              'type: ${bill.billType.name}\ntradeType: ${bill.tradeType}\ncounter: ${bill.counterParty}\ncard: ${bill.cardNumber}';
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
