@@ -20,6 +20,7 @@ class WalletImportedBill {
     required this.billType,
     required this.tradeType,
     required this.counterParty,
+    this.importedSummary,
     this.productName,
     this.cardNumber,
   });
@@ -40,6 +41,9 @@ class WalletImportedBill {
 
   /// 转入转出卡号
   final String? cardNumber;
+
+  /// 导入时的交易摘要
+  final String? importedSummary;
 
   bool get isIncome => billType == WalletImportedBillType.income;
 
@@ -86,6 +90,7 @@ class WalletImportedBill {
         inAmountType: currencyType,
         inAmount: amount,
         inAssets: fromAsset?.id ?? 0,
+        inImportedSummary: importedSummary,
         outAmountType: null,
         outAmount: null,
         outAssets: null,
@@ -95,6 +100,7 @@ class WalletImportedBill {
         outAmountType: currencyType,
         outAmount: amount,
         outAssets: toAsset?.id ?? 0,
+        outImportedSummary: importedSummary,
         inAmountType: null,
         inAmount: null,
         inAssets: null,
@@ -104,9 +110,11 @@ class WalletImportedBill {
         inAmountType: currencyType,
         inAmount: amount,
         inAssets: fromAsset?.id ?? 0,
+        inImportedSummary: this.amount > 0 ? importedSummary : null,
         outAmountType: currencyType,
         outAmount: amount,
         outAssets: toAsset?.id ?? 0,
+        outImportedSummary: this.amount <= 0 ? importedSummary : null,
       );
     } else if (isRefund) {
       bill = bill.copyWith(
@@ -114,6 +122,7 @@ class WalletImportedBill {
         inAmountType: currencyType,
         inAmount: amount,
         inAssets: toAsset?.id ?? 0,
+        inImportedSummary: importedSummary,
       );
     }
     return bill;
