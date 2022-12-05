@@ -1,0 +1,1 @@
+const currentDatabaseVersion = 5;

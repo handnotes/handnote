@@ -38,7 +38,7 @@ dependencies:
   collection:
   hooks_riverpod: ^2.0.0-dev.2
   path: ^1.8.0
-  sqflite: ^2.0.2
+  sqflite: ^2.2.2
   intl: ^0.17.0
   nanoid: ^1.0.0
   file_picker: ^4.5.0
