@@ -146,11 +146,11 @@ class WalletAsset {
       balance: map['balance'],
       bank: map['bank'] != null ? Bank.values.byName(map['bank']) : null,
       cardNumber: map['card_number'],
-      repaymentDate: map['repayment_date']?.let((it) => DateTime.parse(it)),
-      billingDate: map['billing_date']?.let((it) => DateTime.parse(it)),
-      createdAt: DateTime.parse(map['created_at']),
-      updatedAt: DateTime.parse(map['updated_at']),
-      deletedAt: map['deleted_at']?.let((it) => DateTime.parse(it)),
+      repaymentDate: map['repayment_date']?.let((it) => DateTime.parse(it).toLocal()),
+      billingDate: map['billing_date']?.let((it) => DateTime.parse(it).toLocal()),
+      createdAt: DateTime.parse(map['created_at']).toLocal(),
+      updatedAt: DateTime.parse(map['updated_at']).toLocal(),
+      deletedAt: map['deleted_at']?.let((it) => DateTime.parse(it).toLocal()),
     );
   }
 

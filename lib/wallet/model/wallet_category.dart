@@ -100,9 +100,9 @@ class WalletCategory {
       icon: decodeIcon(map['icon'] as String?),
       sort: map['sort'] as int,
       status: WalletCategoryStatus.values[map['status'] as int],
-      createdAt: DateTime.parse(map['created_at']),
-      updatedAt: DateTime.parse(map['updated_at']),
-      deletedAt: map['deleted_at'] == null ? null : DateTime.parse(map['deleted_at']),
+      createdAt: DateTime.parse(map['created_at']).toLocal(),
+      updatedAt: DateTime.parse(map['updated_at']).toLocal(),
+      deletedAt: map['deleted_at'] == null ? null : DateTime.parse(map['deleted_at']).toLocal(),
     );
   }
 

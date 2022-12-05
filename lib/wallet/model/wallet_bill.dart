@@ -160,13 +160,13 @@ class WalletBill {
       inAmount: map['in_amount'],
       inAmountType: currencyMap[map['in_type']],
       inImportedSummary: map['in_imported_summary'],
-      time: DateTime.parse(map['time']),
+      time: DateTime.parse(map['time']).toLocal(),
       description: map['description'],
       counterParty: map['counter_party'],
       importedId: map['imported_id'],
-      createdAt: DateTime.parse(map['created_at']),
-      updatedAt: DateTime.parse(map['updated_at']),
-      deletedAt: map['deleted_at'] == null ? null : DateTime.parse(map['deleted_at']),
+      createdAt: DateTime.parse(map['created_at']).toLocal(),
+      updatedAt: DateTime.parse(map['updated_at']).toLocal(),
+      deletedAt: map['deleted_at'] == null ? null : DateTime.parse(map['deleted_at']).toLocal(),
     );
   }
 }

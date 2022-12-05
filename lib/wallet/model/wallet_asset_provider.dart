@@ -96,7 +96,7 @@ class WalletAssetNotifier extends StateNotifier<List<WalletAsset>> {
       orderBy: 'time DESC',
       limit: 1,
     );
-    return list.isEmpty ? null : DateTime.parse(list.first['time'] as String);
+    return list.isEmpty ? null : DateTime.parse(list.first['time'] as String).toLocal();
   }
 
   Future<double> _queryBalance(int assetId) async {

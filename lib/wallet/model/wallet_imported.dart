@@ -57,7 +57,7 @@ class WalletImportedBill {
 
   factory WalletImportedBill.fromMap(Map<String, dynamic> map) {
     return WalletImportedBill(
-      datetime: DateTime.parse(map['datetime']),
+      datetime: DateTime.parse(map['datetime']).toLocal(),
       currencyType: CurrencyType.values.byName(map['currencyType']),
       amount: double.tryParse("${map['amount']}") ?? 0,
       billType: WalletImportedBillType.values.byName(map['billType']),
@@ -173,8 +173,8 @@ class WalletImportedReport {
   factory WalletImportedReport.fromMap(Map<String, dynamic> map) {
     return WalletImportedReport(
       accountName: map['accountName'],
-      startDate: DateTime.parse(map['startDate']),
-      endDate: DateTime.parse(map['endDate']),
+      startDate: DateTime.parse(map['startDate']).toLocal(),
+      endDate: DateTime.parse(map['endDate']).toLocal(),
       count: map['count'],
       totalIncome: double.tryParse("${map['totalIncome']}") ?? 0,
       totalOutcome: double.tryParse("${map['totalOutcome']}") ?? 0,
