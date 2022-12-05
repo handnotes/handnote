@@ -6,6 +6,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:handnote/constants/bank.dart';
+import 'package:handnote/constants/constants.dart';
 import 'package:handnote/utils/formatter.dart';
 import 'package:handnote/wallet/constants/wallet_asset_type.dart';
 import 'package:handnote/wallet/constants/wallet_system_category.dart';
@@ -16,7 +17,6 @@ import 'package:handnote/wallet/model/wallet_imported.dart';
 import 'package:handnote/wallet/screen/bill/wallet_bill_batch_edit_screen.dart';
 import 'package:handnote/wallet/widget/wallet_asset_selector.dart';
 import 'package:handnote/widgets/page_container.dart';
-import 'package:handnote/widgets/toast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class WalletBillImportScreen extends HookConsumerWidget {
@@ -115,9 +115,11 @@ class WalletBillImportScreen extends HookConsumerWidget {
       // TODO: support alipay (${bankInfoMap[Bank.values.byName(report.accountName)]?.name}储蓄卡)'
       Text('导入账户：${report.accountName}'),
       Text('时间范围：${dateFormat.format(report.startDate.toLocal())} ~ ${dateFormat.format(report.endDate.toLocal())}'),
-      Text('总支出：${report.totalOutcome.toStringAsFixed(2)}'),
-      Text('总收入：${report.totalIncome.toStringAsFixed(2)}'),
-      Text('总条数：${report.count}'),
+      Text('总支出：${currencyTableFormatter.format(report.totalOutcome).padLeft(12)}',
+          style: const TextStyle(fontFamily: fontMonospace)),
+      Text('总收入：${currencyTableFormatter.format(report.totalIncome).padLeft(12)}',
+          style: const TextStyle(fontFamily: fontMonospace)),
+      Text('总条数：${report.bills.length}'),
       for (final map in bySummary)
         Builder(builder: (context) {
           final bills = map.value;
@@ -148,8 +150,9 @@ class WalletBillImportScreen extends HookConsumerWidget {
               ),
               for (final bill in bills)
                 Text(
-                  '${dateFormat.format(bill.datetime)} ${bill.amount.toStringAsFixed(2)} \t${bill.tradeType} ${bill.counterParty} ${bill.cardNumber ?? ''}',
+                  '${dateTimeFormat.format(bill.datetime)} ${currencyTableFormatter.format(bill.amount).padLeft(12)}',
                   softWrap: false,
+                  style: const TextStyle(fontFamily: fontMonospace),
                 ),
             ],
           );
