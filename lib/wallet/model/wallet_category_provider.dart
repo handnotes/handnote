@@ -16,7 +16,7 @@ class WalletCategoryNotifier extends StateNotifier<List<WalletCategory>> {
     final List<Map<String, Object?>> list = await db.query(
       tableName,
       orderBy: 'sort DESC',
-      where: 'deleted_at is null',
+      where: 'deletedAt is null',
     );
     state = list.map((e) => WalletCategory.fromMap(e)).toList();
   }

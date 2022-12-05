@@ -17,8 +17,8 @@ class WalletAssetNotifier extends StateNotifier<List<WalletAsset>> {
     final db = await DB.shared.instance;
     final List<Map<String, Object?>> list = await db.query(
       tableName,
-      orderBy: 'created_at DESC',
-      where: 'deleted_at is null',
+      orderBy: 'createdAt DESC',
+      where: 'deletedAt is null',
     );
     state = list.map((e) => WalletAsset.fromMap(e)).toList();
 
@@ -91,7 +91,7 @@ class WalletAssetNotifier extends StateNotifier<List<WalletAsset>> {
     final adjustBalanceCategoryId = walletSystemCategoryIdMap[WalletSystemCategory.adjustBalance];
     final list = await db.query(
       WalletBillNotifier.tableName,
-      where: 'category = $adjustBalanceCategoryId and in_assets = ? and deleted_at is null',
+      where: 'category = $adjustBalanceCategoryId and inAssets = ? and deletedAt is null',
       whereArgs: [assetId],
       orderBy: 'time DESC',
       limit: 1,
@@ -103,16 +103,16 @@ class WalletAssetNotifier extends StateNotifier<List<WalletAsset>> {
     final db = await DB.shared.instance;
     final fromDate = (await _queryLatestAdjustBalanceDate(assetId)) ?? DateTime.fromMillisecondsSinceEpoch(0);
 
-    var result = await db.rawQuery("""select SUM(out_amount) as total from ${WalletBillNotifier.tableName} 
-           where out_assets = ? 
+    var result = await db.rawQuery("""select SUM(outAmount) as total from ${WalletBillNotifier.tableName} 
+           where outAssets = ? 
              and datetime(time) >= datetime('$fromDate') 
-             and deleted_at is null""", [assetId]);
+             and deletedAt is null""", [assetId]);
     final double outAmount = double.tryParse('${result.first['total']}') ?? 0;
 
-    result = await db.rawQuery("""select SUM(in_amount) as total from ${WalletBillNotifier.tableName} 
-        where in_assets = ? 
+    result = await db.rawQuery("""select SUM(inAmount) as total from ${WalletBillNotifier.tableName} 
+        where inAssets = ? 
           and datetime(time) >= datetime('$fromDate') 
-          and deleted_at is null""", [assetId]);
+          and deletedAt is null""", [assetId]);
     final inAmount = double.tryParse('${result.first['total']}') ?? 0;
 
     return double.tryParse((inAmount - outAmount).toStringAsFixed(2)) ?? 0;

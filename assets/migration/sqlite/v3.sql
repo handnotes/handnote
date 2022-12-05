@@ -1,15 +1,15 @@
 CREATE TABLE wallet_category
 (
-    id         INTEGER PRIMARY KEY AUTOINCREMENT,
-    pid        INTEGER,                     -- 父分类
-    type       INTEGER  NOT NULL,           -- 类型 (0: 支出 1: 收入)
-    name       TEXT     NOT NULL,           -- 分类名称
-    icon       TEXT,                        -- 分类图标
-    sort       INTEGER  NOT NULL DEFAULT 0, -- 排序
-    status     INTEGER  NOT NULL DEFAULT 1, -- 状态 (0: 禁用 1: 启用)
-    created_at DATETIME NOT NULL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')),
-    updated_at DATETIME NOT NULL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')),
-    deleted_at DATETIME
+    id        INTEGER PRIMARY KEY AUTOINCREMENT,
+    pid       INTEGER,                     -- 父分类
+    type      INTEGER  NOT NULL,           -- 类型 (0: 支出 1: 收入)
+    name      TEXT     NOT NULL,           -- 分类名称
+    icon      TEXT,                        -- 分类图标
+    sort      INTEGER  NOT NULL DEFAULT 0, -- 排序
+    status    INTEGER  NOT NULL DEFAULT 1, -- 状态 (0: 禁用 1: 启用)
+    createdAt DATETIME NOT NULL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')),
+    updatedAt DATETIME NOT NULL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')),
+    deletedAt DATETIME
 );
 
 -- 系统分类

@@ -1,28 +1,28 @@
 CREATE TABLE wallet_asset
 (
-    id                INTEGER PRIMARY KEY AUTOINCREMENT,
-    category          INTEGER  NOT NULL,           -- 分类 (0: 资金 1: 应收 2: 应付)
-    type              TEXT     NOT NULL,           -- 资产类型
-    name              TEXT     NOT NULL,           -- 资产名称 (category 0: 资产名称 1: 借出人 2: 借入人)
-    remark            TEXT,                        -- 资产备注
-    status            INTEGER  NOT NULL DEFAULT 1, -- 状态 (0: 禁用 1: 启用)
-    show_in_home_page INTEGER  NOT NULL DEFAULT 1, -- 是否在首页显示 (0: 不显示 1: 显示)
-    allow_bill        INTEGER  NOT NULL DEFAULT 1, -- 是否允许记账
-    not_counted       INTEGER  NOT NULL DEFAULT 1, -- 是否不计入账单
-    balance           REAL              DEFAULT 0, -- 余额
-    bank              TEXT,                        -- 银行
-    card_number       TEXT,                        -- 银行卡尾号
-    repayment_date    DATETIME,                    -- 到期日/还款日
-    billing_date      DATETIME,                    -- (信用卡/花呗)账单日
-    created_at        DATETIME NOT NULL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')),
-    updated_at        DATETIME NOT NULL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')),
-    deleted_at        DATETIME
+    id             INTEGER PRIMARY KEY AUTOINCREMENT,
+    category       INTEGER  NOT NULL,           -- 分类 (0: 资金 1: 应收 2: 应付)
+    type           TEXT     NOT NULL,           -- 资产类型
+    name           TEXT     NOT NULL,           -- 资产名称 (category 0: 资产名称 1: 借出人 2: 借入人)
+    remark         TEXT,                        -- 资产备注
+    status         INTEGER  NOT NULL DEFAULT 1, -- 状态 (0: 禁用 1: 启用)
+    showInHomePage INTEGER  NOT NULL DEFAULT 1, -- 是否在首页显示 (0: 不显示 1: 显示)
+    allowBill      INTEGER  NOT NULL DEFAULT 1, -- 是否允许记账
+    notCounted     INTEGER  NOT NULL DEFAULT 1, -- 是否不计入账单
+    balance        REAL              DEFAULT 0, -- 余额
+    bank           TEXT,                        -- 银行
+    cardNumber     TEXT,                        -- 银行卡尾号
+    repaymentDate  DATETIME,                    -- 到期日/还款日
+    billingDate    DATETIME,                    -- (信用卡/花呗)账单日
+    createdAt      DATETIME NOT NULL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')),
+    updatedAt      DATETIME NOT NULL DEFAULT (STRFTIME('%Y-%m-%d %H:%M:%f', 'NOW')),
+    deletedAt      DATETIME
 );
 
 
 INSERT INTO 'wallet_asset'
-(category, type, name, remark, status, show_in_home_page,
- allow_bill, not_counted, bank, card_number)
+(category, type, name, remark, status, showInHomePage,
+ allowBill, notCounted, bank, cardNumber)
 VALUES
 -- presets
 (0, 'cash', '现金钱包', '', 1, 1, 1, 0, NULL, NULL),

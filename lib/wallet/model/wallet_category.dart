@@ -85,9 +85,9 @@ class WalletCategory implements Model {
       'icon': encodeIcon(icon),
       'sort': sort,
       'status': status.index,
-      'created_at': createdAt.toUtc().toIso8601String(),
-      'updated_at': updatedAt.toUtc().toIso8601String(),
-      'deleted_at': deletedAt?.toUtc().toIso8601String(),
+      'createdAt': createdAt.toUtc().toIso8601String(),
+      'updatedAt': updatedAt.toUtc().toIso8601String(),
+      'deletedAt': deletedAt?.toUtc().toIso8601String(),
     };
     if (id != null) {
       map['id'] = id;
@@ -105,9 +105,9 @@ class WalletCategory implements Model {
       icon: decodeIcon(map['icon'] as String?),
       sort: map['sort'] as int,
       status: WalletCategoryStatus.values[map['status'] as int],
-      createdAt: DateTime.parse(map['created_at']).toLocal(),
-      updatedAt: DateTime.parse(map['updated_at']).toLocal(),
-      deletedAt: map['deleted_at'] == null ? null : DateTime.parse(map['deleted_at']).toLocal(),
+      createdAt: DateTime.parse(map['createdAt']).toLocal(),
+      updatedAt: DateTime.parse(map['updatedAt']).toLocal(),
+      deletedAt: map['deletedAt'] == null ? null : DateTime.parse(map['deletedAt']).toLocal(),
     );
   }
 

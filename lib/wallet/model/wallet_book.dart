@@ -49,9 +49,9 @@ class WalletBook implements Model {
     final map = {
       'name': name,
       'status': status.index,
-      'created_at': createdAt.toUtc().toIso8601String(),
-      'updated_at': updatedAt.toUtc().toIso8601String(),
-      'deleted_at': deletedAt?.toUtc().toIso8601String(),
+      'createdAt': createdAt.toUtc().toIso8601String(),
+      'updatedAt': updatedAt.toUtc().toIso8601String(),
+      'deletedAt': deletedAt?.toUtc().toIso8601String(),
     };
     if (id != null) {
       map['id'] = id;
@@ -65,9 +65,9 @@ class WalletBook implements Model {
       id: map['id'] as int,
       name: map['name'] as String,
       status: Status.values[map['status'] as int],
-      createdAt: DateTime.parse(map['created_at']).toLocal(),
-      updatedAt: DateTime.parse(map['updated_at']).toLocal(),
-      deletedAt: map['deleted_at'] == null ? null : DateTime.parse(map['deleted_at']).toLocal(),
+      createdAt: DateTime.parse(map['createdAt']).toLocal(),
+      updatedAt: DateTime.parse(map['updatedAt']).toLocal(),
+      deletedAt: map['deletedAt'] == null ? null : DateTime.parse(map['deletedAt']).toLocal(),
     );
   }
 

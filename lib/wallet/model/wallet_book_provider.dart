@@ -16,7 +16,7 @@ class WalletBookNotifier extends StateNotifier<List<WalletBook>> {
     final List<Map<String, Object?>> list = await db.query(
       tableName,
       orderBy: 'sort DESC',
-      where: 'deleted_at is null',
+      where: 'deletedAt is null',
     );
     state = list.map((e) => WalletBook.fromMap(e)).toList();
   }
@@ -41,5 +41,4 @@ class WalletBookNotifier extends StateNotifier<List<WalletBook>> {
   }
 }
 
-final walletBookProvider =
-    StateNotifierProvider<WalletBookNotifier, List<WalletBook>>((ref) => WalletBookNotifier());
+final walletBookProvider = StateNotifierProvider<WalletBookNotifier, List<WalletBook>>((ref) => WalletBookNotifier());
