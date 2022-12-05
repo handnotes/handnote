@@ -18,7 +18,7 @@ VALUES (0, NULL, 0, '', NULL, 0),
        (1, 0, 0, '投资', '{"pack":"custom","iconData":{"codePoint":58986,"fontFamily":"HandnoteIcon","fontPackage":null,"matchTextDirection":false}}', -1),
        (2, 0, 0, '投资亏损', '{"pack":"custom","iconData":{"codePoint":59351,"fontFamily":"HandnoteIcon","fontPackage":null,"matchTextDirection":false}}', -1),
        (3, 0, 0, '借出', '{"pack":"custom","iconData":{"codePoint":58920,"fontFamily":"HandnoteIcon","fontPackage":null,"matchTextDirection":false}}', -1),
-       (4, 0, 0, '还债', '{"pack":"custom","iconData":{"codePoint":58963,"fontFamily":"HandnoteIcon","fontPackage":null,"matchTextDirection":false}}', -1),
+       (4, 0, 0, '还贷', '{"pack":"custom","iconData":{"codePoint":58963,"fontFamily":"HandnoteIcon","fontPackage":null,"matchTextDirection":false}}', -1),
        (5, 0, 0, '利息支出', '{"pack":"custom","iconData":{"codePoint":58891,"fontFamily":"MaterialIcons","fontPackage":null,"matchTextDirection":false}}', -1),
        (49, 0, 0, '其他支出', '{"pack":"custom","iconData":{"codePoint":58882,"fontFamily":"HandnoteIcon","fontPackage":null,"matchTextDirection":false}}', -2),
 
@@ -64,6 +64,10 @@ VALUES (100, 0, 0, 0, '餐饮', '{"pack":"custom","iconData":{"codePoint":57946,
 
 -- 子分类
 INSERT INTO wallet_category (id, pid, type, name, icon, sort) VALUES
+       -- max 283
+       (282, 4, 0, '房贷', '{"pack":"custom","iconData":{"codePoint":58152,"fontFamily":"MaterialIcons","fontPackage":null,"matchTextDirection":false}}', 0),
+       (283, 4, 0, '车贷', '{"pack":"custom","iconData":{"codePoint":57660,"fontFamily":"MaterialIcons","fontPackage":null,"matchTextDirection":false}}', 0),
+
        (200, 100, 0, '堂食', '{"pack":"custom","iconData":{"codePoint":58026,"fontFamily":"MaterialIcons","fontPackage":null,"matchTextDirection":false}}', 0),
        (201, 100, 0, '外卖', '{"pack":"custom","iconData":{"codePoint":58901,"fontFamily":"HandnoteIcon","fontPackage":null,"matchTextDirection":false}}', 0),
        (202, 100, 0, '早餐', '{"pack":"custom","iconData":{"codePoint":58894,"fontFamily":"HandnoteIcon","fontPackage":null,"matchTextDirection":false}}', 0),
@@ -80,7 +84,7 @@ INSERT INTO wallet_category (id, pid, type, name, icon, sort) VALUES
        (212, 101, 0, '茶水', '{"pack":"custom","iconData":{"codePoint":58895,"fontFamily":"HandnoteIcon","fontPackage":null,"matchTextDirection":false}}', 0),
 
        (213, 102, 0, '日用', '{"pack":"custom","iconData":{"codePoint":58955,"fontFamily":"HandnoteIcon","fontPackage":null,"matchTextDirection":false}}', 0),
-       (214, 102, 0, '快递', '{"pack":"custom","iconData":{"codePoint":58942,"fontFamily":"HandnoteIcon","fontPackage":null,"matchTextDirection":false}}', 0),
+       (214, 102, 0, '快递', '{"pack":"custom","iconData":{"codePoint":57469,"fontFamily":"MaterialIcons","fontPackage":null,"matchTextDirection":false}}', 0),
        (215, 102, 0, '清洁', '{"pack":"custom","iconData":{"codePoint":58928,"fontFamily":"HandnoteIcon","fontPackage":null,"matchTextDirection":false}}', 0),
        (216, 102, 0, '卫生用品', '{"pack":"custom","iconData":{"codePoint":58924,"fontFamily":"HandnoteIcon","fontPackage":null,"matchTextDirection":false}}', 0),
        (217, 102, 0, '计生用品', '{"pack":"custom","iconData":{"codePoint":58942,"fontFamily":"HandnoteIcon","fontPackage":null,"matchTextDirection":false}}', 0),
