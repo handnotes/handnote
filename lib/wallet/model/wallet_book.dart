@@ -1,6 +1,7 @@
 import 'package:handnote/constants/enums.dart';
+import 'package:handnote/model.dart';
 
-class WalletBook {
+class WalletBook implements Model {
   final int? id;
 
   final String name;
@@ -13,6 +14,7 @@ class WalletBook {
 
   final DateTime? deletedAt;
 
+  @override
   WalletBook({
     this.id,
     required this.name,
@@ -23,6 +25,7 @@ class WalletBook {
   })  : createdAt = createdAt ?? DateTime.now(),
         updatedAt = updatedAt ?? DateTime.now();
 
+  @override
   WalletBook copyWith({
     int? id,
     String? name,
@@ -41,6 +44,7 @@ class WalletBook {
     );
   }
 
+  @override
   Map<String, dynamic> toMap() {
     final map = {
       'name': name,
@@ -55,6 +59,7 @@ class WalletBook {
     return map;
   }
 
+  @override
   factory WalletBook.fromMap(Map<String, dynamic> map) {
     return WalletBook(
       id: map['id'] as int,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:handnote/constants/currency.dart';
+import 'package:handnote/model.dart';
 import 'package:handnote/theme.dart';
 import 'package:handnote/utils/nanoid.dart';
 import 'package:handnote/wallet/constants/wallet_system_category.dart';
@@ -10,7 +11,8 @@ enum WalletBillType {
   innerTransfer,
 }
 
-class WalletBill {
+class WalletBill implements Model {
+  @override
   WalletBill({
     String? id,
     this.category,
@@ -82,6 +84,7 @@ class WalletBill {
           inAmount: balance,
         );
 
+  @override
   WalletBill copyWith({
     String? id,
     int? category,
@@ -124,6 +127,7 @@ class WalletBill {
     );
   }
 
+  @override
   Map<String, dynamic> toMap() {
     return {
       'id': id,
@@ -147,6 +151,7 @@ class WalletBill {
     };
   }
 
+  @override
   factory WalletBill.fromMap(Map<String, dynamic> map) {
     return WalletBill(
       id: map['id'],

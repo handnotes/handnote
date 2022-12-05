@@ -1,11 +1,12 @@
 import 'package:handnote/constants/bank.dart';
 import 'package:handnote/constants/enums.dart';
+import 'package:handnote/model.dart';
 import 'package:handnote/utils/extensions.dart'; // ignore: unused_import
 import 'package:handnote/utils/string.dart';
 import 'package:handnote/wallet/constants/wallet_asset_category.dart';
 import 'package:handnote/wallet/constants/wallet_asset_type.dart';
 
-class WalletAsset {
+class WalletAsset implements Model {
   final int? id;
 
   final WalletAssetCategory category;
@@ -45,6 +46,7 @@ class WalletAsset {
 
   final DateTime? deletedAt;
 
+  @override
   WalletAsset({
     this.id,
     required this.category,
@@ -66,6 +68,7 @@ class WalletAsset {
   })  : createdAt = createdAt ?? DateTime.now(),
         updatedAt = updatedAt ?? DateTime.now();
 
+  @override
   WalletAsset copyWith({
     int? id,
     WalletAssetCategory? category,
@@ -107,6 +110,7 @@ class WalletAsset {
     );
   }
 
+  @override
   Map<String, dynamic> toMap() {
     final map = <String, dynamic>{
       'category': category.index,
@@ -132,6 +136,7 @@ class WalletAsset {
     return map;
   }
 
+  @override
   factory WalletAsset.fromMap(Map<String, dynamic> map) {
     return WalletAsset(
       id: map['id'],

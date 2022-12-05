@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:handnote/model.dart';
 import 'package:handnote/theme.dart';
 import 'package:handnote/utils/string.dart';
 
@@ -12,7 +13,8 @@ enum WalletCategoryStatus {
   enable,
 }
 
-class WalletCategory {
+class WalletCategory implements Model {
+  @override
   WalletCategory({
     this.id,
     this.pid,
@@ -47,6 +49,7 @@ class WalletCategory {
 
   Color get color => type == WalletCategoryType.income ? successColor : errorColor;
 
+  @override
   WalletCategory copyWith({
     int? id,
     int? pid,
@@ -73,6 +76,7 @@ class WalletCategory {
     );
   }
 
+  @override
   Map<String, dynamic> toMap() {
     final map = {
       'pid': pid,
@@ -91,6 +95,7 @@ class WalletCategory {
     return map;
   }
 
+  @override
   factory WalletCategory.fromMap(Map<String, dynamic> map) {
     return WalletCategory(
       id: map['id'] as int,
