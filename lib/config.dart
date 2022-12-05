@@ -1,1 +1,1 @@
-const currentDatabaseVersion = 5;
+const currentDatabaseVersion = 6;

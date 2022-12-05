@@ -13,14 +13,14 @@ enum WalletImportedBillType {
 }
 
 class WalletImportedBill {
-  const WalletImportedBill({
+  WalletImportedBill({
     required this.datetime,
     required this.currencyType,
     required this.amount,
     required this.billType,
     required this.tradeType,
     required this.counterParty,
-    this.importedSummary,
+    this.suggestCategory,
     this.productName,
     this.cardNumber,
   });
@@ -28,7 +28,7 @@ class WalletImportedBill {
   final DateTime datetime;
   final CurrencyType currencyType;
   final double amount;
-  final WalletImportedBillType billType;
+  WalletImportedBillType billType;
 
   /// 交易类型
   final String tradeType;
@@ -42,8 +42,7 @@ class WalletImportedBill {
   /// 转入转出卡号
   final String? cardNumber;
 
-  /// 导入时的交易摘要
-  final String? importedSummary;
+  int? suggestCategory;
 
   bool get isIncome => billType == WalletImportedBillType.income;
 
@@ -76,53 +75,58 @@ class WalletImportedBill {
   WalletBill toBill({
     WalletAsset? fromAsset,
     WalletAsset? toAsset,
+    WalletAsset? currentAsset,
     String? identifier,
+    int? categoryId,
   }) {
     WalletBill bill = WalletBill(
       time: datetime,
       counterParty: [counterParty, cardNumber].whereNotNull().join(' '),
       description: tradeType,
       importedId: identifier,
+      category: categoryId ?? suggestCategory,
     );
     final amount = this.amount.abs();
     if (isIncome) {
       bill = bill.copyWith(
         inAmountType: currencyType,
         inAmount: amount,
-        inAssets: fromAsset?.id ?? 0,
-        inImportedSummary: importedSummary,
+        inAssets: fromAsset?.id ?? currentAsset?.id ?? 0,
+        inImportedSummary: summary,
         outAmountType: null,
         outAmount: null,
         outAssets: null,
+        category: bill.category ?? walletSystemCategoryIdMap[WalletSystemCategory.otherIncome],
       );
     } else if (isOutcome) {
       bill = bill.copyWith(
         outAmountType: currencyType,
         outAmount: amount,
-        outAssets: toAsset?.id ?? 0,
-        outImportedSummary: importedSummary,
+        outAssets: toAsset?.id ?? currentAsset?.id ?? 0,
+        outImportedSummary: summary,
         inAmountType: null,
         inAmount: null,
         inAssets: null,
+        category: bill.category ?? walletSystemCategoryIdMap[WalletSystemCategory.otherOutcome],
       );
     } else if (isTransfer) {
       bill = bill.copyWith(
         inAmountType: currencyType,
         inAmount: amount,
-        inAssets: fromAsset?.id ?? 0,
-        inImportedSummary: this.amount > 0 ? importedSummary : null,
+        inAssets: fromAsset?.id ?? (this.amount > 0 ? currentAsset?.id : 0),
+        inImportedSummary: this.amount > 0 ? summary : null,
         outAmountType: currencyType,
         outAmount: amount,
-        outAssets: toAsset?.id ?? 0,
-        outImportedSummary: this.amount <= 0 ? importedSummary : null,
+        outAssets: toAsset?.id ?? (this.amount <= 0 ? currentAsset?.id : 0),
+        outImportedSummary: this.amount <= 0 ? summary : null,
       );
     } else if (isRefund) {
       bill = bill.copyWith(
         category: walletSystemCategoryIdMap[WalletSystemCategory.refund],
         inAmountType: currencyType,
         inAmount: amount,
-        inAssets: toAsset?.id ?? 0,
-        inImportedSummary: importedSummary,
+        inAssets: toAsset?.id ?? currentAsset?.id ?? 0,
+        inImportedSummary: summary,
       );
     }
     return bill;

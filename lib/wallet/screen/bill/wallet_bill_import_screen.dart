@@ -13,10 +13,16 @@ import 'package:handnote/wallet/constants/wallet_system_category.dart';
 import 'package:handnote/wallet/model/wallet_asset.dart';
 import 'package:handnote/wallet/model/wallet_asset_provider.dart';
 import 'package:handnote/wallet/model/wallet_bill.dart';
+import 'package:handnote/wallet/model/wallet_bill_provider.dart';
+import 'package:handnote/wallet/model/wallet_category.dart';
+import 'package:handnote/wallet/model/wallet_category_match_rule.dart';
+import 'package:handnote/wallet/model/wallet_category_match_rule_provider.dart';
+import 'package:handnote/wallet/model/wallet_category_provider.dart';
 import 'package:handnote/wallet/model/wallet_imported.dart';
 import 'package:handnote/wallet/screen/bill/wallet_bill_batch_edit_screen.dart';
 import 'package:handnote/wallet/widget/wallet_asset_selector.dart';
 import 'package:handnote/widgets/page_container.dart';
+import 'package:handnote/widgets/toast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class WalletBillImportScreen extends HookConsumerWidget {
@@ -28,6 +34,13 @@ class WalletBillImportScreen extends HookConsumerWidget {
     final report = useState<WalletImportedReport?>(null);
     final asset = useState<WalletAsset?>(null);
     final assets = ref.watch(walletAssetProvider);
+    final categories = ref.watch(walletCategoryProvider).toList();
+    final matchRules = ref.watch(walletCategoryMatchRuleProvider);
+    final billNotifier = ref.read(walletBillProvider.notifier);
+
+    useEffect(() {
+      ref.read(walletCategoryMatchRuleProvider.notifier).getList();
+    }, []);
 
     void _handleAnalysis() {
       report.value = WalletImportedReport.fromMap(json.decode(jsonStringController.value.text));
@@ -92,7 +105,8 @@ class WalletBillImportScreen extends HookConsumerWidget {
                 child: const Text('分析'),
                 onPressed: _handleAnalysis,
               ),
-              if (report.value != null) ..._handleImport(context, report, asset, assets),
+              if (report.value != null)
+                ..._handleImport(context, report, asset, assets, matchRules, categories, billNotifier),
             ],
           ),
         ),
@@ -105,10 +119,30 @@ class WalletBillImportScreen extends HookConsumerWidget {
     ValueNotifier<WalletImportedReport?> reportValueNotifier,
     ValueNotifier<WalletAsset?> asset,
     List<WalletAsset> assets,
+    List<WalletCategoryMatchRule> matchRules,
+    List<WalletCategory> categories,
+    WalletBillNotifier billNotifier,
   ) {
+    final categoryNameMap = useMemoized(() => {for (var e in categories) '${e.type.name}.${e.name}': e}, [categories]);
+    final categoryIdMap = useMemoized(() => {for (var e in categories) e.id: e}, [categories]);
     final report = reportValueNotifier.value!;
-    var bySummary = groupBy(report.bills, (WalletImportedBill bill) => bill.summary).entries.toList();
-    bySummary.sort((a, b) => b.value.length.compareTo(a.value.length));
+    var billGroup = useMemoized(() {
+      var list = groupBy(
+        report.bills,
+        (WalletImportedBill bill) =>
+            '${bill.amount > 0 ? 'income' : 'outcome'}, ${bill.summary}, ${bill.suggestCategory}',
+      ).entries.toList();
+      list.sort((a, b) => b.value.length.compareTo(a.value.length));
+      return list;
+    }, [report.bills]);
+
+    useEffect(() {
+      _autoCategory(billGroup, matchRules, categoryNameMap);
+      reportValueNotifier.value = reportValueNotifier.value!.copyWith(
+        bills: [...reportValueNotifier.value!.bills],
+      );
+      return null;
+    }, []);
 
     return [
       WalletAssetSelector(asset: asset.value, onSelected: (value) => asset.value = value),
@@ -120,12 +154,23 @@ class WalletBillImportScreen extends HookConsumerWidget {
       Text('总收入：${currencyTableFormatter.format(report.totalIncome).padLeft(12)}',
           style: const TextStyle(fontFamily: fontMonospace)),
       Text('总条数：${report.bills.length}'),
-      for (final map in bySummary)
+      const Padding(padding: EdgeInsets.symmetric(vertical: 4)),
+      OutlinedButton(
+        child: const Text('导入所有'),
+        onPressed: () {
+          if (asset.value == null) {
+            Toast.error(context, '请先选择要导入的账户');
+            return;
+          }
+        },
+      ),
+      for (final map in billGroup)
         Builder(builder: (context) {
           final bills = map.value;
-          final bill = bills.elementAt(0);
+          final bill = bills.first;
+          // if (bill.suggestCategory != null) return Container();
           final summary =
-              'type: ${bill.billType.name}\ntradeType: ${bill.tradeType}\ncounter: ${bill.counterParty}\ncard: ${bill.cardNumber}';
+              'type: ${bill.billType.name}\ntradeType: ${bill.tradeType}\ncounter: ${bill.counterParty}\ncard: ${bill.cardNumber}\ncategory: ${categoryIdMap[bill.suggestCategory]?.name}';
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -137,9 +182,19 @@ class WalletBillImportScreen extends HookConsumerWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
                 ),
                 onPressed: () async {
-                  final result = await Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => walletBillBatchEditScreen(summary, bills, report, asset.value, assets),
-                  ));
+                  if (asset.value == null) {
+                    Toast.error(context, '请先选择要导入的账户');
+                    return;
+                  }
+                  bool result = false;
+                  if (bill.suggestCategory != null) {
+                    await _importClassifiedBills(billNotifier, asset.value!, report.identifier!, bills);
+                    result = true;
+                  } else {
+                    result = await Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => walletBillBatchEditScreen(summary, bills, report, asset.value, assets),
+                    ));
+                  }
                   if (result == true) {
                     reportValueNotifier.value = reportValueNotifier.value!.copyWith(
                       bills: reportValueNotifier.value!.bills.where((e) => !bills.contains(e)).toList(),
@@ -150,7 +205,7 @@ class WalletBillImportScreen extends HookConsumerWidget {
               ),
               for (final bill in bills)
                 Text(
-                  '${dateTimeFormat.format(bill.datetime)} ${currencyTableFormatter.format(bill.amount).padLeft(12)}',
+                  '${dateTimeFormat.format(bill.datetime)} ${currencyTableFormatter.format(bill.amount).padLeft(12)} ${bill.suggestCategory ?? ''}',
                   softWrap: false,
                   style: const TextStyle(fontFamily: fontMonospace),
                 ),
@@ -158,6 +213,25 @@ class WalletBillImportScreen extends HookConsumerWidget {
           );
         }),
     ];
+  }
+
+  Future<void> _importClassifiedBills(
+    WalletBillNotifier billNotifier,
+    WalletAsset asset,
+    String importIdentifier,
+    List<WalletImportedBill> importedBills,
+  ) async {
+    final bills = importedBills.map((importedBill) {
+      importedBill.summary;
+      final bill = importedBill.toBill(
+        currentAsset: asset,
+        identifier: importIdentifier,
+      );
+      return bill;
+    });
+    for (var bill in bills) {
+      await billNotifier.add(bill);
+    }
   }
 
   Widget walletBillBatchEditScreen(
@@ -225,9 +299,47 @@ class WalletBillImportScreen extends HookConsumerWidget {
       bills: bills.map((e) => e.toBill(identifier: report.identifier)).toList(),
       asset: asset,
       // TODO: identify the type and category
-      type: bills.first.isIncome ? WalletBillType.income : WalletBillType.outcome,
+      type: bills.first.isIncome
+          ? WalletBillType.income
+          : bills.first.isOutcome
+              ? WalletBillType.outcome
+              : bills.first.amount > 0
+                  ? WalletBillType.income
+                  : WalletBillType.outcome,
       description: bills.first.tradeType,
       counterParty: [bills.first.counterParty, bills.first.cardNumber].whereNotNull().join(' '),
     );
+  }
+
+  Future<void> _autoCategory(
+    List<MapEntry<String, List<WalletImportedBill>>> billGroup,
+    List<WalletCategoryMatchRule> matchRules,
+    Map<String, WalletCategory> categoryNameMap,
+  ) async {
+    print('autoCategory');
+    final incomeMatchRules = matchRules.where((it) => it.type == WalletCategoryType.income);
+    final outcomeMatchRules = matchRules.where((it) => it.type == WalletCategoryType.outcome);
+    for (final kv in billGroup) {
+      final bills = kv.value;
+      final summary = bills.first.summary;
+      final isIncome = bills.first.amount > 0;
+      final rules = isIncome ? incomeMatchRules : outcomeMatchRules;
+      for (final rule in rules) {
+        if (!RegExp(rule.pattern.replaceAll(r'\', '\\')).hasMatch(summary)) continue;
+        for (final bill in bills) {
+          if (bill.suggestCategory != null) continue;
+          if (rule.minAmount != null && bill.amount.abs() < rule.minAmount!) continue;
+          if (rule.maxAmount != null && bill.amount.abs() > rule.maxAmount!) continue;
+          for (final categoryName in rule.categoryName.reversed) {
+            final walletCategoryType = isIncome ? WalletCategoryType.income : WalletCategoryType.outcome;
+            final suggestedCategory = categoryNameMap['${walletCategoryType.name}.${categoryName}'];
+            if (suggestedCategory != null) {
+              bill.suggestCategory = suggestedCategory.id;
+              break;
+            }
+          }
+        }
+      }
+    }
   }
 }
