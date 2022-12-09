@@ -54,7 +54,8 @@ VALUES (100, 0, 0, 0, '餐饮', '{"pack":"custom","iconData":{"codePoint":57946,
        (116, 0, 0, 0, '转出', '{"pack":"custom","iconData":{"codePoint":58739,"fontFamily":"MaterialIcons","fontPackage":null,"matchTextDirection":false}}'),
        (117, 0, 0, 0, '捐赠', '{"pack":"custom","iconData":{"codePoint":59078,"fontFamily":"MaterialIcons","fontPackage":null,"matchTextDirection":false}}'),
        (118, 0, 0, 0, '罚款', '{"pack":"custom","iconData":{"codePoint":57511,"fontFamily":"MaterialIcons","fontPackage":null,"matchTextDirection":false}}'),
-       (119, 0, 0, 0, '软件', '{"pack":"custom","iconData":{"codePoint":58215,"fontFamily":"MaterialIcons","fontPackage":null,"matchTextDirection":false}}'),
+       (119, 0, 0, 0, '软件应用', '{"pack":"custom","iconData":{"codePoint":58954,"fontFamily":"HandnoteIcon","fontPackage":null,"matchTextDirection":false}}'),
+       (120, 0, 0, 0, '电子游戏', '{"pack":"custom","iconData":{"codePoint":59050,"fontFamily":"MaterialIcons","fontPackage":null,"matchTextDirection":false}}'),
 
        (150, 0, 0, 1, '薪资', '{"pack":"custom","iconData":{"codePoint":59043,"fontFamily":"HandnoteIcon","fontPackage":null,"matchTextDirection":false}}'),
        (151, 0, 0, 1, '奖金', '{"pack":"custom","iconData":{"codePoint":58360,"fontFamily":"MaterialIcons","fontPackage":null,"matchTextDirection":false}}'),
@@ -64,7 +65,7 @@ VALUES (100, 0, 0, 0, '餐饮', '{"pack":"custom","iconData":{"codePoint":57946,
 
 -- 子分类
 INSERT INTO wallet_category (id, pid, type, name, icon, sort) VALUES
-       -- max 283
+       -- max 294
        (282, 4, 0, '房贷', '{"pack":"custom","iconData":{"codePoint":58152,"fontFamily":"MaterialIcons","fontPackage":null,"matchTextDirection":false}}', 0),
        (283, 4, 0, '车贷', '{"pack":"custom","iconData":{"codePoint":57660,"fontFamily":"MaterialIcons","fontPackage":null,"matchTextDirection":false}}', 0),
 
@@ -87,6 +88,7 @@ INSERT INTO wallet_category (id, pid, type, name, icon, sort) VALUES
        (214, 103, 0, '美容美发', '{"pack":"custom","iconData":{"codePoint":57745,"fontFamily":"MaterialIcons","fontPackage":null,"matchTextDirection":false}}', 0),
        (215, 103, 0, '美妆品', '{"pack":"custom","iconData":{"codePoint":58936,"fontFamily":"HandnoteIcon","fontPackage":null,"matchTextDirection":false}}', 0),
        (216, 102, 0, '快递', '{"pack":"custom","iconData":{"codePoint":57469,"fontFamily":"MaterialIcons","fontPackage":null,"matchTextDirection":false}}', 0),
+       (293, 102, 0, '卡管理费', '{"pack":"custom","iconData":{"codePoint":58156,"fontFamily":"MaterialIcons","fontPackage":null,"matchTextDirection":false}}', 0),
        (217, 102, 0, '清洁', '{"pack":"custom","iconData":{"codePoint":58928,"fontFamily":"HandnoteIcon","fontPackage":null,"matchTextDirection":false}}', 0),
        (218, 102, 0, '卫生用品', '{"pack":"custom","iconData":{"codePoint":58924,"fontFamily":"HandnoteIcon","fontPackage":null,"matchTextDirection":false}}', 0),
        (219, 102, 0, '计生用品', '{"pack":"custom","iconData":{"codePoint":58942,"fontFamily":"HandnoteIcon","fontPackage":null,"matchTextDirection":false}}', 0),
@@ -164,5 +166,18 @@ INSERT INTO wallet_category (id, pid, type, name, icon, sort) VALUES
        (278, 115, 0, '宠物食品', '{"pack":"custom","iconData":{"codePoint":58931,"fontFamily":"HandnoteIcon","fontPackage":null,"matchTextDirection":false}}', 0),
        (279, 115, 0, '猫砂', '{"pack":"custom","iconData":{"codePoint":58917,"fontFamily":"HandnoteIcon","fontPackage":null,"matchTextDirection":false}}', 0),
        (280, 115, 0, '宠物医疗', '{"pack":"custom","iconData":{"codePoint":60482,"fontFamily":"HandnoteIcon","fontPackage":null,"matchTextDirection":false}}', 0),
+
+       (291, 117, 0, '公益捐赠', '{"pack":"custom","iconData":{"codePoint":58259,"fontFamily":"MaterialIcons","fontPackage":null,"matchTextDirection":false}}', 0),
+       (292, 117, 0, '打赏', '{"pack":"custom","iconData":{"codePoint":58971,"fontFamily":"MaterialIcons","fontPackage":null,"matchTextDirection":false}}', 0),
+
+       (284, 119, 0, '影视音乐', '{"pack":"custom","iconData":{"codePoint":58389,"fontFamily":"MaterialIcons","fontPackage":null,"matchTextDirection":false}}', 0),
+       (285, 119, 0, '娱乐应用', '{"pack":"custom","iconData":{"codePoint":58475,"fontFamily":"MaterialIcons","fontPackage":null,"matchTextDirection":false}}', 0),
+       (286, 119, 0, '知识教育', '{"pack":"custom","iconData":{"codePoint":58333,"fontFamily":"MaterialIcons","fontPackage":null,"matchTextDirection":false}}', 0),
+       (294, 119, 0, '生产力工具', '{"pack":"custom","iconData":{"codePoint":57484,"fontFamily":"MaterialIcons","fontPackage":null,"matchTextDirection":false}}', 0),
+
+       (287, 120, 0, '单机游戏', '{"pack":"custom","iconData":{"codePoint":58949,"fontFamily":"HandnoteIcon","fontPackage":null,"matchTextDirection":false}}', 0),
+       (288, 120, 0, '游戏外设', '{"pack":"custom","iconData":{"codePoint":58960,"fontFamily":"HandnoteIcon","fontPackage":null,"matchTextDirection":false}}', 0),
+       (289, 120, 0, '英雄联盟', '{"pack":"custom","iconData":{"codePoint":58953,"fontFamily":"HandnoteIcon","fontPackage":null,"matchTextDirection":false}}', 0),
+       (290, 120, 0, '王者荣耀', '{"pack":"custom","iconData":{"codePoint":58952,"fontFamily":"HandnoteIcon","fontPackage":null,"matchTextDirection":false}}', 0),
 
        (281, 153, 0, '生活费', '{"pack":"custom","iconData":{"codePoint":57914,"fontFamily":"MaterialIcons","fontPackage":null,"matchTextDirection":false}}', 0);
