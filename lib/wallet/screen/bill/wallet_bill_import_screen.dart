@@ -40,6 +40,7 @@ class WalletBillImportScreen extends HookConsumerWidget {
 
     useEffect(() {
       ref.read(walletCategoryMatchRuleProvider.notifier).getList();
+      return null;
     }, []);
 
     void _handleAnalysis() {
@@ -126,9 +127,10 @@ class WalletBillImportScreen extends HookConsumerWidget {
     final categoryNameMap = useMemoized(() => {for (var e in categories) '${e.type.name}.${e.name}': e}, [categories]);
     final categoryIdMap = useMemoized(() => {for (var e in categories) e.id: e}, [categories]);
     final report = reportValueNotifier.value!;
+    final nonZeroBills = report.bills.where((e) => e.amount != 0);
     var billGroup = useMemoized(() {
       var list = groupBy(
-        report.bills,
+        nonZeroBills,
         (WalletImportedBill bill) =>
             '${bill.amount > 0 ? 'income' : 'outcome'}, ${bill.summary}, ${bill.suggestCategory}',
       ).entries.toList();
@@ -153,7 +155,7 @@ class WalletBillImportScreen extends HookConsumerWidget {
           style: const TextStyle(fontFamily: fontMonospace)),
       Text('总收入：${currencyTableFormatter.format(report.totalIncome).padLeft(12)}',
           style: const TextStyle(fontFamily: fontMonospace)),
-      Text('总条数：${report.bills.length}'),
+      Text('总条数：${report.bills.length} (无金额条数: ${report.bills.length - nonZeroBills.length})'),
       const Padding(padding: EdgeInsets.symmetric(vertical: 4)),
       OutlinedButton(
         child: const Text('导入所有'),
@@ -202,7 +204,7 @@ class WalletBillImportScreen extends HookConsumerWidget {
                   }
                 },
               ),
-              for (final bill in bills)
+              for (final bill in bills.where((e) => e.suggestCategory == null))
                 Text(
                   '${dateTimeFormat.format(bill.datetime)} ${currencyTableFormatter.format(bill.amount).padLeft(12)} ${bill.suggestCategory ?? ''}',
                   softWrap: false,
@@ -334,7 +336,7 @@ class WalletBillImportScreen extends HookConsumerWidget {
           // 遍历推荐分类，依次寻找是否有分类相匹配
           for (final categoryName in rule.categoryName.reversed) {
             final walletCategoryType = isIncome ? WalletCategoryType.income : WalletCategoryType.outcome;
-            final suggestedCategory = categoryNameMap['${walletCategoryType.name}.${categoryName}'];
+            final suggestedCategory = categoryNameMap['${walletCategoryType.name}.$categoryName'];
             if (suggestedCategory != null) {
               bill.suggestCategory = suggestedCategory.id;
               break;
