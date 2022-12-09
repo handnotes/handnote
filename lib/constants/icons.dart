@@ -136,6 +136,18 @@ const Map<String, IconData> iconPack = {
   'daikuanlixishouru': IconData(0xe60b, fontFamily: 'HandnoteIcon'),
   'kehushoukuan': IconData(0xe6f3, fontFamily: 'HandnoteIcon'),
   'touzikuisun': IconData(0xe63d, fontFamily: 'HandnoteIcon'),
+  'game-goblet': IconData(0xe64e, fontFamily: 'HandnoteIcon'),
+  'game-pad': IconData(0xe6e5, fontFamily: 'HandnoteIcon'),
+  'game-castle': IconData(0xe64c, fontFamily: 'HandnoteIcon'),
+  'game-crown': IconData(0xe64a, fontFamily: 'HandnoteIcon'),
+  'game-lol': IconData(0xe649, fontFamily: 'HandnoteIcon'),
+  'game-battle': IconData(0xe648, fontFamily: 'HandnoteIcon'),
+  'game-pacman': IconData(0xe645, fontFamily: 'HandnoteIcon'),
+  'game-epic': IconData(0xeb8a, fontFamily: 'HandnoteIcon'),
+  'game-steam': IconData(0xe887, fontFamily: 'HandnoteIcon'),
+  'game-switch': IconData(0xe772, fontFamily: 'HandnoteIcon'),
+  'game-gamepad3': IconData(0xe650, fontFamily: 'HandnoteIcon'),
+  'game-handheld': IconData(0xe64f, fontFamily: 'HandnoteIcon'),
 
   // Material Icons
   'three_p': IconData(0xe01e, fontFamily: 'MaterialIcons'),
