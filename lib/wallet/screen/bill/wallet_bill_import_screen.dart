@@ -142,7 +142,7 @@ class WalletBillImportScreen extends HookConsumerWidget {
         bills: [...reportValueNotifier.value!.bills],
       );
       return null;
-    }, []);
+    }, [billGroup]);
 
     return [
       WalletAssetSelector(asset: asset.value, onSelected: (value) => asset.value = value),
