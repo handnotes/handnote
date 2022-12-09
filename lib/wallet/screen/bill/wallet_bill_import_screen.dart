@@ -168,7 +168,6 @@ class WalletBillImportScreen extends HookConsumerWidget {
         Builder(builder: (context) {
           final bills = map.value;
           final bill = bills.first;
-          // if (bill.suggestCategory != null) return Container();
           final summary =
               'type: ${bill.billType.name}\ntradeType: ${bill.tradeType}\ncounter: ${bill.counterParty}\ncard: ${bill.cardNumber}\ncategory: ${categoryIdMap[bill.suggestCategory]?.name}';
           return Column(
@@ -316,20 +315,23 @@ class WalletBillImportScreen extends HookConsumerWidget {
     List<WalletCategoryMatchRule> matchRules,
     Map<String, WalletCategory> categoryNameMap,
   ) async {
-    print('autoCategory');
     final incomeMatchRules = matchRules.where((it) => it.type == WalletCategoryType.income);
     final outcomeMatchRules = matchRules.where((it) => it.type == WalletCategoryType.outcome);
+    // 遍历 group
     for (final kv in billGroup) {
       final bills = kv.value;
       final summary = bills.first.summary;
       final isIncome = bills.first.amount > 0;
       final rules = isIncome ? incomeMatchRules : outcomeMatchRules;
+      // 遍历匹配规则
       for (final rule in rules) {
         if (!RegExp(rule.pattern.replaceAll(r'\', '\\')).hasMatch(summary)) continue;
+        // 遍历group中的每笔账单
         for (final bill in bills) {
           if (bill.suggestCategory != null) continue;
           if (rule.minAmount != null && bill.amount.abs() < rule.minAmount!) continue;
           if (rule.maxAmount != null && bill.amount.abs() > rule.maxAmount!) continue;
+          // 遍历推荐分类，依次寻找是否有分类相匹配
           for (final categoryName in rule.categoryName.reversed) {
             final walletCategoryType = isIncome ? WalletCategoryType.income : WalletCategoryType.outcome;
             final suggestedCategory = categoryNameMap['${walletCategoryType.name}.${categoryName}'];

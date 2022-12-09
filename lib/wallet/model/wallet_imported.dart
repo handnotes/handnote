@@ -14,6 +14,7 @@ enum WalletImportedBillType {
 
 class WalletImportedBill {
   WalletImportedBill({
+    required this.reportAccountName,
     required this.datetime,
     required this.currencyType,
     required this.amount,
@@ -25,6 +26,7 @@ class WalletImportedBill {
     this.cardNumber,
   });
 
+  final String reportAccountName;
   final DateTime datetime;
   final CurrencyType currencyType;
   final double amount;
@@ -52,10 +54,11 @@ class WalletImportedBill {
 
   bool get isRefund => billType == WalletImportedBillType.refund;
 
-  String get summary => [tradeType, counterParty, cardNumber].whereNotNull().join(' ');
+  String get summary => reportAccountName + ':' + [tradeType, counterParty, cardNumber].whereNotNull().join(' ');
 
-  factory WalletImportedBill.fromMap(Map<String, dynamic> map) {
+  factory WalletImportedBill.fromMap(String reportAccountName, Map<String, dynamic> map) {
     return WalletImportedBill(
+      reportAccountName: reportAccountName,
       datetime: DateTime.parse(map['datetime']).toLocal(),
       currencyType: CurrencyType.values.byName(map['currencyType']),
       amount: double.tryParse("${map['amount']}") ?? 0,
@@ -175,14 +178,15 @@ class WalletImportedReport {
   }
 
   factory WalletImportedReport.fromMap(Map<String, dynamic> map) {
+    var accountName = map['accountName'];
     return WalletImportedReport(
-      accountName: map['accountName'],
+      accountName: accountName,
       startDate: DateTime.parse(map['startDate']).toLocal(),
       endDate: DateTime.parse(map['endDate']).toLocal(),
       count: map['count'],
       totalIncome: double.tryParse("${map['totalIncome']}") ?? 0,
       totalOutcome: double.tryParse("${map['totalOutcome']}") ?? 0,
-      bills: (map['bills'] as List<dynamic>).map((e) => WalletImportedBill.fromMap(e)).toList(),
+      bills: (map['bills'] as List<dynamic>).map((e) => WalletImportedBill.fromMap(accountName, e)).toList(),
     );
   }
 }
