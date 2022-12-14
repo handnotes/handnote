@@ -158,7 +158,7 @@ class WalletBillImportScreen extends HookConsumerWidget {
       Text('总条数：${report.bills.length} (无金额条数: ${report.bills.length - nonZeroBills.length})'),
       const Padding(padding: EdgeInsets.symmetric(vertical: 4)),
       OutlinedButton(
-        child: const Text('导入所有'),
+        child: const Text('自动导入'),
         onPressed: () {
           if (asset.value == null) {
             Toast.error(context, '请先选择要导入的账户');
@@ -177,34 +177,55 @@ class WalletBillImportScreen extends HookConsumerWidget {
             children: [
               const Divider(),
               Text(summary),
-              OutlinedButton(
-                child: const Text('导入这一批'),
-                style: OutlinedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
-                ),
-                onPressed: () async {
-                  if (asset.value == null) {
-                    Toast.error(context, '请先选择要导入的账户');
-                    return;
-                  }
-                  bool result = false;
-                  if (bill.suggestCategory != null) {
-                    await _importClassifiedBills(billNotifier, asset.value!, report.identifier!, bills);
-                    result = true;
-                  } else {
-                    result = await Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => walletBillBatchEditScreen(summary, bills, report, asset.value, assets),
-                    ));
-                  }
-                  if (result == true) {
-                    reportValueNotifier.value = reportValueNotifier.value!.copyWith(
-                      bills: reportValueNotifier.value!.bills.where((e) => !bills.contains(e)).toList(),
-                    );
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('导入成功')));
-                  }
-                },
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Row(children: [
+                  if (bill.suggestCategory != null) ...[
+                    ElevatedButton(
+                      child: Text('导入到"${categoryIdMap[bill.suggestCategory]?.name}"'),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+                      ),
+                      onPressed: () async {
+                        if (asset.value == null) {
+                          Toast.error(context, '请先选择要导入的账户');
+                          return;
+                        }
+                        await _importClassifiedBills(billNotifier, asset.value!, report.identifier!, bills);
+                        reportValueNotifier.value = reportValueNotifier.value!.copyWith(
+                          bills: reportValueNotifier.value!.bills.where((e) => !bills.contains(e)).toList(),
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('导入成功')));
+                      },
+                    ),
+                    const SizedBox(width: 8),
+                  ],
+                  OutlinedButton(
+                    child: const Text('修改并导入'),
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+                    ),
+                    onPressed: () async {
+                      bool result = false;
+                      result = await Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => walletBillBatchEditScreen(summary, bills, report, asset.value, assets),
+                      ));
+                      if (result == true) {
+                        reportValueNotifier.value = reportValueNotifier.value!.copyWith(
+                          bills: reportValueNotifier.value!.bills.where((e) => !bills.contains(e)).toList(),
+                        );
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('导入成功')));
+                      }
+                    },
+                  ),
+                ]),
               ),
-              for (final bill in bills.where((e) => e.suggestCategory == null))
+              const Text(
+                '时间                         金额',
+                softWrap: false,
+                style: TextStyle(fontFamily: fontMonospace),
+              ),
+              for (final bill in bills)
                 Text(
                   '${dateTimeFormat.format(bill.datetime)} ${currencyTableFormatter.format(bill.amount).padLeft(12)} ${bill.suggestCategory ?? ''}',
                   softWrap: false,
