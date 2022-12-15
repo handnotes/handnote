@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_font_icons/flutter_font_icons.dart';
@@ -39,7 +41,10 @@ class WalletAssetDetailScreen extends HookConsumerWidget {
     final asset = assets.firstWhere((element) => element.id == this.asset.id);
     final assetMap = useMemoized(() => {for (var e in assets) e.id: e}, [assets]);
     final bills = ref.watch(walletBillProvider).where((e) => e.inAssets == asset.id || e.outAssets == asset.id);
-    final billMonthly = useMemoized(() => groupBy(bills, (WalletBill e) => '${e.time.year}-${e.time.month}'), [bills]);
+    final billMonthly = useMemoized(() {
+      var groupedMap = groupBy(bills, (WalletBill e) => '${e.time.year}-${e.time.month}');
+      return SplayTreeMap<String, List<WalletBill>>.from(groupedMap, (k1, k2) => k2.compareTo(k1));
+    }, [bills]);
 
     final tapPosition = useState<Offset?>(null);
     final scrollController = useScrollController();
