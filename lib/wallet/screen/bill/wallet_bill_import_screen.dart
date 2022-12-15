@@ -171,7 +171,7 @@ class WalletBillImportScreen extends HookConsumerWidget {
           final bills = map.value;
           final bill = bills.first;
           final summary =
-              'type: ${bill.billType.name}\ntradeType: ${bill.tradeType}\ncounter: ${bill.counterParty}\ncard: ${bill.cardNumber}\ncategory: ${categoryIdMap[bill.suggestCategory]?.name}';
+              'type: ${bill.billType.name}\ntradeType: ${bill.tradeType}\ncounter: ${bill.counterParty}\ncard: ${bill.transformCounter}\ncategory: ${categoryIdMap[bill.suggestCategory]?.name}';
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -291,7 +291,7 @@ class WalletBillImportScreen extends HookConsumerWidget {
         asset: outcomeAsset,
         transferAsset: transferAsset,
         description: bills.first.tradeType,
-        counterParty: [bills.first.counterParty, bills.first.cardNumber].whereNotNull().join(' '),
+        counterParty: [bills.first.counterParty, bills.first.transformCounter].whereNotNull().join(' '),
       );
     }
 
@@ -301,7 +301,7 @@ class WalletBillImportScreen extends HookConsumerWidget {
         type: WalletBillType.income,
         asset: asset,
         description: bills.first.tradeType,
-        counterParty: [bills.first.counterParty, bills.first.cardNumber].whereNotNull().join(' '),
+        counterParty: [bills.first.counterParty, bills.first.transformCounter].whereNotNull().join(' '),
         categoryId: walletSystemCategoryIdMap[WalletSystemCategory.refund],
       );
     }
@@ -312,7 +312,7 @@ class WalletBillImportScreen extends HookConsumerWidget {
         type: WalletBillType.income,
         asset: asset,
         description: bills.first.tradeType,
-        counterParty: [bills.first.counterParty, bills.first.cardNumber].whereNotNull().join(' '),
+        counterParty: [bills.first.counterParty, bills.first.transformCounter].whereNotNull().join(' '),
         categoryId: walletSystemCategoryIdMap[WalletSystemCategory.interestIncome],
       );
     }
@@ -329,7 +329,7 @@ class WalletBillImportScreen extends HookConsumerWidget {
                   ? WalletBillType.income
                   : WalletBillType.outcome,
       description: bills.first.tradeType,
-      counterParty: [bills.first.counterParty, bills.first.cardNumber].whereNotNull().join(' '),
+      counterParty: [bills.first.counterParty, bills.first.transformCounter].whereNotNull().join(' '),
     );
   }
 

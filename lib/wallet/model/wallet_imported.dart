@@ -23,7 +23,7 @@ class WalletImportedBill {
     required this.counterParty,
     this.suggestCategory,
     this.productName,
-    this.cardNumber,
+    this.transformCounter,
   });
 
   final String reportAccountName;
@@ -42,7 +42,7 @@ class WalletImportedBill {
   final String? productName;
 
   /// 转入转出卡号
-  final String? cardNumber;
+  final String? transformCounter;
 
   int? suggestCategory;
 
@@ -54,7 +54,7 @@ class WalletImportedBill {
 
   bool get isRefund => billType == WalletImportedBillType.refund;
 
-  String get summary => reportAccountName + ':' + [tradeType, counterParty, cardNumber].whereNotNull().join(' ');
+  String get summary => reportAccountName + ':' + [tradeType, counterParty, transformCounter].whereNotNull().join(' ');
 
   factory WalletImportedBill.fromMap(String reportAccountName, Map<String, dynamic> map) {
     return WalletImportedBill(
@@ -66,13 +66,13 @@ class WalletImportedBill {
       tradeType: map['tradeType'],
       counterParty: map['counterParty'],
       productName: map['productName'],
-      cardNumber: map['cardNumber'],
+      transformCounter: map['transformCounter'],
     );
   }
 
   @override
   String toString() {
-    return '\nWalletBillImported{${dateFormat.format(datetime)} ${currencyType.name} $amount, \tbillType: ${billType.name}, tradeType: $tradeType, counterParty: $counterParty, productName: $productName, cardNumber: $cardNumber}';
+    return '\nWalletBillImported{${dateFormat.format(datetime)} ${currencyType.name} $amount, \tbillType: ${billType.name}, tradeType: $tradeType, counterParty: $counterParty, productName: $productName, transformCounter: $transformCounter}';
   }
 
   WalletBill toBill({
@@ -84,7 +84,7 @@ class WalletImportedBill {
   }) {
     WalletBill bill = WalletBill(
       time: datetime,
-      counterParty: [counterParty, cardNumber].whereNotNull().join(' '),
+      counterParty: [counterParty, transformCounter].whereNotNull().join(' '),
       description: tradeType,
       importedId: identifier,
       category: categoryId ?? suggestCategory,
