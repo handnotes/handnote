@@ -25,6 +25,12 @@ import 'package:handnote/widgets/page_container.dart';
 import 'package:handnote/widgets/toast.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+final transformCounterAssetMap = <String, WalletAssetType>{
+  '微信支付': WalletAssetType.wechat,
+  '支付宝': WalletAssetType.alipay,
+  '京东金融': WalletAssetType.jd,
+};
+
 class WalletBillImportScreen extends HookConsumerWidget {
   const WalletBillImportScreen({Key? key}) : super(key: key);
 
@@ -170,8 +176,11 @@ class WalletBillImportScreen extends HookConsumerWidget {
         Builder(builder: (context) {
           final bills = map.value;
           final bill = bills.first;
-          final summary =
-              'type: ${bill.billType.name}\ntradeType: ${bill.tradeType}\ncounter: ${bill.counterParty}\ncard: ${bill.transformCounter}\ncategory: ${categoryIdMap[bill.suggestCategory]?.name}';
+          final counterAsset =
+              assets.firstWhereOrNull((element) => element.type == transformCounterAssetMap[bill.transformCounter]);
+          final summary = bill.billType == WalletImportedBillType.transfer
+              ? 'type: ${bill.billType.name}\ntradeType: ${bill.tradeType}\ncounter: ${bill.counterParty}\ntransformCounter: ${bill.transformCounter}'
+              : 'type: ${bill.billType.name}\ntradeType: ${bill.tradeType}\ncounter: ${bill.counterParty}\ncategory: ${categoryIdMap[bill.suggestCategory]?.name}';
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -180,33 +189,43 @@ class WalletBillImportScreen extends HookConsumerWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 child: Row(children: [
-                  if (bill.suggestCategory != null) ...[
-                    ElevatedButton(
-                      child: Text('导入到"${categoryIdMap[bill.suggestCategory]?.name}"'),
-                      style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+                  if (bill.isTransfer ? counterAsset != null : bill.suggestCategory != null)
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: ElevatedButton(
+                        child: Text(bill.isTransfer
+                            ? bill.isIncome
+                                ? '导入为"从${counterAsset?.name}转入"'
+                                : '导入为"转出到${counterAsset?.name}"'
+                            : '导入到"${categoryIdMap[bill.suggestCategory]?.name}"分类'),
+                        style: OutlinedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+                        ),
+                        onPressed: () async {
+                          if (asset.value == null) {
+                            return Toast.error(context, '请先选择要导入的账户');
+                          }
+                          await _importClassifiedBills(
+                            billNotifier,
+                            asset.value!,
+                            counterAsset,
+                            report.identifier!,
+                            bills,
+                          );
+                          reportValueNotifier.value = reportValueNotifier.value!.copyWith(
+                            bills: reportValueNotifier.value!.bills.where((e) => !bills.contains(e)).toList(),
+                          );
+                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('导入成功')));
+                        },
                       ),
-                      onPressed: () async {
-                        if (asset.value == null) {
-                          Toast.error(context, '请先选择要导入的账户');
-                          return;
-                        }
-                        await _importClassifiedBills(billNotifier, asset.value!, report.identifier!, bills);
-                        reportValueNotifier.value = reportValueNotifier.value!.copyWith(
-                          bills: reportValueNotifier.value!.bills.where((e) => !bills.contains(e)).toList(),
-                        );
-                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('导入成功')));
-                      },
                     ),
-                    const SizedBox(width: 8),
-                  ],
                   OutlinedButton(
                     child: const Text('修改并导入'),
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
                     ),
                     onPressed: () async {
-                      bool result = false;
+                      bool? result = false;
                       result = await Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => walletBillBatchEditScreen(summary, bills, report, asset.value, assets),
                       ));
@@ -221,13 +240,13 @@ class WalletBillImportScreen extends HookConsumerWidget {
                 ]),
               ),
               const Text(
-                '时间                         金额',
+                '时间                           金额',
                 softWrap: false,
                 style: TextStyle(fontFamily: fontMonospace),
               ),
               for (final bill in bills)
                 Text(
-                  '${dateTimeFormat.format(bill.datetime)} ${currencyTableFormatter.format(bill.amount).padLeft(12)} ${bill.suggestCategory ?? ''}',
+                  '${dateTimeFormat.format(bill.datetime)} ${currencyTableFormatter.format(bill.amount).padLeft(14)}',
                   softWrap: false,
                   style: const TextStyle(fontFamily: fontMonospace),
                 ),
@@ -240,17 +259,15 @@ class WalletBillImportScreen extends HookConsumerWidget {
   Future<void> _importClassifiedBills(
     WalletBillNotifier billNotifier,
     WalletAsset asset,
+    WalletAsset? counterAsset,
     String importIdentifier,
     List<WalletImportedBill> importedBills,
   ) async {
-    final bills = importedBills.map((importedBill) {
-      importedBill.summary;
-      final bill = importedBill.toBill(
-        currentAsset: asset,
-        identifier: importIdentifier,
-      );
-      return bill;
-    });
+    final bills = importedBills.map((importedBill) => importedBill.toBill(
+          currentAsset: asset,
+          counterAsset: counterAsset,
+          identifier: importIdentifier,
+        ));
     for (var bill in bills) {
       await billNotifier.add(bill);
     }

@@ -20,14 +20,13 @@ CREATE TABLE wallet_asset
 );
 
 
-INSERT INTO 'wallet_asset'
-(category, type, name, remark, status, showInHomePage,
- allowBill, notCounted, bank, cardNumber)
+INSERT INTO 'wallet_asset' (category, type, name, remark, status, showInHomePage, allowBill, notCounted, bank, cardNumber)
 VALUES
 -- presets
 (0, 'cash', '现金钱包', '', 1, 1, 1, 0, NULL, NULL),
 (0, 'alipay', '支付宝', '', 1, 1, 1, 0, NULL, NULL),
 (0, 'wechat', '微信钱包', '', 1, 1, 1, 0, NULL, NULL),
+(0, 'jd', '京东钱包', '', 1, 1, 1, 0, NULL, NULL),
 (0, 'creditCard', '招商银行', '', 1, 1, 1, 0, 'zhaoshang', '3759'),
 (0, 'debitCard', '招商银行', '工资卡', 1, 1, 1, 0, 'zhaoshang', '3415'),
 (0, 'debitCard', '农业银行', '房贷卡', 1, 1, 1, 0, 'nongye', '6975'),
