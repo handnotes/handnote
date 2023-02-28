@@ -5,10 +5,8 @@
 
 Flutter client for handnote.
 
-![](https://raw.githubusercontent.com/handnotes/handnote/main/.github/homepage.png)
-![](https://raw.githubusercontent.com/handnotes/handnote/main/.github/assets.png)
-![](https://raw.githubusercontent.com/handnotes/handnote/main/.github/add-bill.png)
-![](https://raw.githubusercontent.com/handnotes/handnote/main/.github/category.png)
+
+<img width="240" src="https://raw.githubusercontent.com/handnotes/handnote/main/.github/homepage.png"> <img width="240" src="https://raw.githubusercontent.com/handnotes/handnote/main/.github/assets.png"> <img width="240" src="https://raw.githubusercontent.com/handnotes/handnote/main/.github/add-bill.png"> <img width="240" src="https://raw.githubusercontent.com/handnotes/handnote/main/.github/category.png">
 
 ## Getting Started
 
