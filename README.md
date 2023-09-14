@@ -1,6 +1,6 @@
 # Handnote
 
-[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/handnotes/handnote/Test?style=for-the-badge)](https://github.com/handnotes/handnote/actions/workflows/test.yml)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/handnotes/handnote/macos.yml?style=for-the-badge)](https://github.com/handnotes/handnote/actions/workflows/macos.yml)
 [![Codecov](https://img.shields.io/codecov/c/github/handnotes/handnote?style=for-the-badge&token=0GPY49D81Q)](https://app.codecov.io/gh/handnotes/handnote)
 
 Flutter client for handnote.
